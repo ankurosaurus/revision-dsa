@@ -1,0 +1,178 @@
+@import "@fontsource/manrope/400.css";
+@import "@fontsource/manrope/500.css";
+@import "@fontsource/manrope/600.css";
+@import "@fontsource/manrope/700.css";
+@import "@fontsource/manrope/800.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-app: #FAFAFA;
+    --surface-card: #FFFFFF;
+    --surface-subtle: #F4F5F7;
+    --border-color: #E5E7EB;
+    --text-primary: #111827;
+    --text-secondary: #4B5563;
+    --text-tertiary: #9CA3AF;
+    --accent-color: #4F46E5;
+    --accent-hover: #4338CA;
+  }
+
+  .dark {
+    --bg-app: #0A0A0C;
+    --surface-card: #121316;
+    --surface-subtle: #18191E;
+    --border-color: rgba(255, 255, 255, 0.08);
+    --text-primary: #EDEDED;
+    --text-secondary: #94969E;
+    --text-tertiary: #60636C;
+    --accent-color: #6366F1;
+    --accent-hover: #4F46E5;
+  }
+
+  body {
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.012em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Manrope', sans-serif;
+    letter-spacing: -0.03em;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Architectural subtle grid background (Apple / Vercel / Linear inspired) */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}
+
+.dark .bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+}
+
+/* Minimalist precision scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.35);
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.6);
+}
+
+/* High-End Editorial Surface */
+.editorial-surface {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.dark .editorial-surface {
+  background-color: #121316;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.editorial-surface:hover {
+  border-color: #D1D5DB;
+}
+
+.dark .editorial-surface:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+/* Primary Precision Button */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  background-color: #4F46E5;
+  color: #FFFFFF;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  transition: background-color 150ms ease, transform 150ms ease;
+  box-shadow: 0 1px 2px 0 rgba(79, 70, 229, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: #4338CA;
+}
+
+.btn-primary:active {
+  transform: scale(0.985);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  background-color: #FFFFFF;
+  color: #374151;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 0.5rem 0.875rem;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+}
+
+.btn-secondary:hover {
+  background-color: #F9FAFB;
+  border-color: #D1D5DB;
+  color: #111827;
+}
+
+.dark .btn-secondary {
+  background-color: #16181D;
+  color: #D1D5DB;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .btn-secondary:hover {
+  background-color: #1E2026;
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #EDEDED;
+}
