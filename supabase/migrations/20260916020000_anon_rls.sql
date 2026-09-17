@@ -1,0 +1,36 @@
+-- RevisionDSA: Anonymous / Guest User RLS Verification
+-- =====================================================
+-- This migration is intentionally a no-op on the database schema.
+-- The existing RLS policies from 20260916000000_init_schema.sql already work
+-- correctly for anonymous users because Supabase gives anonymous users a real
+-- auth.uid() — identical to registered users from the RLS perspective.
+--
+-- Verification:
+--   1. Register two separate guest sessions in two different browsers.
+--   2. Add problems as guest A. Confirm guest B cannot see them.
+--   3. The query "SELECT * FROM problems" returns only rows where
+--      user_id = auth.uid() — this holds for guests, registered users, and
+--      Google OAuth users equally.
+--
+-- MANUAL SETUP REQUIRED (cannot be done in SQL):
+-- -----------------------------------------------
+-- Before anonymous sign-in (guest mode) will work, you must enable it in the
+-- Supabase dashboard:
+--   Project → Authentication → Settings → "Allow anonymous sign-ins"  → ON
+--
+-- Before Google OAuth will work:
+--   Project → Authentication → Providers → Google → Enable
+--   Paste your Google Cloud Console OAuth 2.0 Client ID and Client Secret.
+--   Add your domain to the authorized redirect URIs in Google Cloud Console:
+--     https://<your-supabase-project>.supabase.co/auth/v1/callback
+--
+-- Email confirmation redirect:
+--   Project → Authentication → URL Configuration → Site URL = your app URL
+--   Add "http://localhost:5173/" to Redirect URLs (for local dev).
+
+-- Confirm profiles table auto-creates for anon users via the existing trigger.
+-- The trigger on_auth_user_created fires for ALL auth.users inserts, including
+-- anonymous ones, so every guest gets a profiles row automatically.
+
+-- No schema changes needed. This file documents the requirements.
+select 1; -- no-op statement to make this a valid SQL migration
