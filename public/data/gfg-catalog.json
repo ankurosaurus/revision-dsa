@@ -1,0 +1,295 @@
+[
+  {
+    "id": "gfg-kadanes-algorithm-1587115620",
+    "platform": "gfg",
+    "external_id": "kadanes-algorithm-1587115620",
+    "title": "Kadane's Algorithm",
+    "difficulty": "medium",
+    "rating": null,
+    "tags": [
+      "Arrays",
+      "Dynamic Programming"
+    ],
+    "url": "https://practice.geeksforgeeks.org/problems/kadanes-algorithm-1587115620/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-detect-cycle-in-a-directed-graph",
+    "platform": "gfg",
+    "external_id": "detect-cycle-in-a-directed-graph",
+    "title": "Detect Cycle in a Directed Graph",
+    "difficulty": "medium",
+    "rating": null,
+    "tags": [
+      "Graph",
+      "DFS",
+      "BFS"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/detect-cycle-in-a-directed-graph/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-detect-cycle-in-an-undirected-graph",
+    "platform": "gfg",
+    "external_id": "detect-cycle-in-an-undirected-graph",
+    "title": "Detect Cycle in an Undirected Graph",
+    "difficulty": "medium",
+    "rating": null,
+    "tags": [
+      "Graph",
+      "BFS",
+      "DFS",
+      "Disjoint Set"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/detect-cycle-in-an-undirected-graph/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-subarray-with-given-sum-1587115621",
+    "platform": "gfg",
+    "external_id": "subarray-with-given-sum-1587115621",
+    "title": "Subarray with Given Sum",
+    "difficulty": "medium",
+    "rating": null,
+    "tags": [
+      "Arrays",
+      "Sliding Window",
+      "Two Pointers"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/subarray-with-given-sum-1587115621/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-reverse-a-linked-list",
+    "platform": "gfg",
+    "external_id": "reverse-a-linked-list",
+    "title": "Reverse a Linked List",
+    "difficulty": "easy",
+    "rating": null,
+    "tags": [
+      "Linked List"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/reverse-a-linked-list/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-word-boggle4143",
+    "platform": "gfg",
+    "external_id": "word-boggle4143",
+    "title": "Word Boggle",
+    "difficulty": "medium",
+    "rating": null,
+    "tags": [
+      "Backtracking",
+      "DFS",
+      "Trie",
+      "Matrix"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/word-boggle4143/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-minimum-platforms-1587115620",
+    "platform": "gfg",
+    "external_id": "minimum-platforms-1587115620",
+    "title": "Minimum Platforms",
+    "difficulty": "medium",
+    "rating": null,
+    "tags": [
+      "Greedy",
+      "Sorting",
+      "Arrays"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/minimum-platforms-1587115620/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-inversion-of-array-1587115620",
+    "platform": "gfg",
+    "external_id": "inversion-of-array-1587115620",
+    "title": "Count Inversions",
+    "difficulty": "medium",
+    "rating": null,
+    "tags": [
+      "Arrays",
+      "Divide and Conquer",
+      "Merge Sort"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/inversion-of-array-1587115620/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-parenthesis-checker2744",
+    "platform": "gfg",
+    "external_id": "parenthesis-checker2744",
+    "title": "Parenthesis Checker",
+    "difficulty": "easy",
+    "rating": null,
+    "tags": [
+      "Stack",
+      "Strings"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/parenthesis-checker2744/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-kth-smallest-element5635",
+    "platform": "gfg",
+    "external_id": "kth-smallest-element5635",
+    "title": "Kth Smallest Element",
+    "difficulty": "medium",
+    "rating": null,
+    "tags": [
+      "Heap",
+      "Sorting",
+      "QuickSelect"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/kth-smallest-element5635/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-topological-sort",
+    "platform": "gfg",
+    "external_id": "topological-sort",
+    "title": "Topological Sort",
+    "difficulty": "medium",
+    "rating": null,
+    "tags": [
+      "Graph",
+      "DFS",
+      "BFS",
+      "Kahn Algorithm"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/topological-sort/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-rat-in-a-maze-problem",
+    "platform": "gfg",
+    "external_id": "rat-in-a-maze-problem",
+    "title": "Rat in a Maze Problem - I",
+    "difficulty": "medium",
+    "rating": null,
+    "tags": [
+      "Backtracking",
+      "Recursion",
+      "DFS"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/rat-in-a-maze-problem/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-lru-cache",
+    "platform": "gfg",
+    "external_id": "lru-cache",
+    "title": "LRU Cache",
+    "difficulty": "hard",
+    "rating": null,
+    "tags": [
+      "Design",
+      "Hash Table",
+      "Doubly Linked List"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/lru-cache/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-longest-common-subsequence-1587115620",
+    "platform": "gfg",
+    "external_id": "longest-common-subsequence-1587115620",
+    "title": "Longest Common Subsequence",
+    "difficulty": "medium",
+    "rating": null,
+    "tags": [
+      "Dynamic Programming",
+      "Strings"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/longest-common-subsequence-1587115620/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-0-1-knapsack-problem0945",
+    "platform": "gfg",
+    "external_id": "0-1-knapsack-problem0945",
+    "title": "0 - 1 Knapsack Problem",
+    "difficulty": "medium",
+    "rating": null,
+    "tags": [
+      "Dynamic Programming"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/0-1-knapsack-problem0945/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-egg-dropping-puzzle-1587115620",
+    "platform": "gfg",
+    "external_id": "egg-dropping-puzzle-1587115620",
+    "title": "Egg Dropping Puzzle",
+    "difficulty": "hard",
+    "rating": null,
+    "tags": [
+      "Dynamic Programming",
+      "Binary Search"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/egg-dropping-puzzle-1587115620/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-edit-distance3702",
+    "platform": "gfg",
+    "external_id": "edit-distance3702",
+    "title": "Edit Distance",
+    "difficulty": "hard",
+    "rating": null,
+    "tags": [
+      "Dynamic Programming",
+      "Strings"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/edit-distance3702/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-alien-dictionary",
+    "platform": "gfg",
+    "external_id": "alien-dictionary",
+    "title": "Alien Dictionary",
+    "difficulty": "hard",
+    "rating": null,
+    "tags": [
+      "Graph",
+      "Topological Sort"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/alien-dictionary/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-trapping-rain-water-1587115621",
+    "platform": "gfg",
+    "external_id": "trapping-rain-water-1587115621",
+    "title": "Trapping Rain Water",
+    "difficulty": "hard",
+    "rating": null,
+    "tags": [
+      "Arrays",
+      "Two Pointers",
+      "Stack"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/trapping-rain-water-1587115621/1",
+    "is_paid_only": false
+  },
+  {
+    "id": "gfg-diameter-of-binary-tree",
+    "platform": "gfg",
+    "external_id": "diameter-of-binary-tree",
+    "title": "Diameter of a Binary Tree",
+    "difficulty": "medium",
+    "rating": null,
+    "tags": [
+      "Tree",
+      "Binary Tree",
+      "DFS"
+    ],
+    "url": "https://www.geeksforgeeks.org/problems/diameter-of-binary-tree/1",
+    "is_paid_only": false
+  }
+]
