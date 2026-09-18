@@ -1,0 +1,15 @@
+{
+  "short_name": "RevisionDSA",
+  "name": "RevisionDSA — Spaced Repetition DSA Tracker",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0A0A0C",
+  "theme_color": "#4F46E5",
+  "display": "standalone"
+}
