@@ -32,6 +32,74 @@ const yesterday = addDaysToDate(today, -1);
 const twoDaysAgo = addDaysToDate(today, -2);
 const threeDaysAgo = addDaysToDate(today, -3);
 
+export const ESSENTIAL_PROBLEMS: Omit<Problem, 'id' | 'created_at'>[] = [
+  {
+    title: 'Two Sum',
+    url: 'https://leetcode.com/problems/two-sum/',
+    platform: 'leetcode',
+    difficulty: 'easy',
+    tags: ['Arrays', 'Hashing'],
+    notes: '### Approach:\n- Use a HashMap to store `target - num` along with its index.\n- One-pass scan achieves **O(N)** time and **O(N)** space.\n- *Watch out for*: using the same element twice.',
+    link_verified: true,
+    ease_factor: 2.5,
+    interval_days: 1,
+    repetitions: 0,
+    next_review_date: today,
+  },
+  {
+    title: 'Reverse Linked List',
+    url: 'https://leetcode.com/problems/reverse-linked-list/',
+    platform: 'leetcode',
+    difficulty: 'easy',
+    tags: ['Linked List', 'Recursion'],
+    notes: '### Approach:\n- Iterative 3-pointer pattern: `prev = null`, `curr = head`.\n- Loop: `next = curr.next; curr.next = prev; prev = curr; curr = next;`\n- Returns `prev` as new head. **O(N)** time, **O(1)** space.',
+    link_verified: true,
+    ease_factor: 2.5,
+    interval_days: 1,
+    repetitions: 0,
+    next_review_date: today,
+  },
+  {
+    title: 'Valid Parentheses',
+    url: 'https://leetcode.com/problems/valid-parentheses/',
+    platform: 'leetcode',
+    difficulty: 'easy',
+    tags: ['Stack', 'Strings'],
+    notes: '### Approach:\n- Push opening brackets onto a stack.\n- For closing brackets, pop and verify matching type.\n- If stack is empty at end, expression is valid. **O(N)** time, **O(N)** space.',
+    link_verified: true,
+    ease_factor: 2.5,
+    interval_days: 1,
+    repetitions: 0,
+    next_review_date: today,
+  },
+  {
+    title: 'Binary Search',
+    url: 'https://leetcode.com/problems/binary-search/',
+    platform: 'leetcode',
+    difficulty: 'easy',
+    tags: ['Binary Search', 'Arrays'],
+    notes: '### Approach:\n- `low = 0, high = nums.length - 1`.\n- In loop: `mid = low + Math.floor((high - low) / 2)` (prevents overflow).\n- If `nums[mid] === target`, return mid. Adjust pointers accordingly.\n- **O(log N)** time, **O(1)** space.',
+    link_verified: true,
+    ease_factor: 2.5,
+    interval_days: 1,
+    repetitions: 0,
+    next_review_date: today,
+  },
+  {
+    title: 'Maximum Subarray',
+    url: 'https://leetcode.com/problems/maximum-subarray/',
+    platform: 'leetcode',
+    difficulty: 'medium',
+    tags: ['Arrays', 'Dynamic Programming'],
+    notes: '### Kadane\'s Algorithm:\n- Maintain `current_sum` and `max_sum`.\n- `current_sum = Math.max(nums[i], current_sum + nums[i])`.\n- `max_sum = Math.max(max_sum, current_sum)`.\n- **O(N)** time, **O(1)** space.',
+    link_verified: true,
+    ease_factor: 2.5,
+    interval_days: 1,
+    repetitions: 0,
+    next_review_date: today,
+  },
+];
+
 export const SAMPLE_PROBLEMS: Problem[] = [
   // Overdue problems (for revision queue urgent attention)
   {

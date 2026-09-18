@@ -53,6 +53,12 @@ type EventMap = {
   problem_added:            { platform: 'leetcode' | 'gfg' | 'codeforces' };
   revision_completed:       { rating: 'again' | 'hard' | 'good' | 'easy' };
   daily_goal_reached:       { goal: number; total_today: number };
+  landing_page_viewed:      { referrer: string; path?: string };
+  page_load_complete:       { load_time_ms?: number };
+  first_interaction:        { type?: string; target?: string };
+  signup_button_clicked:    { source?: string };
+  guest_button_clicked:     { source?: string };
+  compiler_code_run:        { language: string; status: string; duration_ms?: number };
 };
 
 /**

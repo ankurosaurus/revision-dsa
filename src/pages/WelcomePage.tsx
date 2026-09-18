@@ -27,10 +27,13 @@ import {
   AlertCircle,
   CheckCircle2,
   ChevronLeft,
+  X,
+  Sparkles,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 import { PasswordStrengthMeter } from '../components/auth/PasswordStrengthMeter';
 import { useAuth } from '../contexts/AuthContext';
+import { track } from '../lib/analytics';
 
 type Screen = 'home' | 'login' | 'signup' | 'forgot' | 'check-inbox' | 'forgot-sent';
 
@@ -71,11 +74,24 @@ const Field: React.FC<{ label: string; error?: string; children: React.ReactNode
 );
 
 // ── Main component ────────────────────────────────────────────────────────────
-export const WelcomePage: React.FC = () => {
+export const WelcomePage: React.FC<{ onClose?: () => void; onExploreDemo?: () => void }> = ({
+  onClose,
+  onExploreDemo,
+}) => {
   const [screen, setScreen] = useState<Screen>('home');
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-neutral-50 dark:bg-dark-bg bg-grid-pattern p-4">
+    <div className="min-h-screen w-full flex items-center justify-center bg-neutral-50 dark:bg-dark-bg bg-grid-pattern p-4 relative">
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 p-2 rounded-full bg-white/80 dark:bg-dark-surface/80 hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover text-neutral-600 dark:text-neutral-300 transition-colors shadow-sm z-30"
+          title="Close and return to demo"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      )}
+
       <div className="w-full max-w-4xl flex flex-col lg:flex-row rounded-2xl overflow-hidden shadow-2xl border border-neutral-200 dark:border-dark-border bg-white dark:bg-dark-surface">
         {/* ── Left: Value prop ─────────────────────────────── */}
         <div className="lg:w-5/12 bg-brand-600 dark:bg-brand-700 p-10 flex flex-col justify-between">
@@ -110,6 +126,7 @@ export const WelcomePage: React.FC = () => {
               {[
                 'SM-2 algorithm — same tech as Anki',
                 '15,000+ problem catalog built-in',
+                'Online Code Compiler with Python, Java, C, C++',
                 'Works offline, syncs when connected',
               ].map((feat) => (
                 <div key={feat} className="flex items-center gap-2 text-brand-100 text-xs">
@@ -127,7 +144,18 @@ export const WelcomePage: React.FC = () => {
         <div className="lg:w-7/12 p-8 flex flex-col justify-center">
           <AnimatePresence mode="wait">
             {screen === 'home' && (
-              <HomeScreen key="home" onLogin={() => setScreen('login')} onSignUp={() => setScreen('signup')} />
+              <HomeScreen
+                key="home"
+                onLogin={() => {
+                  track('signup_button_clicked', { source: 'welcome_login' });
+                  setScreen('login');
+                }}
+                onSignUp={() => {
+                  track('signup_button_clicked', { source: 'welcome_signup' });
+                  setScreen('signup');
+                }}
+                onExploreDemo={onExploreDemo}
+              />
             )}
             {screen === 'login' && (
               <LoginForm key="login" onBack={() => setScreen('home')} onForgot={() => setScreen('forgot')} />
@@ -151,13 +179,18 @@ export const WelcomePage: React.FC = () => {
   );
 };
 
-// ── Screen: Home (3 options) ─────────────────────────────────────────────────
-const HomeScreen: React.FC<{ onLogin: () => void; onSignUp: () => void }> = ({ onLogin, onSignUp }) => {
+// ── Screen: Home (3 options + Live Demo) ──────────────────────────────────────
+const HomeScreen: React.FC<{
+  onLogin: () => void;
+  onSignUp: () => void;
+  onExploreDemo?: () => void;
+}> = ({ onLogin, onSignUp, onExploreDemo }) => {
   const { signInAsGuest } = useAuth();
   const [guestLoading, setGuestLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleGuest = async () => {
+    track('guest_button_clicked', { source: 'welcome_guest' });
     setGuestLoading(true);
     setError('');
     try {
@@ -178,7 +211,7 @@ const HomeScreen: React.FC<{ onLogin: () => void; onSignUp: () => void }> = ({ o
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
       transition={{ duration: 0.2 }}
-      className="space-y-6"
+      className="space-y-5"
     >
       <div>
         <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Get started</h2>
@@ -187,50 +220,69 @@ const HomeScreen: React.FC<{ onLogin: () => void; onSignUp: () => void }> = ({ o
         </p>
       </div>
 
-      <div className="space-y-3">
-        {/* Log In */}
+      <div className="space-y-2.5">
+        {/* 1. Explore Live Demo — Zero barrier, reduces bounce rate immediately */}
+        {onExploreDemo && (
+          <button
+            onClick={onExploreDemo}
+            className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-gradient-to-r from-brand-50 to-indigo-50 hover:from-brand-100 hover:to-indigo-100 dark:from-brand-950/40 dark:to-indigo-950/40 dark:hover:from-brand-900/50 dark:hover:to-indigo-900/50 border border-brand-200/80 dark:border-brand-800/60 text-brand-700 dark:text-brand-300 font-semibold text-sm transition-all group shadow-2xs"
+          >
+            <div className="text-left">
+              <div className="flex items-center gap-1.5 text-sm font-bold text-brand-700 dark:text-brand-300">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                <span>Explore Live Interactive Demo</span>
+              </div>
+              <span className="text-[11px] text-brand-600/80 dark:text-brand-400/80 font-normal">
+                Test spaced repetition, problem bank & compiler instantly
+              </span>
+            </div>
+            <ArrowRight className="w-4 h-4 text-brand-600 dark:text-brand-400 group-hover:translate-x-1 transition-transform" />
+          </button>
+        )}
+
+        {/* 2. Log In */}
         <button
           onClick={onLogin}
-          className="w-full btn-primary flex items-center justify-between px-4 py-3"
+          className="w-full btn-primary flex items-center justify-between px-4 py-2.5"
         >
           <span className="font-semibold">Log In</span>
           <ArrowRight className="w-4 h-4" />
         </button>
 
-        {/* Sign Up */}
+        {/* 3. Sign Up */}
         <button
           onClick={onSignUp}
-          className="w-full btn-secondary flex items-center justify-between px-4 py-3"
+          className="w-full btn-secondary flex items-center justify-between px-4 py-2.5"
         >
           <span className="font-semibold">Create Account</span>
           <ArrowRight className="w-4 h-4" />
         </button>
 
         {/* Divider */}
-        <div className="relative flex items-center gap-3 py-1">
+        <div className="relative flex items-center gap-3 py-0.5">
           <div className="flex-1 h-px bg-neutral-200 dark:bg-dark-border" />
           <span className="text-[11px] text-neutral-400 dark:text-neutral-500 font-medium">or</span>
           <div className="flex-1 h-px bg-neutral-200 dark:bg-dark-border" />
         </div>
 
-        {/* Continue as Guest — 100% active, frictionless access */}
+        {/* 4. Continue as Guest */}
         <button
           onClick={handleGuest}
           disabled={guestLoading}
-          className="w-full flex items-center justify-between px-4 py-3 rounded-lg border border-neutral-200 dark:border-dark-border text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-dark-surfaceHover hover:border-neutral-300 dark:hover:border-neutral-600 transition-all font-medium text-sm group"
+          className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg border border-neutral-200 dark:border-dark-border text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-dark-surfaceHover hover:border-neutral-300 dark:hover:border-neutral-600 transition-all font-medium text-xs group"
         >
           <div className="text-left">
-            <span className="font-semibold block text-sm group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+            <span className="font-semibold block text-xs group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
               Continue as Guest
             </span>
-            <span className="text-[11px] text-neutral-500 dark:text-neutral-400 font-normal">
-              No sign-up required · Saved on this device only
+            <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-normal">
+              No sign-up required · Saved on this device
             </span>
           </div>
           {guestLoading ? (
-            <Loader2 className="w-4 h-4 animate-spin text-brand-500" />
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-brand-500" />
           ) : (
-            <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 group-hover:text-brand-500 transition-all" />
+            <ArrowRight className="w-3.5 h-3.5 text-neutral-400 group-hover:translate-x-0.5 group-hover:text-brand-500 transition-all" />
           )}
         </button>
       </div>

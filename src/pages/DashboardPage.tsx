@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import confetti from 'canvas-confetti';
 import { useProblemStore } from '../store/useProblemStore';
 import { useUIStore } from '../store/useUIStore';
 import { MemoryCurveSimulator } from '../components/interactive/MemoryCurveSimulator';
@@ -18,14 +19,34 @@ import {
   Layers,
   Sparkles,
   ExternalLink,
+  Zap,
+  CheckCircle2,
+  Loader2,
 } from 'lucide-react';
 
 export const DashboardPage: React.FC = () => {
   const problems = useProblemStore((s) => s.problems);
+  const addEssentialProblems = useProblemStore((s) => s.addEssentialProblems);
   const profile = useProblemStore((s) => s.profile);
   const openAddPanel = useUIStore((s) => s.openAddPanel);
   const setActiveTab = useUIStore((s) => s.setActiveTab);
   const streak = useStreak();
+
+  const [isAddingEssentials, setIsAddingEssentials] = useState(false);
+
+  const handleAddEssentials = async () => {
+    setIsAddingEssentials(true);
+    try {
+      await addEssentialProblems();
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+    } finally {
+      setIsAddingEssentials(false);
+    }
+  };
 
   const dueProblems = problems.filter((p) => isProblemDue(p.next_review_date));
   const dueThisWeek = problems.filter((p) => {
@@ -186,20 +207,62 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {problems.length === 0 ? (
-          <div className="editorial-surface p-8 text-center flex flex-col items-center">
-            <h4 className="text-sm font-bold text-neutral-900 dark:text-white mb-1">
-              Your revision queue is clear
+          <div className="editorial-surface p-8 sm:p-10 text-center flex flex-col items-center rounded-2xl border border-dashed border-neutral-300 dark:border-dark-border bg-gradient-to-b from-white to-neutral-50 dark:from-dark-surface dark:to-dark-bg">
+            <div className="w-12 h-12 rounded-2xl bg-brand-50 dark:bg-brand-950/50 border border-brand-200/80 dark:border-brand-800/50 flex items-center justify-center text-brand-600 dark:text-brand-400 mb-4 shadow-2xs">
+              <Sparkles className="w-6 h-6" />
+            </div>
+
+            <h4 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-white mb-2">
+              Start Your Spaced Repetition Problem Bank
             </h4>
-            <p className="text-xs text-neutral-500 dark:text-dark-textMuted max-w-sm mb-4">
-              When you solve a problem on LeetCode, GeeksforGeeks, or Codeforces, paste its URL here to begin spaced repetition tracking.
+            <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 max-w-lg mb-6 leading-relaxed">
+              Don't start from an empty sheet. Seed your revision queue with 5 high-yield essential interview problems tested by top product companies.
             </p>
-            <button
-              onClick={openAddPanel}
-              className="btn-primary text-xs flex items-center gap-1.5"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Log First Problem</span>
-            </button>
+
+            {/* 5 Essential Problems Preview Badges */}
+            <div className="flex flex-wrap justify-center gap-2 max-w-xl mb-6">
+              {[
+                { title: '1. Two Sum', tag: 'Arrays & Hashing' },
+                { title: '2. Reverse Linked List', tag: 'Linked List' },
+                { title: '3. Valid Parentheses', tag: 'Stack' },
+                { title: '4. Binary Search', tag: 'Binary Search' },
+                { title: '5. Maximum Subarray', tag: 'DP & Kadane' },
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="px-3 py-1.5 rounded-lg bg-white dark:bg-dark-surface border border-neutral-200 dark:border-dark-border text-xs flex items-center gap-1.5 shadow-2xs"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 text-brand-500" />
+                  <span className="font-semibold text-neutral-800 dark:text-neutral-200">{item.title}</span>
+                  <span className="text-[10px] text-neutral-400">({item.tag})</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={handleAddEssentials}
+                disabled={isAddingEssentials}
+                className="btn-primary text-xs sm:text-sm py-2.5 px-5 flex items-center gap-2 font-bold shadow-md hover:shadow-lg transition-all disabled:opacity-50"
+              >
+                {isAddingEssentials ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Zap className="w-4 h-4 text-amber-300 fill-current" />
+                )}
+                <span>Quick Start: Add 5 essential problems</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={openAddPanel}
+                className="btn-secondary text-xs sm:text-sm py-2.5 px-4 flex items-center gap-1.5 font-semibold"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Log Custom Problem</span>
+              </button>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
