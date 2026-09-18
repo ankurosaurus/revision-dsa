@@ -21,10 +21,10 @@ export const StatsPage: React.FC = () => {
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Top Header */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-serif font-bold text-paper-primary tracking-tight">
           Revision Analytics
         </h1>
-        <p className="text-xs sm:text-sm text-neutral-500 dark:text-dark-textMuted mt-0.5">
+        <p className="text-xs sm:text-sm text-paper-muted mt-0.5">
           Metrics on retention rates, consistency streaks, and algorithmic pattern mastery.
         </p>
       </div>
@@ -32,66 +32,66 @@ export const StatsPage: React.FC = () => {
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Streak */}
-        <div className="saas-card p-5">
+        <div className="bg-surface border border-graphite-hairline rounded-xl p-5 shadow-deck">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-neutral-500 dark:text-dark-textMuted uppercase tracking-wider">
-              Current Streak
+            <span className="text-xs font-medium text-paper-muted">
+              Current streak
             </span>
-            <Flame className="w-4 h-4 text-amber-500" />
+            <Flame className="w-4 h-4 text-ochre" />
           </div>
-          <div className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white mt-2">
-            {streak.currentStreak} <span className="text-xs font-normal text-neutral-500">days</span>
+          <div className="text-2xl sm:text-3xl font-serif font-bold text-paper-primary mt-2">
+            {streak.currentStreak} <span className="text-xs font-normal text-paper-muted">days</span>
           </div>
-          <div className="text-[11px] text-neutral-400 dark:text-neutral-500 mt-1">
+          <div className="text-xs text-paper-muted mt-1">
             Personal best: {streak.longestStreak} days
           </div>
         </div>
 
         {/* Total Reviews */}
-        <div className="saas-card p-5">
+        <div className="bg-surface border border-graphite-hairline rounded-xl p-5 shadow-deck">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-neutral-500 dark:text-dark-textMuted uppercase tracking-wider">
-              Total Reviews
+            <span className="text-xs font-medium text-paper-muted">
+              Total reviews
             </span>
-            <CheckCircle2 className="w-4 h-4 text-brand-600" />
+            <CheckCircle2 className="w-4 h-4 text-teal" />
           </div>
-          <div className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white mt-2">
+          <div className="text-2xl sm:text-3xl font-serif font-bold text-paper-primary mt-2">
             {reviewLogs.length}
           </div>
-          <div className="text-[11px] text-neutral-400 dark:text-neutral-500 mt-1">
+          <div className="text-xs text-paper-muted mt-1">
             {streak.todayCount} completed today
           </div>
         </div>
 
         {/* Average Ease Factor */}
-        <div className="saas-card p-5">
+        <div className="bg-surface border border-graphite-hairline rounded-xl p-5 shadow-deck">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-neutral-500 dark:text-dark-textMuted uppercase tracking-wider">
-              Average Ease Factor
+            <span className="text-xs font-medium text-paper-muted">
+              Average ease factor
             </span>
-            <Zap className="w-4 h-4 text-emerald-500" />
+            <Zap className="w-4 h-4 text-teal" />
           </div>
-          <div className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white mt-2">
+          <div className="text-2xl sm:text-3xl font-serif font-bold text-paper-primary mt-2">
             {avgEase}
           </div>
-          <div className="text-[11px] text-neutral-400 dark:text-neutral-500 mt-1">
+          <div className="text-xs text-paper-muted mt-1">
             Baseline: 2.50 (higher = easier recall)
           </div>
         </div>
 
         {/* Long-term Mastered */}
-        <div className="saas-card p-5">
+        <div className="bg-surface border border-graphite-hairline rounded-xl p-5 shadow-deck">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-neutral-500 dark:text-dark-textMuted uppercase tracking-wider">
-              Mastery Rate
+            <span className="text-xs font-medium text-paper-muted">
+              Mastery rate
             </span>
-            <Brain className="w-4 h-4 text-indigo-500" />
+            <Brain className="w-4 h-4 text-teal" />
           </div>
-          <div className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white mt-2">
+          <div className="text-2xl sm:text-3xl font-serif font-bold text-paper-primary mt-2">
             {totalProblems > 0 ? `${Math.round((masteredCount / totalProblems) * 100)}%` : '0%'}
           </div>
-          <div className="text-[11px] text-neutral-400 dark:text-neutral-500 mt-1">
-            {masteredCount} of {totalProblems} problems (5+ reps)
+          <div className="text-xs text-paper-muted mt-1">
+            {masteredCount} of {totalProblems} problems (5+ reviews)
           </div>
         </div>
       </div>
@@ -106,41 +106,41 @@ export const StatsPage: React.FC = () => {
       <ReviewHeatmap />
 
       {/* Spaced Repetition Reference */}
-      <div className="saas-card p-6">
-        <h3 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1.5 flex items-center gap-2">
-          <BookOpen className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+      <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
+        <h3 className="text-base font-serif font-bold text-paper-primary mb-1.5 flex items-center gap-2">
+          <BookOpen className="w-4 h-4 text-teal" />
           <span>SM-2 Spaced Repetition Principle</span>
         </h3>
-        <p className="text-xs text-neutral-500 dark:text-dark-textMuted mb-4 leading-relaxed">
-          The SuperMemo-2 (SM-2) algorithm calculates the optimal memory spacing for algorithmic problem retention, actively preventing the Ebbinghaus forgetting curve before placement interviews:
+        <p className="text-xs text-paper-muted mb-4 leading-relaxed">
+          The SuperMemo-2 (SM-2) algorithm calculates the optimal memory spacing for algorithmic problem retention, actively countering the forgetting curve:
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-          <div className="p-3.5 rounded-lg bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border">
-            <span className="text-rose-700 dark:text-rose-400 font-semibold block mb-1">Again (1)</span>
-            <span className="text-neutral-500 dark:text-dark-textMuted leading-relaxed block">
+          <div className="p-3.5 rounded-lg bg-graphite-base border border-graphite-hairline">
+            <span className="text-rose-400 font-serif font-semibold block mb-1">Again (1)</span>
+            <span className="text-paper-muted leading-relaxed block">
               Reset repetitions to 0 and schedule review for tomorrow (1 day).
             </span>
           </div>
 
-          <div className="p-3.5 rounded-lg bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border">
-            <span className="text-amber-700 dark:text-amber-400 font-semibold block mb-1">Hard (2)</span>
-            <span className="text-neutral-500 dark:text-dark-textMuted leading-relaxed block">
-              Struggled with edge cases. Multiplies interval by 1.2x.
+          <div className="p-3.5 rounded-lg bg-graphite-base border border-graphite-hairline">
+            <span className="text-ochre font-serif font-semibold block mb-1">Hard (2)</span>
+            <span className="text-paper-muted leading-relaxed block">
+              Struggled with core logic. Multiplies interval by 1.2x.
             </span>
           </div>
 
-          <div className="p-3.5 rounded-lg bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border">
-            <span className="text-neutral-900 dark:text-white font-semibold block mb-1">Good (3)</span>
-            <span className="text-neutral-500 dark:text-dark-textMuted leading-relaxed block">
-              Standard successful recall. Multiplies interval by current ease factor.
+          <div className="p-3.5 rounded-lg bg-graphite-base border border-graphite-hairline">
+            <span className="text-paper-primary font-serif font-semibold block mb-1">Good (3)</span>
+            <span className="text-paper-muted leading-relaxed block">
+              Successful recall. Multiplies interval by current ease factor.
             </span>
           </div>
 
-          <div className="p-3.5 rounded-lg bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border">
-            <span className="text-emerald-700 dark:text-emerald-400 font-semibold block mb-1">Easy (4)</span>
-            <span className="text-neutral-500 dark:text-dark-textMuted leading-relaxed block">
-              Instant recall. Applies 1.3x booster and increments ease factor.
+          <div className="p-3.5 rounded-lg bg-graphite-base border border-graphite-hairline">
+            <span className="text-teal font-serif font-semibold block mb-1">Easy (4)</span>
+            <span className="text-paper-muted leading-relaxed block">
+              Instinctive recall. Applies 1.3x booster and increments ease factor.
             </span>
           </div>
         </div>

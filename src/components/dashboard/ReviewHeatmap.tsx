@@ -58,33 +58,34 @@ export const ReviewHeatmap: React.FC = () => {
     };
   }, [reviewLogs]);
 
+  // Teal functional accent steps for practice/growth
   const getCellColor = (count: number) => {
-    if (count === 0) return 'bg-neutral-100 dark:bg-dark-surfaceHover border-neutral-200/50 dark:border-dark-border';
-    if (count <= 2) return 'bg-indigo-100 dark:bg-indigo-950/60 border-indigo-200/80 dark:border-indigo-800/40';
-    if (count <= 4) return 'bg-indigo-300 dark:bg-indigo-800/80 border-indigo-400/80 dark:border-indigo-700/60';
-    if (count <= 6) return 'bg-indigo-500 dark:bg-indigo-600 border-indigo-600 dark:border-indigo-500';
-    return 'bg-indigo-700 dark:bg-indigo-500 border-indigo-800 dark:border-indigo-400';
+    if (count === 0) return 'bg-[#171B24] border-[#222735]';
+    if (count <= 2) return 'bg-[#24463F] border-[#315F56]';
+    if (count <= 4) return 'bg-[#356B60] border-[#428477]';
+    if (count <= 6) return 'bg-[#43887B] border-[#4F9C8D]';
+    return 'bg-[#4F9C8D] border-[#6BBBAA]';
   };
 
   return (
     <div className="saas-card p-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
         <div>
-          <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-            Daily Revision Consistency
+          <h3 className="text-sm font-semibold text-paper-primary">
+            Daily practice consistency
           </h3>
-          <p className="text-[11px] text-neutral-500 dark:text-dark-textMuted mt-0.5">
+          <p className="text-xs text-paper-secondary mt-0.5">
             {totalInPeriod} problem revisions across {activeDays} active days in the last 16 weeks
           </p>
         </div>
 
-        {/* Minimalist Legend */}
-        <div className="flex items-center gap-1.5 text-[11px] text-neutral-400">
+        {/* Minimalist Legend with Teal steps */}
+        <div className="flex items-center gap-1.5 text-xs text-paper-muted">
           <span>Less</span>
-          <span className="w-2.5 h-2.5 rounded-xs bg-neutral-100 dark:bg-dark-surfaceHover border border-neutral-200 dark:border-dark-border" />
-          <span className="w-2.5 h-2.5 rounded-xs bg-indigo-200 dark:bg-indigo-950/60" />
-          <span className="w-2.5 h-2.5 rounded-xs bg-indigo-400 dark:bg-indigo-800/80" />
-          <span className="w-2.5 h-2.5 rounded-xs bg-indigo-600 dark:bg-indigo-600" />
+          <span className="w-2.5 h-2.5 rounded-xs bg-[#171B24] border border-[#222735]" />
+          <span className="w-2.5 h-2.5 rounded-xs bg-[#24463F]" />
+          <span className="w-2.5 h-2.5 rounded-xs bg-[#356B60]" />
+          <span className="w-2.5 h-2.5 rounded-xs bg-[#4F9C8D]" />
           <span>More</span>
         </div>
       </div>

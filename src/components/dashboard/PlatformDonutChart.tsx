@@ -7,9 +7,9 @@ interface PlatformDonutChartProps {
 }
 
 const PLATFORM_CONFIG = {
-  leetcode: { name: 'LeetCode', color: '#F59E0B' },
-  gfg: { name: 'GeeksforGeeks', color: '#10B981' },
-  codeforces: { name: 'Codeforces', color: '#3B82F6' },
+  leetcode: { name: 'LeetCode', color: '#C98A3B' }, // Ochre
+  gfg: { name: 'GeeksforGeeks', color: '#4F9C8D' }, // Teal
+  codeforces: { name: 'Codeforces', color: '#656B7B' }, // Paper muted/secondary
 };
 
 export const PlatformDonutChart: React.FC<PlatformDonutChartProps> = ({ problems }) => {
@@ -32,14 +32,14 @@ export const PlatformDonutChart: React.FC<PlatformDonutChartProps> = ({ problems
   return (
     <div className="saas-card p-5 flex flex-col justify-between">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-          Platform Distribution
+        <h3 className="text-sm font-semibold text-paper-primary">
+          Platform distribution
         </h3>
-        <span className="text-xs text-neutral-500 dark:text-dark-textMuted">{total} total</span>
+        <span className="text-xs text-paper-secondary">{total} total</span>
       </div>
 
       {total === 0 ? (
-        <div className="h-44 flex items-center justify-center text-xs text-neutral-400 dark:text-neutral-500 text-center px-4">
+        <div className="h-44 flex items-center justify-center text-xs text-paper-muted text-center px-4">
           No problems added yet. Log LeetCode, GFG, or Codeforces problems to view breakdown.
         </div>
       ) : (
@@ -63,19 +63,19 @@ export const PlatformDonutChart: React.FC<PlatformDonutChartProps> = ({ problems
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#1F2937',
-                    borderColor: '#374151',
+                    backgroundColor: '#1C202B',
+                    borderColor: '#2C3140',
                     borderRadius: '8px',
                     fontSize: '12px',
-                    color: '#F9FAFB',
+                    color: '#E7E5DF',
                   }}
-                  itemStyle={{ color: '#F9FAFB' }}
+                  itemStyle={{ color: '#E7E5DF' }}
                 />
               </PieChart>
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-xl font-bold text-neutral-900 dark:text-neutral-100">{total}</span>
-              <span className="text-[10px] text-neutral-500 dark:text-neutral-400">Problems</span>
+              <span className="text-xl font-bold text-paper-primary">{total}</span>
+              <span className="text-[10px] text-paper-muted">Problems</span>
             </div>
           </div>
 
@@ -85,12 +85,12 @@ export const PlatformDonutChart: React.FC<PlatformDonutChartProps> = ({ problems
               return (
                 <div key={item.name} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: item.color }} />
-                    <span className="text-neutral-700 dark:text-neutral-300 font-medium">{item.name}</span>
+                    <span className="w-2.5 h-2.5 rounded-xs" style={{ backgroundColor: item.color }} />
+                    <span className="text-paper-primary font-medium">{item.name}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-neutral-900 dark:text-white">{item.value}</span>
-                    <span className="text-neutral-400 text-[11px]">({pct}%)</span>
+                    <span className="font-semibold text-paper-primary">{item.value}</span>
+                    <span className="text-paper-muted text-[11px]">({pct}%)</span>
                   </div>
                 </div>
               );
