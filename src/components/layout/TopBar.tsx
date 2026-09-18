@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Moon, Sun, Flame, Plus, Command } from 'lucide-react';
+import { Search, Moon, Sun, Flame, Plus } from 'lucide-react';
 import { useUIStore } from '../../store/useUIStore';
 import { useStreak } from '../../hooks/useStreak';
 import { useProblemStore } from '../../store/useProblemStore';
@@ -32,40 +32,40 @@ export const TopBar: React.FC = () => {
 
   return (
     <>
-      <header className="h-14 border-b border-neutral-200/80 dark:border-dark-border bg-white/80 dark:bg-dark-surface/80 backdrop-blur-md px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 sticky top-0 z-20">
-        {/* Raycast-style Quick Search Button */}
+      <header className="h-14 border-b border-surface-border bg-surface/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between gap-3 sticky top-0 z-20">
+        {/* Quick Search Button */}
         <button
           onClick={() => setIsCommandOpen(true)}
-          className="flex-1 max-w-sm flex items-center justify-between bg-neutral-100/80 dark:bg-dark-bg/80 hover:bg-neutral-100 dark:hover:bg-dark-bg border border-neutral-200/80 dark:border-dark-border rounded-lg px-2.5 sm:px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 transition-colors"
+          className="flex-1 max-w-sm flex items-center justify-between bg-surface-subtle hover:bg-surface-hover border border-surface-border rounded-lg px-3 py-1.5 text-xs text-paper-secondary transition-colors"
         >
-          <div className="flex items-center gap-1.5 sm:gap-2 truncate">
-            <Search className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
-            <span className="hidden sm:inline truncate">Search problems, patterns, commands...</span>
-            <span className="sm:hidden text-neutral-400">Search...</span>
+          <div className="flex items-center gap-2 truncate">
+            <Search className="w-3.5 h-3.5 text-paper-muted shrink-0" />
+            <span className="hidden sm:inline truncate">Search problems, patterns, commands…</span>
+            <span className="sm:hidden text-paper-muted">Search…</span>
           </div>
-          <div className="hidden sm:flex items-center gap-1 font-mono text-[10px] text-neutral-400 shrink-0">
-            <kbd className="px-1.5 py-0.5 rounded bg-white dark:bg-dark-surface border border-neutral-200 dark:border-dark-border shadow-2xs">
+          <div className="hidden sm:flex items-center gap-1 text-[11px] text-paper-muted shrink-0">
+            <kbd className="px-1.5 py-0.5 rounded bg-surface border border-surface-border">
               ⌘K
             </kbd>
           </div>
         </button>
 
         {/* Right Controls */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           {/* Streak Indicator */}
           <button
             onClick={() => setActiveTab('stats')}
-            className="flex items-center gap-1 px-2 py-1.5 rounded-md bg-white dark:bg-dark-bg border border-neutral-200/80 dark:border-dark-border text-neutral-700 dark:text-neutral-300 text-xs font-semibold hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors shadow-2xs shrink-0"
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-surface border border-surface-border text-paper-primary text-xs font-medium hover:bg-surface-hover transition-colors shadow-xs shrink-0"
             title={`${streak.currentStreak} day streak active`}
           >
-            <Flame className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-            <span>{streak.currentStreak}d<span className="hidden sm:inline"> streak</span></span>
+            <Flame className="w-3.5 h-3.5 text-ochre shrink-0" />
+            <span className="tabular-nums">{streak.currentStreak}d<span className="hidden sm:inline"> streak</span></span>
           </button>
 
           {/* Quick Add Button on mobile */}
           <button
             onClick={openAddPanel}
-            className="md:hidden btn-primary p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-md shrink-0"
+            className="md:hidden btn-primary p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg shrink-0"
             title="Log problem"
           >
             <Plus className="w-4 h-4" />
@@ -74,7 +74,7 @@ export const TopBar: React.FC = () => {
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-md border border-neutral-200/80 dark:border-dark-border text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover transition-colors shadow-2xs shrink-0"
+            className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg border border-surface-border text-paper-muted hover:text-paper-primary hover:bg-surface-hover transition-colors shadow-xs shrink-0"
             title={theme === 'dark' ? 'Switch to Light mode' : 'Switch to Dark mode'}
           >
             {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -83,11 +83,11 @@ export const TopBar: React.FC = () => {
           {/* User Initials Avatar */}
           <div
             onClick={() => setActiveTab('settings')}
-            className="cursor-pointer flex items-center gap-2 p-1 rounded-md hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover transition-colors shrink-0"
+            className="cursor-pointer flex items-center gap-2 p-0.5 rounded-lg hover:bg-surface-hover transition-colors shrink-0"
             title="Account settings"
           >
-            <div className="w-7 h-7 rounded-full bg-neutral-200 dark:bg-dark-surfaceHover text-neutral-800 dark:text-neutral-200 font-bold text-xs flex items-center justify-center border border-neutral-300 dark:border-dark-border">
-              {profile.full_name?.charAt(0) || 'U'}
+            <div className="w-7 h-7 rounded-full bg-surface-subtle text-paper-primary font-medium text-xs flex items-center justify-center border border-surface-border">
+              {profile.full_name?.charAt(0) || 'P'}
             </div>
           </div>
         </div>
