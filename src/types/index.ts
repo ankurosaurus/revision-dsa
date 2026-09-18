@@ -78,3 +78,16 @@ export interface VerifiedMetadata {
   canonicalUrl: string;
   error?: string;
 }
+
+export type SupportedLanguage = 'python' | 'java' | 'c' | 'cpp';
+
+export interface CodeSubmission {
+  id: string;
+  user_id?: string;
+  problem_id: string;
+  language: SupportedLanguage;
+  code: string;
+  last_stdout?: string;
+  last_stderr?: string;
+  updated_at?: string;
+}

@@ -4,7 +4,8 @@ import { Problem, RecallRating } from '../../types';
 import { PlatformBadge } from '../problems/PlatformBadge';
 import { DifficultyBadge } from '../problems/DifficultyBadge';
 import { isProblemOverdue, getDaysUntilDue, calculateSM2 } from '../../lib/spacedRepetition';
-import { ExternalLink, Eye, RotateCcw, Check, Sparkles, ChevronDown } from 'lucide-react';
+import { ExternalLink, Eye, RotateCcw, Check, Sparkles, ChevronDown, Code2, BookOpen } from 'lucide-react';
+import { CodeCompiler } from '../compiler/CodeCompiler';
 
 interface RecallCardProps {
   problem: Problem;
@@ -12,6 +13,7 @@ interface RecallCardProps {
 }
 
 export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
+  const [viewMode, setViewMode] = useState<'flashcard' | 'compiler'>('flashcard');
   const [isNotesRevealed, setIsNotesRevealed] = useState(false);
   const isOverdue = isProblemOverdue(problem.next_review_date);
   const daysUntil = getDaysUntilDue(problem.next_review_date);
@@ -27,7 +29,11 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+      // Don't trigger shortcuts if user is typing code or text
+      if (
+        viewMode === 'compiler' ||
+        ['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)
+      ) {
         return;
       }
 
@@ -51,7 +57,7 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onRate]);
+  }, [onRate, viewMode]);
 
   return (
     <motion.div
@@ -60,7 +66,7 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full max-w-2xl mx-auto saas-card p-6 sm:p-8 flex flex-col shadow-sm"
+      className={`w-full ${viewMode === 'compiler' ? 'max-w-4xl' : 'max-w-2xl'} mx-auto saas-card p-5 sm:p-7 flex flex-col shadow-sm transition-all duration-200`}
     >
       {/* Platform, Difficulty & Due status */}
       <div className="flex items-center justify-between gap-3 mb-4">
@@ -104,7 +110,7 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
 
       {/* Tags */}
       {problem.tags && problem.tags.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-6">
+        <div className="flex flex-wrap gap-1 mb-4">
           {problem.tags.map((tag) => (
             <span
               key={tag}
@@ -116,17 +122,51 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
         </div>
       )}
 
-      {/* Active Recall Area */}
-      <div className="w-full mb-6">
-        <AnimatePresence mode="wait">
-          {!isNotesRevealed ? (
-            <motion.div
-              key="hidden"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="rounded-xl border border-dashed border-neutral-200 dark:border-dark-border p-6 text-center bg-neutral-50/60 dark:bg-dark-bg/40 flex flex-col items-center justify-center min-h-[140px]"
-            >
+      {/* Mode Switcher: Flashcard vs Online Code Compiler */}
+      <div className="flex items-center gap-1.5 p-1 rounded-xl bg-neutral-100 dark:bg-dark-surface border border-neutral-200/80 dark:border-dark-border w-fit mb-5">
+        <button
+          type="button"
+          onClick={() => setViewMode('flashcard')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            viewMode === 'flashcard'
+              ? 'bg-white dark:bg-dark-bg text-brand-600 dark:text-brand-400 shadow-2xs'
+              : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+          }`}
+        >
+          <BookOpen className="w-3.5 h-3.5" />
+          <span>Flashcard & Notes</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setViewMode('compiler')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            viewMode === 'compiler'
+              ? 'bg-white dark:bg-dark-bg text-brand-600 dark:text-brand-400 shadow-2xs'
+              : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+          }`}
+        >
+          <Code2 className="w-3.5 h-3.5 text-brand-500" />
+          <span>Code & Test (Compiler)</span>
+        </button>
+      </div>
+
+      {/* Workspace Area: Compiler OR Active Recall Flashcard */}
+      {viewMode === 'compiler' ? (
+        <div className="w-full mb-6">
+          <CodeCompiler problemId={problem.id} problemTitle={problem.title} />
+        </div>
+      ) : (
+        <div className="w-full mb-6">
+          <AnimatePresence mode="wait">
+            {!isNotesRevealed ? (
+              <motion.div
+                key="hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="rounded-xl border border-dashed border-neutral-200 dark:border-dark-border p-6 text-center bg-neutral-50/60 dark:bg-dark-bg/40 flex flex-col items-center justify-center min-h-[140px]"
+              >
               <Eye className="w-6 h-6 text-neutral-400 mb-2" />
               <p className="text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
                 Active Recall Mode
@@ -178,6 +218,7 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
           )}
         </AnimatePresence>
       </div>
+    )}
 
       {/* SM-2 Recall Rating Bar */}
       <div className="pt-4 border-t border-neutral-100 dark:border-dark-border">
