@@ -1,55 +1,52 @@
-@import "@fontsource/manrope/400.css";
-@import "@fontsource/manrope/500.css";
-@import "@fontsource/manrope/600.css";
-@import "@fontsource/manrope/700.css";
-@import "@fontsource/manrope/800.css";
-@import "@fontsource/jetbrains-mono/400.css";
-@import "@fontsource/jetbrains-mono/500.css";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --bg-app: #FAFAFA;
-    --surface-card: #FFFFFF;
-    --surface-subtle: #F4F5F7;
-    --border-color: #E5E7EB;
-    --text-primary: #111827;
-    --text-secondary: #4B5563;
-    --text-tertiary: #9CA3AF;
-    --accent-color: #4F46E5;
-    --accent-hover: #4338CA;
+    --bg-app: #14171F;
+    --surface-card: #1C202B;
+    --surface-hover: #242938;
+    --border-color: #2C3140;
+    --text-primary: #E7E5DF;
+    --text-secondary: #9AA0AE;
+    --text-muted: #656B7B;
+    --accent-teal: #4F9C8D;
+    --accent-teal-hover: #43887B;
+    --accent-ochre: #C98A3B;
+    --accent-ochre-hover: #B5792F;
   }
 
-  .dark {
-    --bg-app: #0A0A0C;
-    --surface-card: #121316;
-    --surface-subtle: #18191E;
-    --border-color: rgba(255, 255, 255, 0.08);
-    --text-primary: #EDEDED;
-    --text-secondary: #94969E;
-    --text-tertiary: #60636C;
-    --accent-color: #6366F1;
-    --accent-hover: #4F46E5;
+  .light {
+    --bg-app: #F6F5F2;
+    --surface-card: #FFFFFF;
+    --surface-hover: #F0EFEA;
+    --border-color: #DCD9D0;
+    --text-primary: #1C202B;
+    --text-secondary: #5A6070;
+    --text-muted: #848B9B;
+    --accent-teal: #3D7F72;
+    --accent-teal-hover: #2F6258;
+    --accent-ochre: #A9702B;
+    --accent-ochre-hover: #84541E;
   }
 
   body {
     background-color: var(--bg-app);
     color: var(--text-primary);
-    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     min-height: 100vh;
     margin: 0;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    letter-spacing: -0.012em;
+    letter-spacing: -0.01em;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Manrope', sans-serif;
-    letter-spacing: -0.03em;
+    font-family: 'Fraunces', Georgia, serif;
+    letter-spacing: -0.02em;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   code, pre, .font-mono {
@@ -57,22 +54,22 @@
   }
 }
 
-/* Architectural subtle grid background (Apple / Vercel / Linear inspired) */
+/* Subtle engineering graph hairline background */
 .bg-grid-pattern {
-  background-size: 32px 32px;
+  background-size: 28px 28px;
   background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(44, 49, 64, 0.45) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(44, 49, 64, 0.45) 1px, transparent 1px);
 }
 
-.dark .bg-grid-pattern {
-  background-size: 32px 32px;
+.light .bg-grid-pattern {
+  background-size: 28px 28px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    linear-gradient(to right, rgba(220, 217, 208, 0.6) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(220, 217, 208, 0.6) 1px, transparent 1px);
 }
 
-/* Minimalist precision scrollbars */
+/* Precision scrollbars */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -83,66 +80,147 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.35);
+  background: #2C3140;
   border-radius: 9999px;
 }
 
-.dark ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-}
-
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.6);
+  background: #434959;
 }
 
-/* High-End Editorial Surface */
-.editorial-surface {
+/* Lab Card / Elevated Surface */
+.saas-card {
+  background-color: #1C202B;
+  border: 1px solid #2C3140;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.light .saas-card {
   background-color: #FFFFFF;
-  border: 1px solid #E5E7EB;
-  border-radius: 14px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
-  transition: border-color 180ms ease, box-shadow 180ms ease;
+  border: 1px solid #DCD9D0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
 }
 
-.dark .editorial-surface {
-  background-color: #121316;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+.saas-card:hover {
+  border-color: #3B4254;
 }
 
-.editorial-surface:hover {
-  border-color: #D1D5DB;
+.light .saas-card:hover {
+  border-color: #CBC7BC;
 }
 
-.dark .editorial-surface:hover {
-  border-color: rgba(255, 255, 255, 0.16);
+/* Editorial Surface */
+.editorial-surface {
+  background-color: #1C202B;
+  border: 1px solid #2C3140;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
 }
 
-/* Primary Precision Button */
+.light .editorial-surface {
+  background-color: #FFFFFF;
+  border: 1px solid #DCD9D0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Physical Flashcard & Stacked Deck */
+.physical-index-card {
+  background-color: #1C202B;
+  border: 1px solid #2C3140;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 
+    0 1px 3px 0 rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.physical-index-card::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed rgba(44, 49, 64, 0.7);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.deck-stack-wrap {
+  position: relative;
+}
+
+/* Peeking underlying cards in the physical deck */
+.deck-card-layer-1 {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  right: 8px;
+  bottom: -6px;
+  background-color: #171A24;
+  border: 1px solid #282D3B;
+  border-radius: 12px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.deck-card-layer-2 {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  right: 16px;
+  bottom: -12px;
+  background-color: #13161F;
+  border: 1px solid #222633;
+  border-radius: 12px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+/* 3D Card Flip Perspective */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Precision Action Buttons */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.25rem;
-  background-color: #4F46E5;
-  color: #FFFFFF;
+  background-color: #4F9C8D;
+  color: #0E1614;
   border-radius: 8px;
-  padding: 0.5rem 1rem;
-  transition: background-color 150ms ease, transform 150ms ease;
-  box-shadow: 0 1px 2px 0 rgba(79, 70, 229, 0.2);
+  padding: 0.45rem 0.95rem;
+  border: 1px solid transparent;
+  transition: background-color 140ms ease, transform 120ms ease;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 .btn-primary:hover {
-  background-color: #4338CA;
+  background-color: #43887B;
 }
 
 .btn-primary:active {
   transform: scale(0.985);
 }
 
-/* Secondary Button */
 .btn-secondary {
   display: inline-flex;
   align-items: center;
@@ -150,29 +228,46 @@
   font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.25rem;
-  background-color: #FFFFFF;
-  color: #374151;
-  border: 1px solid #E5E7EB;
+  background-color: #1C202B;
+  color: #E7E5DF;
+  border: 1px solid #2C3140;
   border-radius: 8px;
-  padding: 0.5rem 0.875rem;
-  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+  padding: 0.45rem 0.85rem;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.light .btn-secondary {
+  background-color: #FFFFFF;
+  color: #1C202B;
+  border: 1px solid #DCD9D0;
 }
 
 .btn-secondary:hover {
-  background-color: #F9FAFB;
-  border-color: #D1D5DB;
-  color: #111827;
+  background-color: #242938;
+  border-color: #3B4254;
+  color: #FFFFFF;
 }
 
-.dark .btn-secondary {
-  background-color: #16181D;
-  color: #D1D5DB;
-  border-color: rgba(255, 255, 255, 0.08);
+.light .btn-secondary:hover {
+  background-color: #F6F5F2;
+  border-color: #CBC7BC;
 }
 
-.dark .btn-secondary:hover {
-  background-color: #1E2026;
-  border-color: rgba(255, 255, 255, 0.16);
-  color: #EDEDED;
+.btn-ochre {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  background-color: #C98A3B;
+  color: #1A1207;
+  border-radius: 8px;
+  padding: 0.45rem 0.95rem;
+  border: 1px solid transparent;
+  transition: background-color 140ms ease;
+}
+
+.btn-ochre:hover {
+  background-color: #B5792F;
 }
