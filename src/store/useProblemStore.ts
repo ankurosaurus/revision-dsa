@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { Problem, ReviewLog, Profile, RecallRating, InitialConfidence } from '../types';
-import { SAMPLE_PROBLEMS } from '../lib/sampleData';
-import { calculateSM2, getInitialSM2 } from '../lib/spacedRepetition';
+import { SAMPLE_PROBLEMS, ESSENTIAL_PROBLEMS } from '../lib/sampleData';
+import { calculateSM2, getInitialSM2, formatDate } from '../lib/spacedRepetition';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 import { addToCatalog } from '../lib/catalogService';
 import { detectAndValidateUrl } from '../lib/urlValidators';
@@ -22,7 +22,7 @@ interface ProblemState {
     difficulty?: 'easy' | 'medium' | 'hard';
     tags: string[];
     notes?: string;
-    confidence: InitialConfidence;
+    confidence?: InitialConfidence;
     link_verified?: boolean;
     catalog_id?: string;
   }) => Promise<Problem>;
@@ -31,6 +31,7 @@ interface ProblemState {
   reviewProblem: (id: string, rating: RecallRating) => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => void;
   loadStarterPack: () => void;
+  addEssentialProblems: () => Promise<Problem[]>;
   clearAllData: () => void;
   exportData: (format: 'json' | 'csv') => void;
 }
@@ -145,15 +146,33 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
   },
 
   addProblem: async (params) => {
-    const initialSm2 = getInitialSM2(params.confidence);
+    const cleanUrl = params.url.trim();
+    // Check if problem already exists in user's revision bank
+    const existing = get().problems.find(
+      (p) => p.url === cleanUrl || (params.catalog_id && p.catalog_id === params.catalog_id)
+    );
+    if (existing) {
+      return existing;
+    }
+
+    const todayStr = formatDate();
+    const initialSm2 = params.confidence
+      ? getInitialSM2(params.confidence)
+      : {
+          ease_factor: 2.5,
+          interval_days: 1,
+          repetitions: 0,
+          next_review_date: todayStr,
+        };
+
     const newProblem: Problem = {
       id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `prob-${Date.now()}`,
       catalog_id: params.catalog_id,
       title: params.title.trim(),
-      url: params.url.trim(),
+      url: cleanUrl,
       platform: params.platform,
       difficulty: params.difficulty || 'medium',
-      tags: params.tags,
+      tags: params.tags || [],
       notes: params.notes || '',
       link_verified: params.link_verified ?? true,
       ease_factor: initialSm2.ease_factor,
@@ -178,7 +197,7 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
         title: params.title.trim(),
         difficulty: params.difficulty || 'medium',
         tags: params.tags,
-        url: params.url.trim(),
+        url: cleanUrl,
       }).catch((e) => console.warn('Organic catalog addition notice:', e));
     } catch {
       // Non-blocking
@@ -325,6 +344,43 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
     });
     localStorage.setItem(STORAGE_KEYS.PROBLEMS, JSON.stringify(SAMPLE_PROBLEMS));
     localStorage.setItem(STORAGE_KEYS.REVIEW_LOGS, JSON.stringify([]));
+  },
+
+  addEssentialProblems: async () => {
+    const current = get().problems;
+    const existingUrls = new Set(current.map((p) => p.url));
+    const toAdd: Problem[] = [];
+
+    for (const ep of ESSENTIAL_PROBLEMS) {
+      if (!existingUrls.has(ep.url)) {
+        toAdd.push({
+          ...ep,
+          id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `prob-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+          created_at: new Date().toISOString(),
+        });
+      }
+    }
+
+    if (toAdd.length === 0) return [];
+
+    const updated = [...toAdd, ...current];
+    set({ problems: updated });
+    localStorage.setItem(STORAGE_KEYS.PROBLEMS, JSON.stringify(updated));
+
+    // Supabase sync if logged in
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        if (userData?.user) {
+          const rows = toAdd.map((p) => ({ ...p, user_id: userData.user.id }));
+          await supabase.from('problems').insert(rows);
+        }
+      } catch (err) {
+        console.warn('Failed to insert essential problems to Supabase:', err);
+      }
+    }
+
+    return toAdd;
   },
 
   clearAllData: () => {

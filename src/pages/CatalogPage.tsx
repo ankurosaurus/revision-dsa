@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search,
   ExternalLink,
@@ -10,6 +11,7 @@ import {
   ArrowUpDown,
   Filter,
   CheckCircle2,
+  Undo2,
 } from 'lucide-react';
 import { CatalogProblem, Platform } from '../types';
 import { browseCatalog, BrowseResult, getCatalogStats } from '../lib/catalogService';
@@ -44,6 +46,8 @@ function difficultyColor(d?: string) {
 
 export const CatalogPage: React.FC = () => {
   const problems = useProblemStore((s) => s.problems);
+  const addProblem = useProblemStore((s) => s.addProblem);
+  const deleteProblem = useProblemStore((s) => s.deleteProblem);
   const openAddPanel = useUIStore((s) => s.openAddPanel);
 
   // Filters
@@ -59,8 +63,53 @@ export const CatalogPage: React.FC = () => {
   const [catalogLoaded, setCatalogLoaded] = useState(false);
   const [statsText, setStatsText] = useState('');
 
+  // Toast & optimistic add state
+  const [toast, setToast] = useState<{ id: string; title: string; url: string } | null>(null);
+  const [justAddedUrls, setJustAddedUrls] = useState<Set<string>>(new Set());
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // Track which problems are already in the user's revision bank
-  const alreadyAdded = new Set(problems.map((p) => p.url));
+  const alreadyAdded = useMemo(() => {
+    const set = new Set(problems.map((p) => p.url));
+    justAddedUrls.forEach((u) => set.add(u));
+    return set;
+  }, [problems, justAddedUrls]);
+
+  const handleAddProblem = useCallback(async (prob: CatalogProblem) => {
+    setJustAddedUrls((prev) => new Set(prev).add(prob.url));
+    try {
+      const added = await addProblem({
+        catalog_id: prob.id,
+        title: prob.title,
+        url: prob.url,
+        platform: prob.platform,
+        difficulty: prob.difficulty || 'medium',
+        tags: prob.tags || [],
+      });
+
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      setToast({ id: added.id, title: prob.title, url: prob.url });
+      toastTimerRef.current = setTimeout(() => {
+        setToast(null);
+      }, 5000);
+    } catch (e) {
+      setJustAddedUrls((prev) => {
+        const next = new Set(prev);
+        next.delete(prob.url);
+        return next;
+      });
+    }
+  }, [addProblem]);
+
+  const handleUndo = useCallback(async (id: string, url: string) => {
+    await deleteProblem(id);
+    setJustAddedUrls((prev) => {
+      const next = new Set(prev);
+      next.delete(url);
+      return next;
+    });
+    setToast(null);
+  }, [deleteProblem]);
 
   // Debounce query input
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -267,7 +316,12 @@ export const CatalogPage: React.FC = () => {
                 {result.items.map((prob) => {
                   const added = alreadyAdded.has(prob.url);
                   return (
-                    <ProblemRow key={prob.id} prob={prob} added={added} />
+                    <ProblemRow
+                      key={prob.id}
+                      prob={prob}
+                      added={added}
+                      onAdd={handleAddProblem}
+                    />
                   );
                 })}
                 {result.items.length === 0 && !isLoading && (
@@ -341,15 +395,57 @@ export const CatalogPage: React.FC = () => {
           </>
         )}
       </div>
+
+      {/* Floating Optimistic Toast Notification with Undo */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 15, scale: 0.95 }}
+            className="fixed bottom-20 md:bottom-8 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-neutral-900 dark:bg-dark-surface text-white rounded-xl shadow-2xl border border-neutral-700/80 dark:border-dark-border max-w-md text-xs"
+          >
+            <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
+            <div className="flex-1 truncate">
+              <span>Added <strong className="text-white font-semibold">{toast.title}</strong> to revision queue</span>
+            </div>
+            <button
+              onClick={() => handleUndo(toast.id, toast.url)}
+              className="flex items-center gap-1 font-semibold text-brand-400 hover:text-brand-300 px-2 py-1 rounded hover:bg-white/10 transition-colors ml-1 shrink-0"
+            >
+              <Undo2 className="w-3.5 h-3.5" />
+              <span>Undo</span>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 // ── Row component (memoized for perf with 100 rows per page) ──────────────────
-const ProblemRow = React.memo(({ prob, added }: { prob: CatalogProblem; added: boolean }) => {
-  const openAddPanel = useUIStore((s) => s.openAddPanel);
-  // Clicking "Add" opens the add panel — user can pick this problem from the search
-  // (catalog is already loaded in memory so it'll appear instantly)
+const ProblemRow = React.memo(({
+  prob,
+  added,
+  onAdd,
+}: {
+  prob: CatalogProblem;
+  added: boolean;
+  onAdd: (prob: CatalogProblem) => Promise<void>;
+}) => {
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddClick = async () => {
+    if (added || isAdding) return;
+    setIsAdding(true);
+    try {
+      await onAdd(prob);
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   return (
     <tr className="hover:bg-neutral-50 dark:hover:bg-dark-surface/60 transition-colors group">
@@ -420,21 +516,26 @@ const ProblemRow = React.memo(({ prob, added }: { prob: CatalogProblem; added: b
         </div>
       </td>
 
-      {/* Action */}
+      {/* Action: 1-Tap Add */}
       <td className="px-4 py-2.5 text-right">
         {added ? (
-          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-200/50 dark:border-emerald-800/30">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            Added
+            <span>Added ✓</span>
           </span>
         ) : (
           <button
-            onClick={openAddPanel}
-            className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 opacity-0 group-hover:opacity-100 transition-all"
+            onClick={handleAddClick}
+            disabled={isAdding}
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/40 dark:hover:bg-brand-900/40 px-2.5 py-1 rounded transition-colors disabled:opacity-50"
             title="Add to revision queue"
           >
-            <Plus className="w-3.5 h-3.5" />
-            Add
+            {isAdding ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Plus className="w-3.5 h-3.5" />
+            )}
+            <span>Add</span>
           </button>
         )}
       </td>

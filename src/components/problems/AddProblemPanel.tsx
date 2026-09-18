@@ -151,6 +151,19 @@ export const AddProblemPanel: React.FC = () => {
     }, 50);
   };
 
+  const handleQuickAdd = async (e: React.MouseEvent, prob: CatalogProblem) => {
+    e.stopPropagation();
+    await addProblem({
+      catalog_id: prob.id,
+      title: prob.title,
+      url: prob.url,
+      platform: prob.platform,
+      difficulty: prob.difficulty || 'medium',
+      tags: prob.tags || [],
+    });
+    closePanel();
+  };
+
   const handleAutoExtractManual = async () => {
     if (!url.trim()) return;
     const detection = detectAndValidateUrl(url);
@@ -555,10 +568,21 @@ export const AddProblemPanel: React.FC = () => {
                                 )}
                               </div>
 
-                              <span className="text-xs font-medium text-brand-600 dark:text-brand-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 flex items-center gap-0.5">
-                                <span>Select</span>
-                                <ChevronRight className="w-3.5 h-3.5" />
-                              </span>
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                <button
+                                  type="button"
+                                  onClick={(e) => handleQuickAdd(e, prob)}
+                                  className="px-2 py-1 text-[11px] font-semibold bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/50 dark:hover:bg-brand-900/50 text-brand-600 dark:text-brand-400 rounded-md border border-brand-200/60 dark:border-brand-800/40 transition-colors flex items-center gap-1"
+                                  title="Add instantly to revision queue"
+                                >
+                                  <Plus className="w-3 h-3" />
+                                  <span>1-Tap Add</span>
+                                </button>
+                                <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
+                                  <span>Edit</span>
+                                  <ChevronRight className="w-3.5 h-3.5" />
+                                </span>
+                              </div>
                             </button>
                           ))
                         )}
