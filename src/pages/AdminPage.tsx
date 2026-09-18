@@ -36,7 +36,7 @@ interface AdminStats {
   platform_breakdown: PlatformStat[];
 }
 
-const PIE_COLORS = ['#4F46E5', '#10B981', '#F59E0B'];
+const PIE_COLORS = ['#C98A3B', '#4F9C8D', '#9AA0AE'];
 
 const fmt = (d: string) => {
   const dt = new Date(d);
@@ -47,13 +47,13 @@ const fmt = (d: string) => {
 const StatCard: React.FC<{
   label: string; value: string | number; sub?: string; icon: React.ReactNode;
 }> = ({ label, value, sub, icon }) => (
-  <div className="saas-card p-5">
+  <div className="bg-surface border border-graphite-hairline rounded-xl p-5 shadow-deck">
     <div className="flex items-start justify-between mb-3">
-      <span className="text-xs font-semibold text-neutral-500 dark:text-dark-textMuted uppercase tracking-wider">{label}</span>
-      <div className="text-brand-600 dark:text-brand-400">{icon}</div>
+      <span className="text-xs font-medium text-paper-muted">{label}</span>
+      <div className="text-teal">{icon}</div>
     </div>
-    <div className="text-2xl font-bold text-neutral-900 dark:text-white">{value}</div>
-    {sub && <div className="text-[11px] text-neutral-500 dark:text-dark-textMuted mt-1">{sub}</div>}
+    <div className="text-2xl sm:text-3xl font-serif font-bold text-paper-primary">{value}</div>
+    {sub && <div className="text-xs text-paper-muted mt-1">{sub}</div>}
   </div>
 );
 
@@ -101,19 +101,19 @@ export const AdminPage: React.FC = () => {
   if (isAdmin === false) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
-        <div className="w-14 h-14 rounded-2xl bg-rose-50 dark:bg-rose-950/20 flex items-center justify-center">
-          <ShieldAlert className="w-7 h-7 text-rose-500" />
+        <div className="w-14 h-14 rounded-2xl bg-rose-950/20 border border-rose-900/40 flex items-center justify-center">
+          <ShieldAlert className="w-7 h-7 text-rose-400" />
         </div>
         <div>
-          <h2 className="text-lg font-bold text-neutral-900 dark:text-white">Access Denied</h2>
-          <p className="text-xs text-neutral-500 dark:text-dark-textMuted mt-1 max-w-xs">
-            This page is restricted to admin accounts only.
+          <h2 className="text-lg font-serif font-bold text-paper-primary">Access Denied</h2>
+          <p className="text-xs text-paper-muted mt-1 max-w-xs">
+            This ledger is restricted to admin accounts only.
             {!isSupabaseConfigured && ' Supabase is not configured.'}
           </p>
         </div>
-        <div className="p-3 rounded-lg bg-neutral-100 dark:bg-dark-surfaceHover text-xs text-neutral-600 dark:text-neutral-400 font-mono max-w-sm text-left">
+        <div className="p-3 rounded-lg bg-graphite-base border border-graphite-hairline text-xs text-paper-muted font-mono max-w-sm text-left">
           To grant admin access, run in Supabase SQL Editor:<br />
-          <span className="text-brand-600 dark:text-brand-400">
+          <span className="text-teal">
             UPDATE profiles SET is_admin = true<br />
             WHERE id = &apos;{user?.id ?? '<your-auth-uid>'}&apos;;
           </span>
@@ -125,9 +125,9 @@ export const AdminPage: React.FC = () => {
   // ── Loading ────────────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full gap-3 text-neutral-400">
-        <Loader2 className="w-5 h-5 animate-spin text-brand-500" />
-        <span className="text-sm">Loading admin stats…</span>
+      <div className="flex items-center justify-center h-full gap-3 text-paper-muted">
+        <Loader2 className="w-5 h-5 animate-spin text-teal" />
+        <span className="text-sm">Loading admin metrics…</span>
       </div>
     );
   }
@@ -152,81 +152,81 @@ export const AdminPage: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-neutral-900 dark:text-white tracking-tight flex items-center gap-2">
-            <ShieldAlert className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-paper-primary tracking-tight flex items-center gap-2">
+            <ShieldAlert className="w-5 h-5 text-ochre" />
             Admin Dashboard
           </h1>
-          <p className="text-xs text-neutral-500 dark:text-dark-textMuted mt-0.5">
-            Internal — visible only to admin accounts. Data from Supabase.
+          <p className="text-xs sm:text-sm text-paper-muted mt-0.5">
+            Internal analytics ledger — restricted to authenticated administrator accounts.
           </p>
         </div>
-        <span className="text-[11px] px-2 py-1 rounded-full bg-rose-100 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 font-semibold">
-          Admin Only
+        <span className="text-xs px-2.5 py-0.5 rounded border border-rose-900/50 bg-rose-950/20 text-rose-400 font-medium">
+          Admin only
         </span>
       </div>
 
       {/* ── KPI Row ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          label="Total Users"
+          label="Total users"
           value={stats.total_users?.toLocaleString() ?? '—'}
-          sub={`${stats.registered_users} registered · ${stats.guest_users} guests`}
+          sub={`${stats.registered_users} registered, ${stats.guest_users} guests`}
           icon={<Users className="w-4 h-4" />}
         />
         <StatCard
-          label="Total Problems"
+          label="Total problems"
           value={stats.total_problems?.toLocaleString() ?? '—'}
-          sub="across all users"
+          sub="across all user queues"
           icon={<BookOpen className="w-4 h-4" />}
         />
         <StatCard
-          label="Total Revisions"
+          label="Total revisions"
           value={stats.total_revisions?.toLocaleString() ?? '—'}
-          sub="review sessions completed"
+          sub="review sessions logged"
           icon={<RotateCcw className="w-4 h-4" />}
         />
         <StatCard
-          label="Conversion Rate"
+          label="Conversion rate"
           value={convRate}
-          sub="guests → registered"
+          sub="guests converted to permanent"
           icon={<TrendingUp className="w-4 h-4" />}
         />
       </div>
 
       {/* ── Charts Row 1: Signups + Problems ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="saas-card p-6">
-          <h2 className="text-sm font-semibold text-neutral-900 dark:text-white mb-4">
-            New Signups / Day <span className="text-[11px] font-normal text-neutral-400">(last 30 days)</span>
+        <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
+          <h2 className="text-base font-serif font-bold text-paper-primary mb-4">
+            New signups / day <span className="text-xs font-normal text-paper-muted">(last 30 days)</span>
           </h2>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={(stats.signups_per_day ?? []).map(d => ({ ...d, date: fmt(d.date) }))}>
-              <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="opacity-10" />
-              <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="currentColor" className="opacity-40" />
-              <YAxis allowDecimals={false} tick={{ fontSize: 10 }} stroke="currentColor" className="opacity-40" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#2C3140" />
+              <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#656B7B" />
+              <YAxis allowDecimals={false} tick={{ fontSize: 10 }} stroke="#656B7B" />
               <Tooltip
-                contentStyle={{ background: 'var(--color-dark-surface, #1a1a1e)', border: '1px solid #333', borderRadius: 8, fontSize: 11 }}
-                labelStyle={{ color: '#ccc' }}
+                contentStyle={{ background: '#1C202B', border: '1px solid #2C3140', borderRadius: 8, fontSize: 11, color: '#E7E5DF' }}
+                labelStyle={{ color: '#9AA0AE' }}
               />
-              <Line type="monotone" dataKey="count" stroke="#4F46E5" strokeWidth={2} dot={false} name="Signups" />
+              <Line type="monotone" dataKey="count" stroke="#4F9C8D" strokeWidth={2} dot={false} name="Signups" />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="saas-card p-6">
-          <h2 className="text-sm font-semibold text-neutral-900 dark:text-white mb-4">
-            Problems Added / Day <span className="text-[11px] font-normal text-neutral-400">(last 30 days)</span>
+        <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
+          <h2 className="text-base font-serif font-bold text-paper-primary mb-4">
+            Problems added / day <span className="text-xs font-normal text-paper-muted">(last 30 days)</span>
           </h2>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={(stats.problems_per_day ?? []).map(d => ({ ...d, date: fmt(d.date) }))}>
-              <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="opacity-10" />
-              <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="currentColor" className="opacity-40" />
-              <YAxis allowDecimals={false} tick={{ fontSize: 10 }} stroke="currentColor" className="opacity-40" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#2C3140" />
+              <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#656B7B" />
+              <YAxis allowDecimals={false} tick={{ fontSize: 10 }} stroke="#656B7B" />
               <Tooltip
-                contentStyle={{ background: 'var(--color-dark-surface, #1a1a1e)', border: '1px solid #333', borderRadius: 8, fontSize: 11 }}
-                labelStyle={{ color: '#ccc' }}
+                contentStyle={{ background: '#1C202B', border: '1px solid #2C3140', borderRadius: 8, fontSize: 11, color: '#E7E5DF' }}
+                labelStyle={{ color: '#9AA0AE' }}
               />
-              <Line type="monotone" dataKey="count" stroke="#10B981" strokeWidth={2} dot={false} name="Problems" />
+              <Line type="monotone" dataKey="count" stroke="#C98A3B" strokeWidth={2} dot={false} name="Problems" />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -234,30 +234,30 @@ export const AdminPage: React.FC = () => {
 
       {/* ── Charts Row 2: Revisions + Platform Pie ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="saas-card p-6">
-          <h2 className="text-sm font-semibold text-neutral-900 dark:text-white mb-4">
-            Revisions / Day <span className="text-[11px] font-normal text-neutral-400">(last 30 days)</span>
+        <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
+          <h2 className="text-base font-serif font-bold text-paper-primary mb-4">
+            Revisions / day <span className="text-xs font-normal text-paper-muted">(last 30 days)</span>
           </h2>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={(stats.revisions_per_day ?? []).map(d => ({ ...d, date: fmt(d.date) }))}>
-              <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="opacity-10" />
-              <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="currentColor" className="opacity-40" />
-              <YAxis allowDecimals={false} tick={{ fontSize: 10 }} stroke="currentColor" className="opacity-40" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#2C3140" />
+              <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#656B7B" />
+              <YAxis allowDecimals={false} tick={{ fontSize: 10 }} stroke="#656B7B" />
               <Tooltip
-                contentStyle={{ background: 'var(--color-dark-surface, #1a1a1e)', border: '1px solid #333', borderRadius: 8, fontSize: 11 }}
-                labelStyle={{ color: '#ccc' }}
+                contentStyle={{ background: '#1C202B', border: '1px solid #2C3140', borderRadius: 8, fontSize: 11, color: '#E7E5DF' }}
+                labelStyle={{ color: '#9AA0AE' }}
               />
-              <Line type="monotone" dataKey="count" stroke="#F59E0B" strokeWidth={2} dot={false} name="Revisions" />
+              <Line type="monotone" dataKey="count" stroke="#4F9C8D" strokeWidth={2} dot={false} name="Revisions" />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="saas-card p-6">
-          <h2 className="text-sm font-semibold text-neutral-900 dark:text-white mb-4">
-            Platform Breakdown
+        <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
+          <h2 className="text-base font-serif font-bold text-paper-primary mb-4">
+            Platform breakdown
           </h2>
           {(stats.platform_breakdown ?? []).length === 0 ? (
-            <div className="flex items-center justify-center h-[200px] text-neutral-400 text-xs">No data yet</div>
+            <div className="flex items-center justify-center h-[200px] text-paper-muted text-xs">No data recorded yet</div>
           ) : (
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
@@ -281,10 +281,10 @@ export const AdminPage: React.FC = () => {
                   iconType="circle"
                   iconSize={8}
                   wrapperStyle={{ fontSize: 11 }}
-                  formatter={(value) => <span style={{ color: '#9ca3af' }}>{value}</span>}
+                  formatter={(value) => <span style={{ color: '#9AA0AE' }}>{value}</span>}
                 />
                 <Tooltip
-                  contentStyle={{ background: '#1a1a1e', border: '1px solid #333', borderRadius: 8, fontSize: 11 }}
+                  contentStyle={{ background: '#1C202B', border: '1px solid #2C3140', borderRadius: 8, fontSize: 11, color: '#E7E5DF' }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -293,25 +293,25 @@ export const AdminPage: React.FC = () => {
       </div>
 
       {/* ── Raw stat table ── */}
-      <div className="saas-card p-6">
-        <h2 className="text-sm font-semibold text-neutral-900 dark:text-white mb-4">User Cohort Breakdown</h2>
+      <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
+        <h2 className="text-base font-serif font-bold text-paper-primary mb-4">User cohort breakdown</h2>
         <table className="w-full text-xs">
           <thead>
-            <tr className="border-b border-neutral-200 dark:border-dark-border text-left text-neutral-500 dark:text-neutral-500">
-              <th className="pb-2 font-semibold">Cohort</th>
-              <th className="pb-2 font-semibold text-right">Count</th>
-              <th className="pb-2 font-semibold text-right">Share</th>
+            <tr className="border-b border-graphite-hairline text-left text-paper-muted">
+              <th className="pb-2 font-medium">Cohort</th>
+              <th className="pb-2 font-medium text-right">Count</th>
+              <th className="pb-2 font-medium text-right">Share</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-neutral-100 dark:divide-dark-border/40">
+          <tbody className="divide-y divide-graphite-hairline">
             {[
               { label: 'Registered (email / Google)', count: stats.registered_users },
               { label: 'Active guests (anonymous)', count: stats.guest_users },
             ].map((row) => (
               <tr key={row.label}>
-                <td className="py-2.5 text-neutral-700 dark:text-neutral-300">{row.label}</td>
-                <td className="py-2.5 text-right font-semibold text-neutral-900 dark:text-white">{row.count?.toLocaleString() ?? '—'}</td>
-                <td className="py-2.5 text-right text-neutral-500">
+                <td className="py-2.5 text-paper-primary">{row.label}</td>
+                <td className="py-2.5 text-right font-serif font-semibold text-paper-primary">{row.count?.toLocaleString() ?? '—'}</td>
+                <td className="py-2.5 text-right text-paper-muted">
                   {stats.total_users ? `${((row.count / stats.total_users) * 100).toFixed(1)}%` : '—'}
                 </td>
               </tr>

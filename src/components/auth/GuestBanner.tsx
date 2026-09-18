@@ -19,28 +19,28 @@ export const GuestBanner: React.FC = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-2 bg-brand-600 dark:bg-brand-700 text-white text-xs">
+      <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-2 bg-surface border-b border-graphite-hairline text-paper-primary text-xs">
         <div className="flex items-center gap-2 min-w-0">
-          <span className="font-semibold shrink-0 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse" />
+          <span className="font-medium shrink-0 flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-ochre animate-pulse" />
             Guest Mode
           </span>
-          <span className="text-brand-100 hidden sm:inline truncate">
-            Your progress is saved on this device only until you create an account.
+          <span className="text-paper-muted hidden sm:inline truncate">
+            Progress is saved locally on this browser until you link an account.
           </span>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => setUpgradeOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/15 hover:bg-white/25 transition-colors font-semibold text-xs"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-teal hover:bg-teal-hover text-graphite-base transition-colors font-medium text-xs"
           >
             <UserPlus className="w-3.5 h-3.5" />
-            <span>Sign up — keep your progress</span>
+            <span>Sign up — preserve progress</span>
           </button>
           <button
             onClick={() => setDismissed(true)}
-            className="p-0.5 rounded text-white/60 hover:text-white transition-colors"
+            className="p-1 rounded text-paper-muted hover:text-paper-primary transition-colors"
             title="Dismiss"
           >
             <X className="w-3.5 h-3.5" />

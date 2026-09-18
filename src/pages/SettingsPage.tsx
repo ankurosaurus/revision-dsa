@@ -103,47 +103,47 @@ export const SettingsPage: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-serif font-bold text-paper-primary tracking-tight">
           Settings
         </h1>
-        <p className="text-xs sm:text-sm text-neutral-500 dark:text-dark-textMuted mt-0.5">
-          Manage your account, profile, daily targets, and data.
+        <p className="text-xs sm:text-sm text-paper-muted mt-0.5">
+          Manage your account, profile, daily targets, and problem data.
         </p>
       </div>
 
       {/* ── Account Card ── */}
-      <div className="saas-card p-6">
-        <h2 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 flex items-center gap-2">
-          <User className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+      <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
+        <h2 className="text-base font-serif font-bold text-paper-primary mb-1 flex items-center gap-2">
+          <User className="w-4 h-4 text-teal" />
           <span>Account</span>
         </h2>
-        <p className="text-xs text-neutral-500 dark:text-dark-textMuted mb-4">
-          Your authentication method and session details.
+        <p className="text-xs text-paper-muted mb-4">
+          Authentication method and session details.
         </p>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg bg-graphite-base border border-graphite-hairline mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-brand-100 dark:bg-brand-950/40 text-brand-700 dark:text-brand-300 font-bold text-sm flex items-center justify-center border border-brand-200 dark:border-brand-800">
+            <div className="w-9 h-9 rounded-full bg-graphite-hover border border-graphite-hairline text-teal font-serif font-semibold text-sm flex items-center justify-center">
               {isGuest ? '?' : (user?.email?.charAt(0)?.toUpperCase() || 'U')}
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-neutral-900 dark:text-white">
-                  {isGuest ? 'Guest Session' : (user?.email || 'Registered User')}
+                <span className="text-xs font-medium text-paper-primary">
+                  {isGuest ? 'Guest session' : (user?.email || 'Registered user')}
                 </span>
-                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                <span className={`text-xs font-medium px-2 py-0.5 rounded border ${
                   isGuest
-                    ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400'
+                    ? 'bg-ochre/15 text-ochre border-ochre/30'
                     : user?.app_metadata?.provider === 'google'
-                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400'
-                    : 'bg-brand-100 text-brand-700 dark:bg-brand-950/40 dark:text-brand-400'
+                    ? 'bg-graphite-hover text-paper-primary border-graphite-hairline'
+                    : 'bg-teal/15 text-teal border-teal/30'
                 }`}>
                   {isGuest ? 'Guest' : user?.app_metadata?.provider === 'google' ? 'Google' : 'Email'}
                 </span>
               </div>
-              <p className="text-[11px] text-neutral-500 dark:text-dark-textMuted mt-0.5">
+              <p className="text-xs text-paper-muted mt-0.5">
                 {isGuest
-                  ? 'Progress saved on this device only — sign up to sync permanently.'
+                  ? 'Progress saved in browser storage only — sign up to preserve permanently.'
                   : `Signed in since ${user?.created_at ? new Date(user.created_at).toLocaleDateString() : '—'}`}
               </p>
             </div>
@@ -154,18 +154,18 @@ export const SettingsPage: React.FC = () => {
             {isGuest ? (
               <button
                 onClick={() => setUpgradeOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-600 text-white text-xs font-semibold hover:bg-brand-700 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-teal hover:bg-teal-hover text-graphite-base text-xs font-medium transition-colors"
               >
                 <UserPlus className="w-3.5 h-3.5" />
-                Sign up — keep progress
+                Sign up — preserve progress
               </button>
             ) : (
               <button
                 onClick={signOut}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-dark-border text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-graphite-hairline bg-graphite-base text-xs font-medium text-paper-muted hover:text-paper-primary hover:bg-graphite-hover transition-colors"
               >
                 <LogOut className="w-3.5 h-3.5" />
-                Log Out
+                Log out
               </button>
             )}
           </div>
@@ -173,10 +173,10 @@ export const SettingsPage: React.FC = () => {
 
         {/* Change Password (only for email users, not guests or Google) */}
         {!isGuest && user?.app_metadata?.provider !== 'google' && (
-          <div className="border-t border-neutral-200 dark:border-dark-border pt-4">
-            <h3 className="text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-3 flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5" />
-              Change Password
+          <div className="border-t border-graphite-hairline pt-4">
+            <h3 className="text-xs font-medium text-paper-primary mb-3 flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5 text-paper-muted" />
+              Change password
             </h3>
             <form onSubmit={handleChangePassword} className="flex items-end gap-3 max-w-sm">
               <div className="flex-1">
@@ -185,7 +185,7 @@ export const SettingsPage: React.FC = () => {
                   placeholder="New password (min 8 chars)"
                   value={newPassword}
                   onChange={(e) => { setNewPassword(e.target.value); setChangePwError(''); }}
-                  className="w-full bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border focus:border-brand-500 rounded-lg px-3.5 py-2 text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none transition-colors"
+                  className="w-full bg-graphite-base border border-graphite-hairline focus:border-teal rounded px-3.5 py-2 text-xs text-paper-primary placeholder:text-paper-muted focus:outline-none transition-colors"
                 />
               </div>
               <button
@@ -198,12 +198,12 @@ export const SettingsPage: React.FC = () => {
               </button>
             </form>
             {changePwError && (
-              <p className="text-[11px] text-rose-500 flex items-center gap-1 mt-1.5">
+              <p className="text-xs text-rose-400 flex items-center gap-1 mt-1.5">
                 <AlertCircle className="w-3 h-3" />{changePwError}
               </p>
             )}
             {changePwSuccess && (
-              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mt-1.5">
+              <p className="text-xs text-teal flex items-center gap-1 mt-1.5">
                 <CheckCircle2 className="w-3 h-3" />Password updated successfully.
               </p>
             )}
@@ -212,31 +212,31 @@ export const SettingsPage: React.FC = () => {
       </div>
 
       {/* Profile & Revision Goals */}
-      <div className="saas-card p-6">
-        <h2 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 flex items-center gap-2">
-          <Target className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+      <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
+        <h2 className="text-base font-serif font-bold text-paper-primary mb-1 flex items-center gap-2">
+          <Target className="w-4 h-4 text-ochre" />
           <span>Profile & Daily Target</span>
         </h2>
-        <p className="text-xs text-neutral-500 dark:text-dark-textMuted mb-4">
+        <p className="text-xs text-paper-muted mb-4">
           Configure your candidate profile and target daily problem completion count.
         </p>
 
         <form onSubmit={handleSaveProfile} className="space-y-4 max-w-md">
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
-              Candidate Name
+            <label className="block text-xs font-medium text-paper-primary mb-1.5">
+              Candidate name
             </label>
             <input
               type="text"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border focus:border-brand-500 rounded-lg px-3.5 py-2 text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none transition-colors"
+              className="w-full bg-graphite-base border border-graphite-hairline focus:border-teal rounded px-3.5 py-2 text-xs text-paper-primary focus:outline-none transition-colors"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
-              Daily Revision Target (Problems/day)
+            <label className="block text-xs font-medium text-paper-primary mb-1.5">
+              Daily revision target (problems / day)
             </label>
             <input
               type="number"
@@ -244,7 +244,7 @@ export const SettingsPage: React.FC = () => {
               max={50}
               value={dailyGoal}
               onChange={(e) => setDailyGoal(Number(e.target.value))}
-              className="w-full bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border focus:border-brand-500 rounded-lg px-3.5 py-2 text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none transition-colors"
+              className="w-full bg-graphite-base border border-graphite-hairline focus:border-teal rounded px-3.5 py-2 text-xs text-paper-primary focus:outline-none transition-colors"
             />
           </div>
 
@@ -253,10 +253,10 @@ export const SettingsPage: React.FC = () => {
               type="submit"
               className="btn-primary"
             >
-              Save Preferences
+              Save preferences
             </button>
             {savedSuccess && (
-              <span className="text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+              <span className="text-xs text-teal flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Saved</span>
               </span>
@@ -266,11 +266,11 @@ export const SettingsPage: React.FC = () => {
       </div>
 
       {/* Appearance */}
-      <div className="saas-card p-6">
-        <h2 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1">
+      <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
+        <h2 className="text-base font-serif font-bold text-paper-primary mb-1">
           Interface Theme
         </h2>
-        <p className="text-xs text-neutral-500 dark:text-dark-textMuted mb-4">
+        <p className="text-xs text-paper-muted mb-4">
           Select between light and dark visual presentation.
         </p>
 
@@ -281,47 +281,47 @@ export const SettingsPage: React.FC = () => {
           >
             {theme === 'dark' ? (
               <>
-                <Sun className="w-4 h-4 text-amber-500" />
+                <Sun className="w-4 h-4 text-ochre" />
                 <span>Switch to Light Theme</span>
               </>
             ) : (
               <>
-                <Moon className="w-4 h-4 text-neutral-600" />
+                <Moon className="w-4 h-4 text-paper-muted" />
                 <span>Switch to Dark Theme</span>
               </>
             )}
           </button>
-          <span className="text-xs text-neutral-500 dark:text-dark-textMuted">
-            Current: <span className="font-semibold text-neutral-800 dark:text-neutral-200 capitalize">{theme}</span>
+          <span className="text-xs text-paper-muted">
+            Current: <span className="font-medium text-paper-primary capitalize">{theme}</span>
           </span>
         </div>
       </div>
 
       {/* Backend Integration */}
-      <div className="saas-card p-6">
-        <h2 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 flex items-center gap-2">
-          <Database className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+      <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
+        <h2 className="text-base font-serif font-bold text-paper-primary mb-1 flex items-center gap-2">
+          <Database className="w-4 h-4 text-teal" />
           <span>Supabase Cloud Integration</span>
         </h2>
-        <p className="text-xs text-neutral-500 dark:text-dark-textMuted mb-4">
+        <p className="text-xs text-paper-muted mb-4">
           Connect your remote Supabase Postgres database with Row Level Security for multi-device sync.
         </p>
 
-        <div className="p-4 rounded-xl bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div className="p-4 rounded-lg bg-graphite-base border border-graphite-hairline flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
           <div>
             <div className="flex items-center gap-2">
               <span
                 className={`w-2 h-2 rounded-full ${
-                  isSupabaseConfigured ? 'bg-emerald-500' : 'bg-neutral-400'
+                  isSupabaseConfigured ? 'bg-teal' : 'bg-ochre'
                 }`}
               />
-              <span className="font-semibold text-neutral-900 dark:text-white">
+              <span className="font-medium text-paper-primary">
                 {isSupabaseConfigured
                   ? 'Connected to Supabase'
                   : 'Standalone Local Cache Mode'}
               </span>
             </div>
-            <p className="text-[11px] text-neutral-500 dark:text-dark-textMuted mt-1">
+            <p className="text-xs text-paper-muted mt-1">
               {isSupabaseConfigured
                 ? 'Your problems, reviews, and logs synchronize with your Postgres database.'
                 : 'All problems and reviews are stored in browser localStorage. To connect remote sync, set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env.'}
@@ -330,74 +330,74 @@ export const SettingsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Problem Catalog Status */}
-      <div className="saas-card p-6">
+      {/* Problem Catalog Coverage */}
+      <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
         <div className="flex items-center justify-between mb-1">
-          <h2 className="text-sm font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+          <h2 className="text-base font-serif font-bold text-paper-primary flex items-center gap-2">
+            <BookOpen className="w-4 h-4 text-teal" />
             <span>Problem Catalog Coverage</span>
           </h2>
-          <span className="text-xs font-mono font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+          <span className="text-xs font-serif font-medium text-teal bg-teal/10 px-2.5 py-0.5 rounded border border-teal/30">
             {catalogStats.total.toLocaleString()} Indexed
           </span>
         </div>
-        <p className="text-xs text-neutral-500 dark:text-dark-textMuted mb-4">
+        <p className="text-xs text-paper-muted mb-4">
           Pre-seeded problem library enabling instant search-and-select without per-problem web scraping.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-          <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-dark-border bg-neutral-50/60 dark:bg-dark-bg/60">
-            <div className="text-[11px] font-semibold text-neutral-500 dark:text-dark-textMuted uppercase tracking-wider">
+          <div className="p-3.5 rounded-lg border border-graphite-hairline bg-graphite-base">
+            <div className="text-xs font-medium text-paper-muted">
               LeetCode
             </div>
-            <div className="text-lg font-bold text-neutral-900 dark:text-white mt-0.5">
+            <div className="text-lg font-serif font-bold text-ochre mt-0.5">
               {catalogStats.leetcode.toLocaleString()}
             </div>
-            <div className="text-[11px] text-neutral-400 mt-0.5">
+            <div className="text-xs text-paper-muted mt-0.5">
               Full catalog + topic tags
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-dark-border bg-neutral-50/60 dark:bg-dark-bg/60">
-            <div className="text-[11px] font-semibold text-neutral-500 dark:text-dark-textMuted uppercase tracking-wider">
+          <div className="p-3.5 rounded-lg border border-graphite-hairline bg-graphite-base">
+            <div className="text-xs font-medium text-paper-muted">
               Codeforces
             </div>
-            <div className="text-lg font-bold text-neutral-900 dark:text-white mt-0.5">
+            <div className="text-lg font-serif font-bold text-paper-primary mt-0.5">
               {catalogStats.codeforces.toLocaleString()}
             </div>
-            <div className="text-[11px] text-neutral-400 mt-0.5">
+            <div className="text-xs text-paper-muted mt-0.5">
               Archive + ratings & tags
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-dark-border bg-neutral-50/60 dark:bg-dark-bg/60">
-            <div className="text-[11px] font-semibold text-neutral-500 dark:text-dark-textMuted uppercase tracking-wider">
+          <div className="p-3.5 rounded-lg border border-graphite-hairline bg-graphite-base">
+            <div className="text-xs font-medium text-paper-muted">
               GeeksforGeeks
             </div>
-            <div className="text-lg font-bold text-neutral-900 dark:text-white mt-0.5">
-              {catalogStats.gfg} <span className="text-xs font-normal text-neutral-400">(growing)</span>
+            <div className="text-lg font-serif font-bold text-teal mt-0.5">
+              {catalogStats.gfg} <span className="text-xs font-normal text-paper-muted">(growing)</span>
             </div>
-            <div className="text-[11px] text-neutral-400 mt-0.5">
+            <div className="text-xs text-paper-muted mt-0.5">
               Curated + organic adds
             </div>
           </div>
         </div>
 
-        <div className="p-3 rounded-lg bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border text-xs text-neutral-500 dark:text-dark-textMuted flex items-start gap-2">
-          <Layers className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+        <div className="p-3 rounded-lg bg-graphite-base border border-graphite-hairline text-xs text-paper-muted flex items-start gap-2">
+          <Layers className="w-4 h-4 text-teal shrink-0 mt-0.5" />
           <div>
-            <span className="font-semibold text-neutral-800 dark:text-neutral-200">Re-indexing note:</span> To re-sync or refresh catalog problems, run <code className="px-1 py-0.5 bg-neutral-200/60 dark:bg-dark-surface rounded font-mono text-[11px]">node scripts/import-all-catalog.js</code>. LeetCode and Codeforces imports deduplicate automatically.
+            <span className="font-medium text-paper-primary">Re-indexing note:</span> To re-sync or refresh catalog problems, run <code className="px-1 py-0.5 bg-surface border border-graphite-hairline rounded font-mono text-xs">node scripts/import-all-catalog.js</code>. LeetCode and Codeforces imports deduplicate automatically.
           </div>
         </div>
       </div>
 
       {/* Data Export */}
-      <div className="saas-card p-6">
-        <h2 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 flex items-center gap-2">
-          <Download className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+      <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
+        <h2 className="text-base font-serif font-bold text-paper-primary mb-1 flex items-center gap-2">
+          <Download className="w-4 h-4 text-paper-muted" />
           <span>Export Data</span>
         </h2>
-        <p className="text-xs text-neutral-500 dark:text-dark-textMuted mb-4">
+        <p className="text-xs text-paper-muted mb-4">
           Export your complete revision history anytime for personal backups or spreadsheets.
         </p>
 
@@ -421,22 +421,22 @@ export const SettingsPage: React.FC = () => {
       </div>
 
       {/* Danger Zone */}
-      <div className="saas-card p-6 border-rose-200 dark:border-rose-900/30">
-        <h2 className="text-sm font-semibold text-rose-700 dark:text-rose-400 mb-1 flex items-center gap-2">
-          <ShieldAlert className="w-4 h-4 text-rose-600" />
+      <div className="bg-surface border border-rose-900/40 rounded-xl p-6 shadow-deck">
+        <h2 className="text-base font-serif font-bold text-rose-400 mb-1 flex items-center gap-2">
+          <ShieldAlert className="w-4 h-4 text-rose-400" />
           <span>Data Management</span>
         </h2>
-        <p className="text-xs text-neutral-500 dark:text-dark-textMuted mb-4">
+        <p className="text-xs text-paper-muted mb-4">
           Wipe all records to maintain a completely clean tracker, or optionally load curated problem templates.
         </p>
 
         <div className="flex flex-wrap items-center gap-2.5">
           <button
             onClick={handleClearAll}
-            className="px-3 py-1.5 rounded-lg border border-rose-200 dark:border-rose-800/40 bg-rose-50/50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-400 hover:bg-rose-100 text-xs font-semibold transition-colors flex items-center gap-1.5"
+            className="px-3 py-1.5 rounded border border-rose-900/50 bg-rose-950/20 text-rose-400 hover:bg-rose-950/40 text-xs font-medium transition-colors flex items-center gap-1.5"
           >
             <Trash2 className="w-3.5 h-3.5" />
-            <span>Wipe All Records (Clean Slate)</span>
+            <span>Wipe all records (clean slate)</span>
           </button>
 
           <button
@@ -444,7 +444,7 @@ export const SettingsPage: React.FC = () => {
             className="btn-secondary flex items-center gap-1.5 text-xs"
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            <span>Load Curated Starter Pack (Optional)</span>
+            <span>Load curated starter pack</span>
           </button>
         </div>
       </div>
