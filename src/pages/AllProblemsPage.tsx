@@ -49,7 +49,7 @@ export const AllProblemsPage: React.FC = () => {
     setToast(null);
   };
 
-  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>('table'); // Default to dense ledger table view
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | 'all'>('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | 'all'>('all');
   const [selectedTag, setSelectedTag] = useState<string>('all');
@@ -116,41 +116,43 @@ export const AllProblemsPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-            <span>Problem Bank</span>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-dark-surfaceHover text-neutral-600 dark:text-neutral-300">
+          <div className="flex items-center gap-2">
+            <h1 className="font-serif text-2xl text-paper-primary font-normal">
+              Problem bank
+            </h1>
+            <span className="text-xs px-2 py-0.5 rounded-md bg-surface-subtle border border-surface-border text-paper-secondary tabular-nums">
               {filteredProblems.length} of {problems.length}
             </span>
-          </h1>
-          <p className="text-xs text-neutral-500 dark:text-dark-textMuted mt-0.5">
+          </div>
+          <p className="text-xs text-paper-secondary mt-0.5">
             Filter, search, and inspect revision schedules across your algorithmic question library.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          {/* View toggle (Grid / Table) */}
-          <div className="flex items-center p-0.5 rounded-lg bg-neutral-100 dark:bg-dark-surface border border-neutral-200 dark:border-dark-border">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-md transition-colors ${
-                viewMode === 'grid'
-                  ? 'bg-white dark:bg-dark-surfaceHover text-neutral-900 dark:text-white shadow-xs'
-                  : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'
-              }`}
-              title="Grid View"
-            >
-              <LayoutGrid className="w-4 h-4" />
-            </button>
+          {/* View toggle (Table / Grid) */}
+          <div className="flex items-center p-0.5 rounded-lg bg-surface border border-surface-border">
             <button
               onClick={() => setViewMode('table')}
               className={`p-1.5 rounded-md transition-colors ${
                 viewMode === 'table'
-                  ? 'bg-white dark:bg-dark-surfaceHover text-neutral-900 dark:text-white shadow-xs'
-                  : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'
+                  ? 'bg-surface-hover text-paper-primary shadow-xs'
+                  : 'text-paper-muted hover:text-paper-primary'
               }`}
-              title="Table View"
+              title="Ledger Table View"
             >
               <List className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`p-1.5 rounded-md transition-colors ${
+                viewMode === 'grid'
+                  ? 'bg-surface-hover text-paper-primary shadow-xs'
+                  : 'text-paper-muted hover:text-paper-primary'
+              }`}
+              title="Card Grid View"
+            >
+              <LayoutGrid className="w-4 h-4" />
             </button>
           </div>
 
@@ -159,21 +161,21 @@ export const AllProblemsPage: React.FC = () => {
             className="btn-primary text-xs flex items-center gap-1.5 py-1.5 px-3"
           >
             <Plus className="w-4 h-4" />
-            <span>Add Problem</span>
+            <span>Add problem</span>
           </button>
         </div>
       </div>
 
       {/* Toolbar / Filters */}
-      <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-dark-border bg-white dark:bg-dark-surface shadow-xs space-y-2.5">
+      <div className="p-3 rounded-xl border border-surface-border bg-surface shadow-xs space-y-2.5">
         <div className="flex flex-wrap items-center gap-2 text-xs">
           {/* Platform */}
           <select
             value={selectedPlatform}
             onChange={(e) => setSelectedPlatform(e.target.value as any)}
-            className="bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border rounded-lg px-2.5 py-1.5 text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-brand-500"
+            className="bg-surface-subtle border border-surface-border rounded-lg px-2.5 py-1.5 text-paper-primary focus:outline-none focus:border-teal"
           >
-            <option value="all">All Platforms</option>
+            <option value="all">All platforms</option>
             <option value="leetcode">LeetCode</option>
             <option value="gfg">GeeksforGeeks</option>
             <option value="codeforces">Codeforces</option>
@@ -183,9 +185,9 @@ export const AllProblemsPage: React.FC = () => {
           <select
             value={selectedDifficulty}
             onChange={(e) => setSelectedDifficulty(e.target.value as any)}
-            className="bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border rounded-lg px-2.5 py-1.5 text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-brand-500"
+            className="bg-surface-subtle border border-surface-border rounded-lg px-2.5 py-1.5 text-paper-primary focus:outline-none focus:border-teal"
           >
-            <option value="all">All Difficulties</option>
+            <option value="all">All difficulties</option>
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
@@ -195,9 +197,9 @@ export const AllProblemsPage: React.FC = () => {
           <select
             value={selectedTag}
             onChange={(e) => setSelectedTag(e.target.value)}
-            className="bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border rounded-lg px-2.5 py-1.5 text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-brand-500 max-w-[150px]"
+            className="bg-surface-subtle border border-surface-border rounded-lg px-2.5 py-1.5 text-paper-primary focus:outline-none focus:border-teal max-w-[150px]"
           >
-            <option value="all">All Patterns</option>
+            <option value="all">All patterns</option>
             {PRESET_TAGS.map((tag) => (
               <option key={tag} value={tag}>
                 {tag}
@@ -209,25 +211,25 @@ export const AllProblemsPage: React.FC = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as any)}
-            className="bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border rounded-lg px-2.5 py-1.5 text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-brand-500"
+            className="bg-surface-subtle border border-surface-border rounded-lg px-2.5 py-1.5 text-paper-primary focus:outline-none focus:border-teal"
           >
-            <option value="all">All Status</option>
+            <option value="all">All statuses</option>
             <option value="learning">Learning (&lt;5 reps)</option>
             <option value="mastered">Mastered (5+ reps)</option>
           </select>
 
           {/* Sort By */}
           <div className="ml-auto flex items-center gap-1.5">
-            <ArrowUpDown className="w-3.5 h-3.5 text-neutral-400" />
+            <ArrowUpDown className="w-3.5 h-3.5 text-paper-muted" />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border rounded-lg px-2.5 py-1.5 text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-brand-500"
+              className="bg-surface-subtle border border-surface-border rounded-lg px-2.5 py-1.5 text-paper-primary focus:outline-none focus:border-teal"
             >
-              <option value="review_asc">Next Review (Urgent first)</option>
-              <option value="created_desc">Recently Added</option>
-              <option value="reps_desc">Most Reviewed</option>
-              <option value="diff_asc">Difficulty (Easy to Hard)</option>
+              <option value="review_asc">Next review (urgent first)</option>
+              <option value="created_desc">Recently added</option>
+              <option value="reps_desc">Most reviewed</option>
+              <option value="diff_asc">Difficulty (easy to hard)</option>
             </select>
           </div>
 
@@ -235,7 +237,7 @@ export const AllProblemsPage: React.FC = () => {
           {hasActiveFilters && (
             <button
               onClick={clearAllFilters}
-              className="px-2.5 py-1.5 rounded-lg border border-neutral-200 dark:border-dark-border bg-neutral-50 dark:bg-dark-bg text-neutral-500 hover:text-neutral-800 dark:hover:text-white flex items-center gap-1 transition-colors"
+              className="px-2.5 py-1.5 rounded-lg border border-surface-border bg-surface-subtle text-paper-secondary hover:text-paper-primary flex items-center gap-1 transition-colors"
               title="Reset filters"
             >
               <X className="w-3 h-3" />
@@ -248,14 +250,14 @@ export const AllProblemsPage: React.FC = () => {
       {/* Problem Content */}
       {filteredProblems.length === 0 ? (
         <div className="py-16 text-center saas-card p-8 flex flex-col items-center justify-center">
-          <BookOpen className="w-10 h-10 text-neutral-300 dark:text-neutral-600 mb-3" />
-          <h3 className="text-base font-bold text-neutral-900 dark:text-white mb-1">
-            No problems found
+          <BookOpen className="w-8 h-8 text-paper-muted mb-3" />
+          <h3 className="font-serif text-lg text-paper-primary font-normal mb-1">
+            No matching problems
           </h3>
-          <p className="text-xs text-neutral-500 dark:text-dark-textMuted mb-5 max-w-sm">
+          <p className="text-xs text-paper-secondary mb-5 max-w-sm">
             {hasActiveFilters
               ? 'Try adjusting your search query or clearing active filters.'
-              : 'Your problem bank is currently empty. Log problems you solve on LeetCode, GFG, or Codeforces to start tracking them.'}
+              : 'Your problem bank is empty. Log problems you solve on LeetCode, GFG, or Codeforces to start tracking them.'}
           </p>
           <div className="flex items-center gap-2.5">
             {hasActiveFilters && (
@@ -263,7 +265,7 @@ export const AllProblemsPage: React.FC = () => {
                 onClick={clearAllFilters}
                 className="btn-secondary text-xs"
               >
-                Clear Filters
+                Clear filters
               </button>
             )}
             <button
@@ -271,11 +273,18 @@ export const AllProblemsPage: React.FC = () => {
               className="btn-primary text-xs flex items-center gap-1.5"
             >
               <Plus className="w-4 h-4" />
-              <span>Log Problem</span>
+              <span>Log problem</span>
             </button>
           </div>
         </div>
-      ) : viewMode === 'grid' ? (
+      ) : viewMode === 'table' ? (
+        <ProblemTable
+          problems={filteredProblems}
+          onSelectForReview={() => setActiveTab('queue')}
+          onRemove={handleRemoveProblem}
+          onSolve={openSolveView}
+        />
+      ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredProblems.map((problem) => (
             <ProblemCard
@@ -287,33 +296,26 @@ export const AllProblemsPage: React.FC = () => {
             />
           ))}
         </div>
-      ) : (
-        <ProblemTable
-          problems={filteredProblems}
-          onSelectForReview={() => setActiveTab('queue')}
-          onRemove={handleRemoveProblem}
-          onSolve={openSolveView}
-        />
       )}
 
       {/* 5-Second Undo Toast */}
       <AnimatePresence>
         {toast && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 15, scale: 0.95 }}
-            className="fixed bottom-20 md:bottom-8 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-neutral-900 dark:bg-dark-surface text-white rounded-xl shadow-2xl border border-neutral-700/80 dark:border-dark-border max-w-md text-xs"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 12 }}
+            className="fixed bottom-20 md:bottom-8 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-[#14171F] text-paper-primary rounded-xl shadow-elevated border border-surface-border max-w-md text-xs"
           >
-            <div className="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+            <div className="w-5 h-5 rounded-full bg-ochre/20 text-ochre flex items-center justify-center shrink-0">
               <Trash2 className="w-3.5 h-3.5" />
             </div>
             <div className="flex-1 truncate">
-              <span>Removed <strong className="text-white font-semibold">{toast.title}</strong> from problem bank</span>
+              <span>Removed <strong className="font-semibold">{toast.title}</strong> from problem bank</span>
             </div>
             <button
               onClick={handleUndo}
-              className="flex items-center gap-1 font-semibold text-brand-400 hover:text-brand-300 px-2.5 py-1 rounded hover:bg-white/10 transition-colors ml-1 shrink-0"
+              className="flex items-center gap-1 font-medium text-teal hover:underline px-2 py-1 rounded hover:bg-surface transition-colors ml-1 shrink-0"
             >
               <Undo2 className="w-3.5 h-3.5" />
               <span>Undo</span>

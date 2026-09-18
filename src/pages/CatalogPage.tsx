@@ -20,6 +20,7 @@ import { browseCatalog, BrowseResult, getCatalogStats } from '../lib/catalogServ
 import { useProblemStore } from '../store/useProblemStore';
 import { useUIStore } from '../store/useUIStore';
 import { PlatformBadge } from '../components/problems/PlatformBadge';
+import { DifficultyBadge } from '../components/problems/DifficultyBadge';
 
 const PAGE_SIZE = 100;
 
@@ -39,12 +40,6 @@ const DIFFICULTY_OPTIONS = [
   { value: 'medium', label: 'Medium' },
   { value: 'hard', label: 'Hard' },
 ];
-
-function difficultyColor(d?: string) {
-  if (d === 'easy') return 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30';
-  if (d === 'hard') return 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/30';
-  return 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30';
-}
 
 export const CatalogPage: React.FC = () => {
   const problems = useProblemStore((s) => s.problems);
@@ -202,7 +197,7 @@ export const CatalogPage: React.FC = () => {
   // Load stats once
   useEffect(() => {
     getCatalogStats().then((s) => {
-      setStatsText(`${s.leetcode.toLocaleString()} LeetCode · ${s.codeforces.toLocaleString()} Codeforces · ${s.gfg} GFG`);
+      setStatsText(`${s.leetcode.toLocaleString()} LeetCode · ${s.codeforces.toLocaleString()} Codeforces · ${s.gfg} GeeksforGeeks`);
     });
   }, []);
 
@@ -211,24 +206,24 @@ export const CatalogPage: React.FC = () => {
   const endItem = Math.min(page * PAGE_SIZE, result.totalMatches);
 
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-neutral-50 dark:bg-dark-bg">
+    <div className="flex flex-col h-full overflow-hidden bg-graphite">
       {/* ── Header ── */}
-      <div className="px-6 pt-6 pb-4 border-b border-neutral-200 dark:border-dark-border bg-white dark:bg-dark-surface shrink-0">
+      <div className="px-6 pt-6 pb-4 border-b border-surface-border bg-surface shrink-0">
         <div className="flex items-start justify-between gap-4 mb-4">
           <div>
-            <h1 className="text-xl font-bold text-neutral-900 dark:text-white tracking-tight">
-              Problem Catalog
+            <h1 className="font-serif text-2xl text-paper-primary font-normal">
+              Problem catalog
             </h1>
-            <p className="text-xs text-neutral-500 dark:text-dark-textMuted mt-0.5">
-              {statsText || 'Loading catalog…'}
+            <p className="text-xs text-paper-secondary mt-0.5">
+              {statsText || 'Indexing problem library…'}
             </p>
           </div>
           <button
             onClick={openAddPanel}
-            className="btn-primary flex items-center gap-1.5 shrink-0"
+            className="btn-primary flex items-center gap-1.5 shrink-0 text-xs"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Add to Revision</span>
+            <span>Add to revision</span>
           </button>
         </div>
 
@@ -236,18 +231,18 @@ export const CatalogPage: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2">
           {/* Search */}
           <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400 pointer-events-none" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-paper-muted pointer-events-none" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by title, #number, tag…"
-              className="w-full bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border rounded-lg pl-8 pr-8 py-2 text-xs text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:border-brand-500 transition-colors"
+              placeholder="Search by title, number, pattern…"
+              className="w-full bg-surface-subtle border border-surface-border rounded-lg pl-8 pr-8 py-2 text-xs text-paper-primary placeholder:text-paper-muted focus:outline-none focus:border-teal transition-colors"
             />
             {query && (
               <button
                 onClick={() => setQuery('')}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-paper-muted hover:text-paper-primary"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -255,15 +250,15 @@ export const CatalogPage: React.FC = () => {
           </div>
 
           {/* Platform tabs */}
-          <div className="flex items-center bg-neutral-100 dark:bg-dark-surfaceHover rounded-lg p-0.5 gap-0.5 text-xs">
+          <div className="flex items-center bg-surface-subtle border border-surface-border rounded-lg p-0.5 gap-0.5 text-xs">
             {(['all', 'leetcode', 'codeforces', 'gfg'] as const).map((p) => (
               <button
                 key={p}
                 onClick={() => setPlatform(p)}
                 className={`px-3 py-1.5 rounded-md font-medium transition-all ${
                   platform === p
-                    ? 'bg-white dark:bg-dark-surface text-neutral-900 dark:text-white shadow-xs'
-                    : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200'
+                    ? 'bg-surface text-paper-primary shadow-xs border border-surface-border'
+                    : 'text-paper-muted hover:text-paper-primary'
                 }`}
               >
                 {p === 'all' ? 'All' : p === 'leetcode' ? 'LeetCode' : p === 'codeforces' ? 'Codeforces' : 'GFG'}
@@ -273,11 +268,11 @@ export const CatalogPage: React.FC = () => {
 
           {/* Difficulty */}
           <div className="flex items-center gap-1">
-            <Filter className="w-3.5 h-3.5 text-neutral-400" />
+            <Filter className="w-3.5 h-3.5 text-paper-muted" />
             <select
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value as typeof difficulty)}
-              className="text-xs bg-white dark:bg-dark-surface border border-neutral-200 dark:border-dark-border rounded-lg px-2 py-2 text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-brand-500 cursor-pointer"
+              className="text-xs bg-surface border border-surface-border rounded-lg px-2 py-2 text-paper-primary focus:outline-none focus:border-teal cursor-pointer"
             >
               {DIFFICULTY_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>{o.label}</option>
@@ -287,11 +282,11 @@ export const CatalogPage: React.FC = () => {
 
           {/* Sort */}
           <div className="flex items-center gap-1">
-            <ArrowUpDown className="w-3.5 h-3.5 text-neutral-400" />
+            <ArrowUpDown className="w-3.5 h-3.5 text-paper-muted" />
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortOption)}
-              className="text-xs bg-white dark:bg-dark-surface border border-neutral-200 dark:border-dark-border rounded-lg px-2 py-2 text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-brand-500 cursor-pointer"
+              className="text-xs bg-surface border border-surface-border rounded-lg px-2 py-2 text-paper-primary focus:outline-none focus:border-teal cursor-pointer"
             >
               {(Object.keys(SORT_LABELS) as SortOption[]).map((s) => (
                 <option key={s} value={s}>{SORT_LABELS[s]}</option>
@@ -304,25 +299,25 @@ export const CatalogPage: React.FC = () => {
       {/* ── Table ── */}
       <div className="flex-1 overflow-y-auto">
         {isLoading && !catalogLoaded ? (
-          <div className="flex flex-col items-center justify-center h-60 gap-3 text-neutral-400">
-            <Loader2 className="w-6 h-6 animate-spin text-brand-500" />
-            <span className="text-sm">Loading 15,476 problems…</span>
+          <div className="flex flex-col items-center justify-center h-60 gap-3 text-paper-muted">
+            <Loader2 className="w-5 h-5 animate-spin text-teal" />
+            <span className="text-xs">Loading 15,476 problems…</span>
           </div>
         ) : (
           <>
             {/* Result count */}
-            <div className="px-6 py-2 border-b border-neutral-100 dark:border-dark-border/60 flex items-center justify-between">
-              <span className="text-[11px] text-neutral-500 dark:text-dark-textMuted">
+            <div className="px-6 py-2.5 border-b border-surface-border bg-surface-subtle flex items-center justify-between">
+              <span className="text-xs text-paper-secondary">
                 {isLoading ? (
                   <span className="flex items-center gap-1.5">
-                    <Loader2 className="w-3 h-3 animate-spin" /> Filtering…
+                    <Loader2 className="w-3 h-3 animate-spin text-teal" /> Filtering…
                   </span>
                 ) : result.totalMatches === 0 ? (
                   'No problems match your filters.'
                 ) : (
                   <>
-                    Showing <span className="font-semibold text-neutral-700 dark:text-neutral-300">{startItem}–{endItem}</span> of{' '}
-                    <span className="font-semibold text-neutral-700 dark:text-neutral-300">{result.totalMatches.toLocaleString()}</span> problems
+                    Showing <span className="font-medium text-paper-primary">{startItem}–{endItem}</span> of{' '}
+                    <span className="font-medium text-paper-primary">{result.totalMatches.toLocaleString()}</span> problems
                   </>
                 )}
               </span>
@@ -333,17 +328,17 @@ export const CatalogPage: React.FC = () => {
                   <button
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
-                    className="p-1 rounded text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 disabled:opacity-30 transition-colors"
+                    className="p-1 rounded text-paper-muted hover:text-paper-primary disabled:opacity-30 transition-colors"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
-                  <span className="text-[11px] text-neutral-500 px-1">
+                  <span className="text-xs text-paper-secondary px-1 tabular-nums">
                     {page} / {totalPages}
                   </span>
                   <button
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                     disabled={page === totalPages}
-                    className="p-1 rounded text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 disabled:opacity-30 transition-colors"
+                    className="p-1 rounded text-paper-muted hover:text-paper-primary disabled:opacity-30 transition-colors"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>
@@ -352,18 +347,18 @@ export const CatalogPage: React.FC = () => {
             </div>
 
             {/* Problem rows */}
-            <table className="w-full text-xs">
+            <table className="w-full text-xs font-sans">
               <thead>
-                <tr className="border-b border-neutral-100 dark:border-dark-border/60 bg-neutral-50/80 dark:bg-dark-surface/50">
-                  <th className="text-left px-4 py-2.5 font-semibold text-neutral-500 dark:text-neutral-500 w-20">#</th>
-                  <th className="text-left px-2 py-2.5 font-semibold text-neutral-500 dark:text-neutral-500">Title</th>
-                  <th className="text-left px-2 py-2.5 font-semibold text-neutral-500 dark:text-neutral-500 w-24 hidden sm:table-cell">Difficulty</th>
-                  <th className="text-left px-2 py-2.5 font-semibold text-neutral-500 dark:text-neutral-500 w-28 hidden md:table-cell">Rating</th>
-                  <th className="text-left px-2 py-2.5 font-semibold text-neutral-500 dark:text-neutral-500 hidden lg:table-cell">Tags</th>
-                  <th className="px-4 py-2.5 w-24 text-right"></th>
+                <tr className="border-b border-surface-border bg-surface">
+                  <th className="text-left px-4 py-2.5 font-medium text-paper-secondary w-20">#</th>
+                  <th className="text-left px-2 py-2.5 font-medium text-paper-secondary">Title</th>
+                  <th className="text-left px-2 py-2.5 font-medium text-paper-secondary w-24 hidden sm:table-cell">Difficulty</th>
+                  <th className="text-left px-2 py-2.5 font-medium text-paper-secondary w-28 hidden md:table-cell">Rating</th>
+                  <th className="text-left px-2 py-2.5 font-medium text-paper-secondary hidden lg:table-cell">Archetypes</th>
+                  <th className="px-4 py-2.5 w-28 text-right"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-100 dark:divide-dark-border/40">
+              <tbody className="divide-y divide-surface-border">
                 {result.items.map((prob) => {
                   const added = userProblemsMap.has(prob.id) || userProblemsMap.has(prob.url);
                   return (
@@ -379,9 +374,9 @@ export const CatalogPage: React.FC = () => {
                 })}
                 {result.items.length === 0 && !isLoading && (
                   <tr>
-                    <td colSpan={6} className="py-16 text-center text-neutral-400 dark:text-neutral-600">
+                    <td colSpan={6} className="py-16 text-center text-paper-muted">
                       <p className="text-sm font-medium">No problems found</p>
-                      <p className="text-xs mt-1">Try a different search or filter combination.</p>
+                      <p className="text-xs mt-1">Try a different search query or platform filter.</p>
                     </td>
                   </tr>
                 )}
@@ -390,27 +385,27 @@ export const CatalogPage: React.FC = () => {
 
             {/* Pagination bottom */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between px-6 py-4 border-t border-neutral-100 dark:border-dark-border/60">
-                <span className="text-[11px] text-neutral-500">
+              <div className="flex items-center justify-between px-6 py-4 border-t border-surface-border bg-surface">
+                <span className="text-xs text-paper-secondary tabular-nums">
                   Page {page} of {totalPages} · {result.totalMatches.toLocaleString()} total
                 </span>
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => { setPage(1); window.scrollTo(0, 0); }}
                     disabled={page === 1}
-                    className="px-3 py-1.5 text-[11px] font-medium rounded-lg border border-neutral-200 dark:border-dark-border text-neutral-600 dark:text-neutral-400 disabled:opacity-30 hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover transition-colors"
+                    className="px-2.5 py-1 text-xs font-medium rounded-lg border border-surface-border text-paper-secondary disabled:opacity-30 hover:bg-surface-hover transition-colors"
                   >
                     First
                   </button>
                   <button
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
-                    className="px-3 py-1.5 text-[11px] font-medium rounded-lg border border-neutral-200 dark:border-dark-border text-neutral-600 dark:text-neutral-400 disabled:opacity-30 hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover transition-colors"
+                    className="px-2.5 py-1 text-xs font-medium rounded-lg border border-surface-border text-paper-secondary disabled:opacity-30 hover:bg-surface-hover transition-colors"
                   >
                     Prev
                   </button>
 
-                  {/* Page number buttons (show 5 around current) */}
+                  {/* Page number buttons */}
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                     const offset = Math.max(0, Math.min(page - 3, totalPages - 5));
                     return offset + i + 1;
@@ -418,10 +413,10 @@ export const CatalogPage: React.FC = () => {
                     <button
                       key={pg}
                       onClick={() => setPage(pg)}
-                      className={`w-7 h-7 text-[11px] font-medium rounded-lg transition-colors ${
+                      className={`w-7 h-7 text-xs font-medium rounded-lg transition-colors tabular-nums ${
                         pg === page
-                          ? 'bg-brand-600 text-white'
-                          : 'border border-neutral-200 dark:border-dark-border text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover'
+                          ? 'bg-teal text-[#0E1614]'
+                          : 'border border-surface-border text-paper-secondary hover:bg-surface-hover'
                       }`}
                     >
                       {pg}
@@ -431,14 +426,14 @@ export const CatalogPage: React.FC = () => {
                   <button
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                     disabled={page === totalPages}
-                    className="px-3 py-1.5 text-[11px] font-medium rounded-lg border border-neutral-200 dark:border-dark-border text-neutral-600 dark:text-neutral-400 disabled:opacity-30 hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover transition-colors"
+                    className="px-2.5 py-1 text-xs font-medium rounded-lg border border-surface-border text-paper-secondary disabled:opacity-30 hover:bg-surface-hover transition-colors"
                   >
                     Next
                   </button>
                   <button
                     onClick={() => setPage(totalPages)}
                     disabled={page === totalPages}
-                    className="px-3 py-1.5 text-[11px] font-medium rounded-lg border border-neutral-200 dark:border-dark-border text-neutral-600 dark:text-neutral-400 disabled:opacity-30 hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover transition-colors"
+                    className="px-2.5 py-1 text-xs font-medium rounded-lg border border-surface-border text-paper-secondary disabled:opacity-30 hover:bg-surface-hover transition-colors"
                   >
                     Last
                   </button>
@@ -453,26 +448,26 @@ export const CatalogPage: React.FC = () => {
       <AnimatePresence>
         {toast && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 15, scale: 0.95 }}
-            className="fixed bottom-20 md:bottom-8 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-neutral-900 dark:bg-dark-surface text-white rounded-xl shadow-2xl border border-neutral-700/80 dark:border-dark-border max-w-md text-xs"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 12 }}
+            className="fixed bottom-20 md:bottom-8 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-[#14171F] text-paper-primary rounded-xl shadow-elevated border border-surface-border max-w-md text-xs"
           >
-            <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
-              toast.type === 'added' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
+            <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
+              toast.type === 'added' ? 'bg-teal/20 text-teal' : 'bg-ochre/20 text-ochre'
             }`}>
-              {toast.type === 'added' ? <CheckCircle2 className="w-4 h-4" /> : <Trash2 className="w-3.5 h-3.5" />}
+              {toast.type === 'added' ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Trash2 className="w-3 h-3" />}
             </div>
             <div className="flex-1 truncate">
               <span>
                 {toast.type === 'added' ? 'Added ' : 'Removed '}
-                <strong className="text-white font-semibold">{toast.title}</strong>
+                <strong className="font-semibold">{toast.title}</strong>
                 {toast.type === 'added' ? ' to revision queue' : ' from revision list'}
               </span>
             </div>
             <button
               onClick={handleUndo}
-              className="flex items-center gap-1 font-semibold text-brand-400 hover:text-brand-300 px-2.5 py-1 rounded hover:bg-white/10 transition-colors ml-1 shrink-0"
+              className="flex items-center gap-1 font-medium text-teal hover:underline px-2 py-1 rounded hover:bg-surface transition-colors ml-1 shrink-0"
             >
               <Undo2 className="w-3.5 h-3.5" />
               <span>Undo</span>
@@ -484,7 +479,7 @@ export const CatalogPage: React.FC = () => {
   );
 };
 
-// ── Row component (memoized for perf with 100 rows per page) ──────────────────
+// ── Row component ────────────────────────────────────────────────────────────
 const ProblemRow = React.memo(({
   prob,
   added,
@@ -515,52 +510,48 @@ const ProblemRow = React.memo(({
   };
 
   return (
-    <tr className="hover:bg-neutral-50 dark:hover:bg-dark-surface/60 transition-colors group">
+    <tr className="hover:bg-surface-hover/70 transition-colors group">
       {/* # / Problem number */}
       <td className="px-4 py-2.5">
         <div className="flex items-center gap-2">
-          <PlatformBadge platform={prob.platform} size="sm" />
+          <PlatformBadge platform={prob.platform} size="sm" showLabel={false} />
           {prob.problem_number && (
-            <span className="font-mono font-bold text-[11px] text-neutral-500 dark:text-neutral-400">
+            <span className="text-xs text-paper-secondary tabular-nums">
               {prob.problem_number}
             </span>
           )}
         </div>
       </td>
 
-      {/* Title */}
+      {/* Title in Fraunces serif */}
       <td className="px-2 py-2.5 max-w-xs">
         <a
           href={prob.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-medium text-neutral-900 dark:text-neutral-100 hover:text-brand-600 dark:hover:text-brand-400 transition-colors inline-flex items-center gap-1 group/link"
+          className="font-serif text-sm font-normal text-paper-primary hover:text-teal transition-colors inline-flex items-center gap-1 group/link"
         >
           <span className="truncate">{prob.title}</span>
           <ExternalLink className="w-3 h-3 shrink-0 opacity-0 group-hover/link:opacity-60 transition-opacity" />
         </a>
         {prob.is_paid_only && (
-          <span className="ml-1.5 text-[10px] text-amber-500 font-medium">Premium</span>
+          <span className="ml-1.5 text-[10px] text-ochre font-medium">Premium</span>
         )}
       </td>
 
       {/* Difficulty */}
       <td className="px-2 py-2.5 hidden sm:table-cell">
-        {prob.difficulty && (
-          <span className={`text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded ${difficultyColor(prob.difficulty)}`}>
-            {prob.difficulty}
-          </span>
-        )}
+        <DifficultyBadge difficulty={prob.difficulty} size="sm" />
       </td>
 
       {/* Rating (Codeforces) */}
       <td className="px-2 py-2.5 hidden md:table-cell">
         {prob.rating ? (
-          <span className="font-mono text-[11px] text-amber-600 dark:text-amber-400 font-semibold">
+          <span className="text-xs text-ochre font-medium tabular-nums">
             ★ {prob.rating}
           </span>
         ) : (
-          <span className="text-neutral-300 dark:text-neutral-700">—</span>
+          <span className="text-paper-muted">—</span>
         )}
       </td>
 
@@ -570,13 +561,13 @@ const ProblemRow = React.memo(({
           {prob.tags.slice(0, 3).map((t) => (
             <span
               key={t}
-              className="text-[10px] px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-dark-surfaceHover text-neutral-600 dark:text-neutral-400"
+              className="text-[11px] px-1.5 py-0.5 rounded bg-surface-subtle text-paper-secondary border border-surface-border"
             >
               {t}
             </span>
           ))}
           {prob.tags.length > 3 && (
-            <span className="text-[10px] text-neutral-400 dark:text-neutral-600">
+            <span className="text-[11px] text-paper-muted">
               +{prob.tags.length - 3}
             </span>
           )}
@@ -589,7 +580,7 @@ const ProblemRow = React.memo(({
           <button
             type="button"
             onClick={() => onSolve(prob)}
-            className="p-1.5 rounded-md text-neutral-400 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-dark-surfaceHover transition-colors"
+            className="p-1.5 rounded-md text-paper-muted hover:text-teal hover:bg-teal/10 transition-colors"
             title="Open in Solve View"
           >
             <Code2 className="w-3.5 h-3.5" />
@@ -600,7 +591,7 @@ const ProblemRow = React.memo(({
               type="button"
               onClick={handleToggle}
               disabled={isProcessing}
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 hover:bg-rose-50 hover:text-rose-700 dark:bg-emerald-950/40 dark:hover:bg-rose-950/40 dark:hover:text-rose-300 px-2.5 py-1 rounded border border-emerald-300/80 dark:border-emerald-700/60 hover:border-rose-300 dark:hover:border-rose-700/60 transition-colors group/btn"
+              className="inline-flex items-center gap-1 text-xs font-medium text-teal bg-teal/10 hover:bg-ochre/15 hover:text-ochre hover:border-ochre/30 px-2.5 py-1 rounded-md border border-teal/30 transition-colors group/btn"
               title="Click to remove from revision list (has 5s Undo)"
             >
               {isProcessing ? (
@@ -609,7 +600,7 @@ const ProblemRow = React.memo(({
                 <>
                   <CheckCircle2 className="w-3.5 h-3.5 group-hover/btn:hidden" />
                   <Trash2 className="w-3.5 h-3.5 hidden group-hover/btn:inline" />
-                  <span className="group-hover/btn:hidden">✓ In Revision</span>
+                  <span className="group-hover/btn:hidden">In revision</span>
                   <span className="hidden group-hover/btn:inline">Remove</span>
                 </>
               )}
@@ -619,7 +610,7 @@ const ProblemRow = React.memo(({
               type="button"
               onClick={handleToggle}
               disabled={isProcessing}
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/40 dark:hover:bg-brand-900/40 px-2.5 py-1 rounded transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1 text-xs font-medium text-paper-primary hover:text-teal bg-surface-subtle hover:bg-surface-hover px-2.5 py-1 rounded-md border border-surface-border transition-colors disabled:opacity-50"
               title="Add to revision queue"
             >
               {isProcessing ? (

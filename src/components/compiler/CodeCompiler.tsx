@@ -245,52 +245,52 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
     switch (status) {
       case 'SUCCESS':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-200/60 dark:border-emerald-800/40">
-            <CheckCircle2 className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-teal bg-teal/10 px-2 py-0.5 rounded border border-teal/30">
+            <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Success</span>
           </span>
         );
       case 'COMPILE_ERROR':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded border border-amber-200/60 dark:border-amber-800/40">
-            <AlertTriangle className="w-3 h-3" />
-            <span>Compile Error</span>
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-ochre bg-ochre/10 px-2 py-0.5 rounded border border-ochre/30">
+            <AlertTriangle className="w-3.5 h-3.5" />
+            <span>Compile error</span>
           </span>
         );
       case 'RUNTIME_ERROR':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 px-2 py-0.5 rounded border border-rose-200/60 dark:border-rose-800/40">
-            <AlertTriangle className="w-3 h-3" />
-            <span>Runtime Error</span>
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-400 bg-rose-950/20 px-2 py-0.5 rounded border border-rose-900/40">
+            <AlertTriangle className="w-3.5 h-3.5" />
+            <span>Runtime error</span>
           </span>
         );
       case 'TIMEOUT':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 px-2 py-0.5 rounded border border-rose-200/60 dark:border-rose-800/40">
-            <Clock className="w-3 h-3" />
-            <span>Time Limit Exceeded</span>
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-400 bg-rose-950/20 px-2 py-0.5 rounded border border-rose-900/40">
+            <Clock className="w-3.5 h-3.5" />
+            <span>Time limit exceeded</span>
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-neutral-500 bg-neutral-100 dark:bg-dark-surface px-2 py-0.5 rounded border border-neutral-200 dark:border-dark-border">
-            <span>Execution Finished</span>
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-paper-muted bg-graphite-base px-2 py-0.5 rounded border border-graphite-hairline">
+            <span>Finished</span>
           </span>
         );
     }
   };
 
   return (
-    <div className="flex flex-col h-full rounded-xl border border-neutral-200 dark:border-dark-border bg-white dark:bg-[#0e0e11] overflow-hidden shadow-sm">
+    <div className="flex flex-col h-full rounded-xl border border-graphite-hairline bg-surface overflow-hidden shadow-deck">
       {/* ── Top Bar / Controls ──────────────────────────────────────────────── */}
-      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 border-b border-neutral-200 dark:border-dark-border bg-neutral-50/80 dark:bg-dark-surface/40">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 border-b border-graphite-hairline bg-graphite-base">
         <div className="flex items-center gap-2">
-          <Code2 className="w-4 h-4 text-brand-500" />
+          <Code2 className="w-4 h-4 text-teal" />
           {/* Language Selector */}
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
-            className="text-xs font-semibold bg-white dark:bg-dark-bg border border-neutral-200 dark:border-dark-border rounded-lg px-2.5 py-1.5 text-neutral-800 dark:text-neutral-200 focus:outline-none focus:border-brand-500 cursor-pointer"
+            className="text-xs font-medium bg-surface border border-graphite-hairline rounded px-2.5 py-1.5 text-paper-primary focus:outline-none focus:border-teal cursor-pointer"
           >
             {(Object.keys(SUPPORTED_LANGUAGES) as SupportedLanguage[]).map((langKey) => (
               <option key={langKey} value={langKey}>
@@ -301,13 +301,13 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
 
           {/* Autosave Status */}
           {saveStatus === 'saving' && (
-            <span className="text-[10px] text-neutral-400 flex items-center gap-1">
+            <span className="text-xs text-paper-muted flex items-center gap-1">
               <Cloud className="w-3 h-3 animate-pulse" />
               <span>Saving...</span>
             </span>
           )}
           {saveStatus === 'saved' && (
-            <span className="text-[10px] text-emerald-500 flex items-center gap-1">
+            <span className="text-xs text-teal flex items-center gap-1">
               <Check className="w-3 h-3" />
               <span>Saved</span>
             </span>
@@ -320,17 +320,17 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
           <button
             type="button"
             onClick={handleCopyCode}
-            className="p-1.5 rounded-lg border border-neutral-200 dark:border-dark-border text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover transition-colors"
+            className="p-1.5 rounded border border-graphite-hairline text-paper-muted hover:text-paper-primary hover:bg-graphite-hover transition-colors"
             title="Copy Code"
           >
-            {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+            {isCopied ? <Check className="w-3.5 h-3.5 text-teal" /> : <Copy className="w-3.5 h-3.5" />}
           </button>
 
           {/* Reset Button */}
           <button
             type="button"
             onClick={handleResetCode}
-            className="p-1.5 rounded-lg border border-neutral-200 dark:border-dark-border text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover transition-colors"
+            className="p-1.5 rounded border border-graphite-hairline text-paper-muted hover:text-paper-primary hover:bg-graphite-hover transition-colors"
             title="Reset to Starter Template"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -341,7 +341,7 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
             type="button"
             onClick={handleRunCode}
             disabled={isRunning}
-            className="btn-primary text-xs py-1.5 px-3 flex items-center gap-1.5 font-semibold shadow-xs disabled:opacity-50"
+            className="btn-primary text-xs py-1.5 px-3 flex items-center gap-1.5 font-medium disabled:opacity-50"
             title="Run Code (Ctrl+Enter / Cmd+Enter)"
           >
             {isRunning ? (
@@ -349,7 +349,7 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
             ) : (
               <Play className="w-3.5 h-3.5 fill-current" />
             )}
-            <span>{isRunning ? 'Running…' : 'Run Code'}</span>
+            <span>{isRunning ? 'Running…' : 'Run code'}</span>
           </button>
         </div>
       </div>
@@ -378,17 +378,17 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
       </div>
 
       {/* ── Collapsible Custom Stdin Panel ─────────────────────────────────── */}
-      <div className="border-t border-neutral-200 dark:border-dark-border bg-neutral-50/60 dark:bg-dark-surface/30">
+      <div className="border-t border-graphite-hairline bg-graphite-base">
         <button
           type="button"
           onClick={() => setIsStdinOpen((prev) => !prev)}
-          className="w-full px-4 py-2 flex items-center justify-between text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+          className="w-full px-4 py-2 flex items-center justify-between text-xs font-medium text-paper-muted hover:text-paper-primary transition-colors"
         >
           <span className="flex items-center gap-1.5">
             <Terminal className="w-3.5 h-3.5" />
-            <span>Custom Input (stdin)</span>
+            <span>Custom input (stdin)</span>
             {stdin.trim() && (
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-500 inline-block" />
+              <span className="w-1.5 h-1.5 rounded-full bg-ochre inline-block" />
             )}
           </span>
           {isStdinOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -401,7 +401,7 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
               onChange={(e) => setStdin(e.target.value)}
               placeholder="Enter test inputs passed to stdin (e.g. 5, array elements, strings)..."
               rows={3}
-              className="w-full font-mono text-xs p-2.5 rounded-lg border border-neutral-200 dark:border-dark-border bg-white dark:bg-dark-bg text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:border-brand-500 resize-none"
+              className="w-full font-mono text-xs p-2.5 rounded border border-graphite-hairline bg-surface text-paper-primary placeholder:text-paper-muted focus:outline-none focus:border-teal resize-none"
             />
           </div>
         )}
@@ -409,14 +409,14 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
 
       {/* ── Output Panel ───────────────────────────────────────────────────── */}
       {result && (
-        <div className="border-t border-neutral-200 dark:border-dark-border bg-neutral-900 text-neutral-100 p-4 space-y-2">
-          <div className="flex items-center justify-between gap-2 border-b border-neutral-800 pb-2">
+        <div className="border-t border-graphite-hairline bg-graphite-base text-paper-primary p-4 space-y-2">
+          <div className="flex items-center justify-between gap-2 border-b border-graphite-hairline pb-2">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-neutral-400">Verdict</span>
+              <span className="text-xs font-medium text-paper-muted">Verdict</span>
               {renderStatusBadge(result.status)}
             </div>
             {result.durationMs > 0 && (
-              <span className="text-[11px] text-neutral-400 font-mono">
+              <span className="text-xs text-paper-muted font-mono">
                 {result.durationMs}ms
               </span>
             )}
@@ -425,8 +425,8 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
           {/* Standard Output */}
           {result.stdout && (
             <div className="space-y-1">
-              <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">stdout:</span>
-              <pre className="font-mono text-xs bg-neutral-950 p-2.5 rounded-lg border border-neutral-800 overflow-x-auto text-emerald-400 whitespace-pre-wrap">
+              <span className="text-xs font-medium text-paper-muted">stdout:</span>
+              <pre className="font-mono text-xs bg-surface p-2.5 rounded border border-graphite-hairline overflow-x-auto text-teal whitespace-pre-wrap">
                 {result.stdout}
               </pre>
             </div>
@@ -435,15 +435,15 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
           {/* Stderr / Compile / Runtime Errors */}
           {result.stderr && (
             <div className="space-y-1">
-              <span className="text-[10px] font-semibold text-rose-400 uppercase tracking-wider">stderr / error:</span>
-              <pre className="font-mono text-xs bg-rose-950/30 p-2.5 rounded-lg border border-rose-900/60 overflow-x-auto text-rose-300 whitespace-pre-wrap">
+              <span className="text-xs font-medium text-rose-400">stderr / error:</span>
+              <pre className="font-mono text-xs bg-rose-950/20 p-2.5 rounded border border-rose-900/40 overflow-x-auto text-rose-300 whitespace-pre-wrap">
                 {result.stderr}
               </pre>
             </div>
           )}
 
           {!result.stdout && !result.stderr && (
-            <p className="text-xs text-neutral-400 italic">Program executed with empty output.</p>
+            <p className="text-xs text-paper-muted italic">Program executed with empty output.</p>
           )}
         </div>
       )}
