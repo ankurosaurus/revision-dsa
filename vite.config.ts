@@ -14,6 +14,12 @@ export default defineConfig({
           if (id.includes('node_modules/framer-motion')) {
             return 'vendor-motion';
           }
+          if (id.includes('node_modules/@monaco-editor') || id.includes('node_modules/monaco-editor')) {
+            return 'vendor-monaco';
+          }
+          if (id.includes('node_modules/@supabase')) {
+            return 'vendor-supabase';
+          }
         },
       },
     },
