@@ -28,6 +28,7 @@ interface ProblemState {
   }) => Promise<Problem>;
   updateProblem: (id: string, updates: Partial<Problem>) => Promise<void>;
   deleteProblem: (id: string) => Promise<void>;
+  restoreProblem: (problem: Problem) => Promise<void>;
   reviewProblem: (id: string, rating: RecallRating) => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => void;
   loadStarterPack: () => void;
@@ -247,6 +248,27 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
         await supabase.from('problems').delete().eq('id', id);
       } catch (err) {
         console.warn('Failed to delete problem in Supabase:', err);
+      }
+    }
+  },
+
+  restoreProblem: async (problem) => {
+    if (get().problems.some((p) => p.id === problem.id)) return;
+    const nextProblems = [problem, ...get().problems];
+    set({ problems: nextProblems });
+    localStorage.setItem(STORAGE_KEYS.PROBLEMS, JSON.stringify(nextProblems));
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        if (userData?.user) {
+          await supabase.from('problems').insert({
+            ...problem,
+            user_id: userData.user.id,
+          });
+        }
+      } catch (err) {
+        console.warn('Failed to restore problem in Supabase:', err);
       }
     }
   },

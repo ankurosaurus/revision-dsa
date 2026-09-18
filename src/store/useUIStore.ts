@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+import { Problem } from '../types';
+
 export type NavTab = 'dashboard' | 'queue' | 'all' | 'stats' | 'settings' | 'catalog' | 'admin';
 
 interface UIState {
@@ -23,6 +25,10 @@ interface UIState {
   
   isOnboardingOpen: boolean;
   setIsOnboardingOpen: (open: boolean) => void;
+
+  solveProblem: Problem | null;
+  openSolveView: (problem: Problem) => void;
+  closeSolveView: () => void;
 }
 
 const getInitialTheme = (): 'dark' | 'light' => {
@@ -76,4 +82,8 @@ export const useUIStore = create<UIState>((set) => ({
 
   isOnboardingOpen: false,
   setIsOnboardingOpen: (open) => set({ isOnboardingOpen: open }),
+
+  solveProblem: null,
+  openSolveView: (problem) => set({ solveProblem: problem }),
+  closeSolveView: () => set({ solveProblem: null }),
 }));
