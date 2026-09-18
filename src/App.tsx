@@ -18,6 +18,7 @@ const SettingsPage = lazy(() => import('./pages/SettingsPage').then((m) => ({ de
 const CatalogPage = lazy(() => import('./pages/CatalogPage').then((m) => ({ default: m.CatalogPage })));
 const AdminPage = lazy(() => import('./pages/AdminPage').then((m) => ({ default: m.AdminPage })));
 const WelcomePage = lazy(() => import('./pages/WelcomePage').then((m) => ({ default: m.WelcomePage })));
+const SolveView = lazy(() => import('./components/solve/SolveView').then((m) => ({ default: m.SolveView })));
 
 // Initialize PostHog once (no-op if VITE_POSTHOG_KEY is not set)
 initPostHog();
@@ -47,6 +48,8 @@ const LoadingScreen = () => (
 function AppContent() {
   const activeTab = useUIStore((s) => s.activeTab);
   const theme = useUIStore((s) => s.theme);
+  const solveProblem = useUIStore((s) => s.solveProblem);
+  const closeSolveView = useUIStore((s) => s.closeSolveView);
   const problems = useProblemStore((s) => s.problems);
   const fetchProblems = useProblemStore((s) => s.fetchProblems);
   const loadStarterPack = useProblemStore((s) => s.loadStarterPack);
@@ -125,6 +128,15 @@ function AppContent() {
       default:          return <DashboardPage />;
     }
   };
+
+  // If user opened a problem in Integrated Solve View
+  if (solveProblem) {
+    return (
+      <Suspense fallback={<LoadingScreen />}>
+        <SolveView problem={solveProblem} onClose={closeSolveView} />
+      </Suspense>
+    );
+  }
 
   // If visitor is not authenticated and has explicitly opened auth
   if (!session && showAuthModal) {

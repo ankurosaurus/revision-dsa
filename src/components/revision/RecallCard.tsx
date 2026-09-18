@@ -4,8 +4,9 @@ import { Problem, RecallRating } from '../../types';
 import { PlatformBadge } from '../problems/PlatformBadge';
 import { DifficultyBadge } from '../problems/DifficultyBadge';
 import { isProblemOverdue, getDaysUntilDue, calculateSM2 } from '../../lib/spacedRepetition';
-import { ExternalLink, Eye, RotateCcw, Check, Sparkles, ChevronDown, Code2, BookOpen } from 'lucide-react';
+import { ExternalLink, Eye, RotateCcw, Check, Sparkles, ChevronDown, Code2, BookOpen, Maximize2 } from 'lucide-react';
 import { CodeCompiler } from '../compiler/CodeCompiler';
+import { useUIStore } from '../../store/useUIStore';
 
 interface RecallCardProps {
   problem: Problem;
@@ -13,6 +14,7 @@ interface RecallCardProps {
 }
 
 export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
+  const openSolveView = useUIStore((s) => s.openSolveView);
   const [viewMode, setViewMode] = useState<'flashcard' | 'compiler'>('flashcard');
   const [isNotesRevealed, setIsNotesRevealed] = useState(false);
   const isOverdue = isProblemOverdue(problem.next_review_date);
@@ -95,16 +97,28 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
             {problem.title}
           </h2>
 
-          <a
-            href={problem.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Open Problem in new tab"
-            className="btn-secondary px-3 py-1.5 text-xs inline-flex items-center gap-1.5 shrink-0"
-          >
-            <span>Open Problem</span>
-            <ExternalLink className="w-3.5 h-3.5 text-neutral-400" />
-          </a>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => openSolveView(problem)}
+              className="btn-primary px-3 py-1.5 text-xs inline-flex items-center gap-1.5"
+              title="Open full 2-panel workspace with compiler & linked problem"
+            >
+              <Maximize2 className="w-3.5 h-3.5" />
+              <span>Solve Workspace</span>
+            </button>
+
+            <a
+              href={problem.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Open Original Problem ↗"
+              className="btn-secondary px-3 py-1.5 text-xs inline-flex items-center gap-1.5"
+            >
+              <span>Open</span>
+              <ExternalLink className="w-3.5 h-3.5 text-neutral-400" />
+            </a>
+          </div>
         </div>
       </div>
 
