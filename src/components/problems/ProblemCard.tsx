@@ -50,27 +50,27 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({
 
           <div>
             {isOverdue ? (
-              <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 border border-rose-200/80 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-800/40">
+              <span className="text-xs font-medium px-2 py-0.5 rounded bg-ochre/15 text-ochre border border-ochre/30">
                 Overdue ({Math.abs(daysUntil)}d)
               </span>
             ) : isDue ? (
-              <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200/80 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-800/40">
-                Due Today
+              <span className="text-xs font-medium px-2 py-0.5 rounded bg-surface-subtle text-paper-secondary border border-surface-border">
+                Due today
               </span>
             ) : isMastered ? (
-              <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-700 border border-neutral-200 dark:bg-dark-surfaceHover dark:text-neutral-300 dark:border-dark-border">
+              <span className="text-xs font-medium px-2 py-0.5 rounded bg-teal/10 text-teal border border-teal/30">
                 Mastered
               </span>
             ) : (
-              <span className="text-[11px] font-medium text-neutral-500 dark:text-dark-textMuted">
+              <span className="text-xs font-normal text-paper-muted">
                 Due in {daysUntil}d
               </span>
             )}
           </div>
         </div>
 
-        {/* Title */}
-        <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-2 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-1">
+        {/* Title in Fraunces serif */}
+        <h3 className="font-serif text-base text-paper-primary font-normal mb-2 group-hover:text-teal transition-colors line-clamp-1">
           {problem.title}
         </h3>
 
@@ -80,7 +80,7 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({
             {problem.tags.map((tag) => (
               <span
                 key={tag}
-                className="text-[11px] font-medium px-2 py-0.5 rounded bg-neutral-100 dark:bg-dark-surfaceHover text-neutral-600 dark:text-neutral-400"
+                className="text-xs px-2 py-0.5 rounded bg-surface-subtle text-paper-secondary border border-surface-border"
               >
                 {tag}
               </span>
@@ -93,14 +93,14 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({
           <div className="mb-3.5">
             <button
               onClick={() => setShowNotes(!showNotes)}
-              className="inline-flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors font-medium"
+              className="inline-flex items-center gap-1 text-xs text-paper-muted hover:text-paper-primary transition-colors font-medium"
             >
               <span>{showNotes ? 'Hide notes' : 'View notes'}</span>
               {showNotes ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
             </button>
 
             {showNotes && (
-              <div className="mt-2 p-3 rounded-lg bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border text-xs text-neutral-700 dark:text-neutral-300 whitespace-pre-wrap leading-relaxed max-h-36 overflow-y-auto">
+              <div className="mt-2 p-3 rounded-lg bg-surface-subtle border border-surface-border text-xs text-paper-secondary whitespace-pre-wrap leading-relaxed max-h-36 overflow-y-auto">
                 {problem.notes}
               </div>
             )}
@@ -109,16 +109,16 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({
       </div>
 
       {/* Footer Info & Actions */}
-      <div className="pt-3 border-t border-neutral-100 dark:border-dark-border flex items-center justify-between gap-3 text-xs">
-        {/* Subtle Metadata */}
-        <div className="flex items-center gap-3 text-neutral-500 dark:text-dark-textMuted">
+      <div className="pt-3 border-t border-surface-border flex items-center justify-between gap-3 text-xs">
+        {/* Subtle Metadata with clean numbers */}
+        <div className="flex items-center gap-3 text-paper-muted">
           <span className="inline-flex items-center gap-1" title="Interval in days">
-            <Calendar className="w-3.5 h-3.5 text-neutral-400" />
-            {problem.interval_days}d
+            <Calendar className="w-3.5 h-3.5" />
+            <span>{problem.interval_days}d</span>
           </span>
           <span className="inline-flex items-center gap-1" title="Repetitions completed">
-            <RotateCcw className="w-3 h-3 text-neutral-400" />
-            {problem.repetitions}
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>{problem.repetitions} reps</span>
           </span>
         </div>
 
@@ -126,7 +126,7 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => onSolve ? onSolve(problem) : openSolveView(problem)}
-            className="px-2.5 py-1 text-xs font-semibold rounded-md bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300 hover:bg-brand-100 dark:hover:bg-brand-900/50 transition-colors inline-flex items-center gap-1"
+            className="px-2.5 py-1 text-xs font-medium rounded-md bg-teal/10 text-teal hover:bg-teal/20 border border-teal/30 transition-colors inline-flex items-center gap-1"
             title="Open in Solve Workspace"
           >
             <Code2 className="w-3.5 h-3.5" />
@@ -136,7 +136,7 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({
           {onSelectForReview && isDue && (
             <button
               onClick={() => onSelectForReview(problem)}
-              className="px-2 py-1 text-xs font-semibold rounded-md bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 hover:bg-amber-100 transition-colors"
+              className="px-2.5 py-1 text-xs font-medium rounded-md bg-ochre/15 text-ochre hover:bg-ochre/25 border border-ochre/30 transition-colors"
             >
               Review
             </button>
@@ -146,17 +146,16 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({
             href={problem.url}
             target="_blank"
             rel="noopener noreferrer"
-            title="Open Original Problem ↗"
-            className="btn-secondary px-2 py-1 text-xs inline-flex items-center gap-1 rounded-md"
+            title="Open original problem in new tab"
+            className="p-1 rounded-md text-paper-muted hover:text-paper-primary transition-colors"
           >
-            <span>Open</span>
-            <ExternalLink className="w-3 h-3 text-neutral-400" />
+            <ExternalLink className="w-3.5 h-3.5" />
           </a>
 
           <button
             onClick={handleDelete}
-            title="Remove Problem"
-            className="p-1 rounded text-neutral-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
+            title="Remove from problem bank"
+            className="p-1 rounded-md text-paper-muted hover:text-ochre transition-colors"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>

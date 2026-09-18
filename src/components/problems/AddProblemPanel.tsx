@@ -24,6 +24,7 @@ import { detectAndValidateUrl, verifyAndFetchMetadata } from '../../lib/urlValid
 import { PRESET_TAGS } from '../../lib/sampleData';
 import { searchCatalog, getCatalogStats } from '../../lib/catalogService';
 import { PlatformBadge } from './PlatformBadge';
+import { DifficultyBadge } from './DifficultyBadge';
 
 export const AddProblemPanel: React.FC = () => {
   const isOpen = useUIStore((s) => s.isAddPanelOpen);
@@ -338,7 +339,7 @@ export const AddProblemPanel: React.FC = () => {
       case 'codeforces':
         return 'Codeforces';
       case 'gfg':
-        return 'GFG';
+        return 'GeeksforGeeks';
     }
   };
 
@@ -346,42 +347,42 @@ export const AddProblemPanel: React.FC = () => {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Subtle Dim Backdrop */}
+          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closePanel}
-            className="fixed inset-0 z-40 bg-neutral-900/40 dark:bg-black/60 backdrop-blur-xs transition-opacity"
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs transition-opacity"
           />
 
-          {/* Slide-in Drawer (Linear / Vercel style) */}
+          {/* Slide-in Drawer */}
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 320 }}
-            className="fixed top-0 right-0 z-50 h-full w-full max-w-xl bg-white dark:bg-dark-surface border-l border-neutral-200 dark:border-dark-border shadow-elevated flex flex-col overflow-hidden"
+            className="fixed top-0 right-0 z-50 h-full w-full max-w-xl bg-surface border-l border-surface-border shadow-elevated flex flex-col overflow-hidden font-sans text-paper-primary"
           >
             {/* Drawer Header */}
-            <div className="px-6 py-4 border-b border-neutral-200 dark:border-dark-border flex items-center justify-between">
+            <div className="px-6 py-4 border-b border-surface-border flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base font-semibold text-neutral-900 dark:text-white">
-                    Log DSA Problem
+                  <h2 className="font-serif text-lg font-normal text-paper-primary">
+                    Log problem
                   </h2>
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 border border-brand-200 dark:border-brand-800/60">
-                    Search-First
+                  <span className="text-xs px-2 py-0.5 rounded-md bg-teal/10 text-teal border border-teal/30">
+                    Search-first
                   </span>
                 </div>
-                <p className="text-xs text-neutral-500 dark:text-dark-textMuted mt-0.5">
-                  Pick from 15,000+ pre-seeded problems or enter a custom link.
+                <p className="text-xs text-paper-secondary mt-0.5">
+                  Pick from 15,000+ indexed problems or enter a custom link.
                 </p>
               </div>
 
               <button
                 onClick={closePanel}
-                className="p-1.5 rounded-md text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover transition-colors"
+                className="p-1.5 rounded-md text-paper-muted hover:text-paper-primary hover:bg-surface-hover transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -389,17 +390,17 @@ export const AddProblemPanel: React.FC = () => {
 
             {/* Mode Switcher Banner if Manual */}
             {mode === 'manual' && (
-              <div className="px-6 py-2.5 bg-neutral-50 dark:bg-dark-bg/60 border-b border-neutral-200 dark:border-dark-border flex items-center justify-between">
+              <div className="px-6 py-2.5 bg-surface-subtle border-b border-surface-border flex items-center justify-between">
                 <button
                   type="button"
                   onClick={() => setMode('catalog')}
-                  className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1"
+                  className="text-xs font-medium text-teal hover:underline flex items-center gap-1"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Back to Problem Catalog Search</span>
+                  <span>Back to problem catalog search</span>
                 </button>
-                <span className="text-[11px] text-neutral-500 dark:text-dark-textMuted">
-                  Manual Link Mode
+                <span className="text-xs text-paper-muted">
+                  Manual link mode
                 </span>
               </div>
             )}
@@ -411,36 +412,25 @@ export const AddProblemPanel: React.FC = () => {
                 <div className="space-y-4">
                   {/* Selected Problem State (if picked) */}
                   {selectedCatalogProblem ? (
-                    <div className="p-4 rounded-xl border border-brand-500/40 bg-brand-50/40 dark:bg-brand-950/20 space-y-3">
+                    <div className="p-4 rounded-xl border border-teal/40 bg-teal/5 space-y-3">
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <div className="flex items-center gap-2 mb-1">
                             <PlatformBadge platform={selectedCatalogProblem.platform} size="sm" />
-                            {/* Serial / Problem number */}
                             {selectedCatalogProblem.problem_number && (
-                              <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-neutral-200/60 dark:bg-dark-surface text-neutral-600 dark:text-neutral-300">
+                              <span className="text-xs text-paper-secondary tabular-nums">
                                 {selectedCatalogProblem.problem_number}
                               </span>
                             )}
                             {selectedCatalogProblem.rating ? (
-                              <span className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20">
+                              <span className="text-xs text-ochre font-medium tabular-nums">
                                 ★ {selectedCatalogProblem.rating}
                               </span>
                             ) : selectedCatalogProblem.difficulty ? (
-                              <span
-                                className={`text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded ${
-                                  selectedCatalogProblem.difficulty === 'easy'
-                                    ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
-                                    : selectedCatalogProblem.difficulty === 'medium'
-                                    ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400'
-                                    : 'bg-rose-500/10 text-rose-700 dark:text-rose-400'
-                                }`}
-                              >
-                                {selectedCatalogProblem.difficulty}
-                              </span>
+                              <DifficultyBadge difficulty={selectedCatalogProblem.difficulty} size="sm" />
                             ) : null}
                           </div>
-                          <h3 className="text-sm font-bold text-neutral-900 dark:text-white leading-snug">
+                          <h3 className="font-serif text-base font-normal text-paper-primary leading-snug">
                             {selectedCatalogProblem.title}
                           </h3>
                         </div>
@@ -448,21 +438,21 @@ export const AddProblemPanel: React.FC = () => {
                         <button
                           type="button"
                           onClick={handleClearSelection}
-                          className="text-xs text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 underline shrink-0 font-medium"
+                          className="text-xs text-paper-secondary hover:text-paper-primary underline shrink-0 font-medium"
                         >
                           Change
                         </button>
                       </div>
 
                       {/* Working URL & Tags */}
-                      <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-brand-200/50 dark:border-brand-900/50">
+                      <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-surface-border">
                         <a
                           href={selectedCatalogProblem.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs text-brand-600 dark:text-brand-400 hover:underline inline-flex items-center gap-1 font-mono text-[11px]"
+                          className="text-xs text-teal hover:underline inline-flex items-center gap-1 font-mono text-[11px]"
                         >
-                          <span>Open in {formatPlatformBadge(selectedCatalogProblem.platform)}</span>
+                          <span>Open on {formatPlatformBadge(selectedCatalogProblem.platform)}</span>
                           <ExternalLink className="w-3 h-3" />
                         </a>
 
@@ -471,13 +461,13 @@ export const AddProblemPanel: React.FC = () => {
                             {selectedCatalogProblem.tags.slice(0, 3).map((t) => (
                               <span
                                 key={t}
-                                className="text-[10px] px-1.5 py-0.5 rounded bg-neutral-200/60 dark:bg-dark-surface text-neutral-700 dark:text-neutral-300"
+                                className="text-[11px] px-1.5 py-0.5 rounded bg-surface-subtle text-paper-secondary border border-surface-border"
                               >
                                 {t}
                               </span>
                             ))}
                             {selectedCatalogProblem.tags.length > 3 && (
-                              <span className="text-[10px] text-neutral-400">
+                              <span className="text-[11px] text-paper-muted">
                                 +{selectedCatalogProblem.tags.length - 3} more
                               </span>
                             )}
@@ -489,9 +479,9 @@ export const AddProblemPanel: React.FC = () => {
                     /* Search & Combobox */
                     <div className="space-y-3">
                       {/* Platform Filter Tabs */}
-                      <div className="flex items-center gap-1 p-1 bg-neutral-100 dark:bg-dark-surfaceHover rounded-lg text-xs">
+                      <div className="flex items-center gap-1 p-1 bg-surface-subtle border border-surface-border rounded-lg text-xs">
                         {[
-                          { id: 'all', label: 'All Catalog', count: `${(catalogStats.total / 1000).toFixed(1)}k` },
+                          { id: 'all', label: 'All', count: `${(catalogStats.total / 1000).toFixed(1)}k` },
                           { id: 'leetcode', label: 'LeetCode', count: catalogStats.leetcode.toLocaleString() },
                           { id: 'codeforces', label: 'Codeforces', count: catalogStats.codeforces.toLocaleString() },
                           { id: 'gfg', label: 'GFG', count: catalogStats.gfg > 100 ? `${catalogStats.gfg}` : 'Organic' },
@@ -502,8 +492,8 @@ export const AddProblemPanel: React.FC = () => {
                             onClick={() => setPlatformTab(tab.id as Platform | 'all')}
                             className={`flex-1 py-1.5 px-2 rounded-md font-medium text-center transition-all flex items-center justify-center gap-1 ${
                               platformTab === tab.id
-                                ? 'bg-white dark:bg-dark-surface text-neutral-900 dark:text-white shadow-xs font-semibold'
-                                : 'text-neutral-500 dark:text-dark-textMuted hover:text-neutral-800 dark:hover:text-neutral-200'
+                                ? 'bg-surface text-paper-primary shadow-xs border border-surface-border'
+                                : 'text-paper-muted hover:text-paper-primary'
                             }`}
                           >
                             <span>{tab.label}</span>
@@ -514,9 +504,9 @@ export const AddProblemPanel: React.FC = () => {
 
                       {/* Search Input Box */}
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-paper-muted">
                           {isSearching ? (
-                            <Loader2 className="w-4 h-4 animate-spin text-brand-600" />
+                            <Loader2 className="w-4 h-4 animate-spin text-teal" />
                           ) : (
                             <Search className="w-4 h-4" />
                           )}
@@ -526,14 +516,14 @@ export const AddProblemPanel: React.FC = () => {
                           type="text"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          placeholder="Search 15,000+ problems (e.g. Two Sum, 1500A, DP, Graph)..."
-                          className="w-full bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border focus:border-brand-500 rounded-lg pl-9 pr-9 py-2.5 text-xs text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none transition-colors shadow-xs"
+                          placeholder="Search 15,000+ problems (e.g. Two Sum, 1500A, DP)…"
+                          className="w-full bg-surface-subtle border border-surface-border focus:border-teal rounded-lg pl-9 pr-9 py-2.5 text-xs text-paper-primary placeholder:text-paper-muted focus:outline-none transition-colors shadow-xs"
                         />
                         {searchQuery && (
                           <button
                             type="button"
                             onClick={() => setSearchQuery('')}
-                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-400 hover:text-neutral-600"
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-paper-muted hover:text-paper-primary"
                           >
                             <X className="w-3.5 h-3.5" />
                           </button>
@@ -542,21 +532,21 @@ export const AddProblemPanel: React.FC = () => {
 
                       {/* GFG Specific Notification if GFG tab chosen */}
                       {platformTab === 'gfg' && (
-                        <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-800 dark:text-amber-300 flex items-start gap-2">
-                          <Info className="w-4 h-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+                        <div className="p-3 rounded-lg bg-surface-subtle border border-surface-border text-xs text-paper-secondary flex items-start gap-2">
+                          <Info className="w-4 h-4 shrink-0 mt-0.5 text-teal" />
                           <div>
-                            <span className="font-semibold">GFG Coverage Note:</span> GeeksforGeeks has no official public bulk API. Classic SDE problems are pre-seeded; adding any GFG link via the manual flow auto-populates the catalog for everyone.
+                            <span className="font-semibold text-paper-primary">GFG note:</span> GeeksforGeeks problems are seeded from classic interview sets; entering any GFG link via manual mode saves it into the shared index for future recall.
                           </div>
                         </div>
                       )}
 
-                      {/* Results List — scrollable, shows up to 50 results */}
-                      <div className="border border-neutral-200 dark:border-dark-border rounded-xl bg-neutral-50/50 dark:bg-dark-bg/40 divide-y divide-neutral-200/70 dark:divide-dark-border/60 max-h-96 overflow-y-auto">
+                      {/* Results List */}
+                      <div className="border border-surface-border rounded-xl bg-surface-subtle/50 divide-y divide-surface-border max-h-96 overflow-y-auto">
                         {searchResults.length === 0 ? (
                           <div className="p-6 text-center">
-                            <p className="text-xs text-neutral-500 dark:text-dark-textMuted">
+                            <p className="text-xs text-paper-muted">
                               {isSearching
-                                ? 'Searching catalog...'
+                                ? 'Searching catalog…'
                                 : `No problems found matching "${searchQuery}".`}
                             </p>
                             <button
@@ -567,7 +557,7 @@ export const AddProblemPanel: React.FC = () => {
                                   setUrl(searchQuery);
                                 }
                               }}
-                              className="mt-2 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline inline-flex items-center gap-1"
+                              className="mt-2 text-xs font-medium text-teal hover:underline inline-flex items-center gap-1"
                             >
                               <span>Add problem manually with link</span>
                               <ChevronRight className="w-3.5 h-3.5" />
@@ -579,48 +569,37 @@ export const AddProblemPanel: React.FC = () => {
                               key={`${prob.platform}-${prob.external_id}`}
                               type="button"
                               onClick={() => handleSelectCatalogProblem(prob)}
-                              className="w-full text-left px-3.5 py-2.5 hover:bg-white dark:hover:bg-dark-surface transition-colors flex items-center justify-between gap-3 group"
+                              className="w-full text-left px-3.5 py-2.5 hover:bg-surface-hover transition-colors flex items-center justify-between gap-3 group"
                             >
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-2 mb-0.5">
-                                  <PlatformBadge platform={prob.platform} size="sm" />
-                                  {/* Serial number: "#1" for LC, "4A" for CF */}
+                                  <PlatformBadge platform={prob.platform} size="sm" showLabel={false} />
                                   {prob.problem_number && (
-                                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-neutral-200/60 dark:bg-dark-surface text-neutral-600 dark:text-neutral-300 shrink-0">
+                                    <span className="text-xs text-paper-secondary tabular-nums">
                                       {prob.problem_number}
                                     </span>
                                   )}
                                   {prob.rating ? (
-                                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-700 dark:text-amber-400">
+                                    <span className="text-xs text-ochre font-medium tabular-nums">
                                       ★ {prob.rating}
                                     </span>
                                   ) : prob.difficulty ? (
-                                    <span
-                                      className={`text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded ${
-                                        prob.difficulty === 'easy'
-                                          ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
-                                          : prob.difficulty === 'medium'
-                                          ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400'
-                                          : 'bg-rose-500/10 text-rose-700 dark:text-rose-400'
-                                      }`}
-                                    >
-                                      {prob.difficulty}
-                                    </span>
+                                    <DifficultyBadge difficulty={prob.difficulty} size="sm" />
                                   ) : null}
 
                                   {prob.is_paid_only && (
-                                    <span className="text-[10px] text-amber-500 font-medium">
+                                    <span className="text-[10px] text-ochre font-medium">
                                       Premium
                                     </span>
                                   )}
                                 </div>
 
-                                <div className="text-xs font-semibold text-neutral-900 dark:text-white truncate group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                                <div className="font-serif text-sm font-normal text-paper-primary truncate group-hover:text-teal transition-colors">
                                   {prob.title}
                                 </div>
 
                                 {prob.tags.length > 0 && (
-                                  <div className="flex items-center gap-1 mt-1 text-[11px] text-neutral-400 truncate">
+                                  <div className="flex items-center gap-1 mt-1 text-[11px] text-paper-muted truncate">
                                     <Tag className="w-2.5 h-2.5 shrink-0" />
                                     <span>{prob.tags.slice(0, 4).join(', ')}</span>
                                     {prob.tags.length > 4 && (
@@ -635,29 +614,25 @@ export const AddProblemPanel: React.FC = () => {
                                   <button
                                     type="button"
                                     onClick={(e) => handleToggleProblem(e, prob)}
-                                    className="px-2.5 py-1 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 hover:bg-rose-50 hover:text-rose-700 dark:bg-emerald-950/40 dark:hover:bg-rose-950/40 dark:hover:text-rose-300 rounded-md border border-emerald-300/80 dark:border-emerald-700/60 hover:border-rose-300 dark:hover:border-rose-700/60 transition-colors flex items-center gap-1 group/btn"
+                                    className="px-2.5 py-1 text-xs font-medium text-teal bg-teal/10 hover:bg-ochre/15 hover:text-ochre hover:border-ochre/30 rounded-md border border-teal/30 transition-colors flex items-center gap-1 group/btn"
                                     title="Click to remove from revision queue (has 5s Undo)"
                                   >
-                                    <CheckCircle2 className="w-3 h-3 group-hover/btn:hidden" />
-                                    <Trash2 className="w-3 h-3 hidden group-hover/btn:inline" />
-                                    <span className="group-hover/btn:hidden">✓ In Revision</span>
+                                    <CheckCircle2 className="w-3.5 h-3.5 group-hover/btn:hidden" />
+                                    <Trash2 className="w-3.5 h-3.5 hidden group-hover/btn:inline" />
+                                    <span className="group-hover/btn:hidden">In revision</span>
                                     <span className="hidden group-hover/btn:inline">Remove</span>
                                   </button>
                                 ) : (
                                   <button
                                     type="button"
                                     onClick={(e) => handleToggleProblem(e, prob)}
-                                    className="px-2 py-1 text-[11px] font-semibold bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/50 dark:hover:bg-brand-900/50 text-brand-600 dark:text-brand-400 rounded-md border border-brand-200/60 dark:border-brand-800/40 transition-colors flex items-center gap-1"
+                                    className="px-2 py-1 text-xs font-medium bg-surface hover:bg-surface-hover text-paper-primary hover:text-teal rounded-md border border-surface-border transition-colors flex items-center gap-1"
                                     title="Add instantly to revision queue"
                                   >
-                                    <Plus className="w-3 h-3" />
+                                    <Plus className="w-3.5 h-3.5" />
                                     <span>+ Add</span>
                                   </button>
                                 )}
-                                <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
-                                  <span>Edit</span>
-                                  <ChevronRight className="w-3.5 h-3.5" />
-                                </span>
                               </div>
                             </button>
                           ))
@@ -666,13 +641,13 @@ export const AddProblemPanel: React.FC = () => {
 
                       {/* Manual Fallback Link */}
                       <div className="pt-2 flex items-center justify-between text-xs">
-                        <span className="text-neutral-500 dark:text-dark-textMuted">
+                        <span className="text-paper-muted">
                           Can't find what you're looking for?
                         </span>
                         <button
                           type="button"
                           onClick={() => setMode('manual')}
-                          className="font-semibold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1"
+                          className="font-medium text-teal hover:underline flex items-center gap-1"
                         >
                           <span>Add manually with URL</span>
                           <ChevronRight className="w-3.5 h-3.5" />
@@ -683,13 +658,13 @@ export const AddProblemPanel: React.FC = () => {
                 </div>
               )}
 
-              {/* --- MODE 2: MANUAL URL PASTE & VERIFY FLOW (ORIGINAL FALLBACK) --- */}
+              {/* --- MODE 2: MANUAL URL PASTE & VERIFY FLOW --- */}
               {mode === 'manual' && (
                 <div className="space-y-4">
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                        Problem Link <span className="text-rose-500">*</span>
+                      <label className="text-xs font-medium text-paper-primary">
+                        Problem link <span className="text-ochre">*</span>
                       </label>
                       {platform && (
                         <div className="flex items-center gap-1.5">
@@ -699,7 +674,7 @@ export const AddProblemPanel: React.FC = () => {
                               href={canonicalUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-[11px] text-brand-600 hover:underline inline-flex items-center gap-0.5"
+                              className="text-xs text-teal hover:underline inline-flex items-center gap-0.5"
                             >
                               <ExternalLink className="w-3 h-3" />
                             </a>
@@ -716,40 +691,40 @@ export const AddProblemPanel: React.FC = () => {
                         onBlur={() => {
                           if (url && !title) handleAutoExtractManual();
                         }}
-                        placeholder="https://leetcode.com/problems/two-sum/ or GFG or Codeforces..."
-                        className={`w-full bg-neutral-50 dark:bg-dark-bg border ${
+                        placeholder="https://leetcode.com/problems/two-sum/ or GFG or Codeforces…"
+                        className={`w-full bg-surface-subtle border ${
                           urlError
-                            ? 'border-rose-400 focus:border-rose-500'
-                            : 'border-neutral-200 dark:border-dark-border focus:border-brand-500'
-                        } rounded-lg px-3.5 py-2 text-xs text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none transition-colors pr-24`}
+                            ? 'border-ochre focus:border-ochre'
+                            : 'border-surface-border focus:border-teal'
+                        } rounded-lg px-3.5 py-2 text-xs text-paper-primary placeholder:text-paper-muted focus:outline-none transition-colors pr-24 font-sans`}
                       />
 
                       <button
                         type="button"
                         onClick={handleAutoExtractManual}
                         disabled={isVerifying || !url.trim()}
-                        className="absolute right-1.5 px-2.5 py-1 rounded-md bg-white dark:bg-dark-surface border border-neutral-200 dark:border-dark-border hover:bg-neutral-50 text-neutral-700 dark:text-neutral-300 text-xs font-medium flex items-center gap-1 transition-colors disabled:opacity-40"
+                        className="absolute right-1.5 px-2.5 py-1 rounded-md bg-surface border border-surface-border hover:bg-surface-hover text-paper-primary text-xs font-medium flex items-center gap-1 transition-colors disabled:opacity-40"
                       >
                         {isVerifying ? (
-                          <Loader2 className="w-3 h-3 animate-spin text-brand-600" />
+                          <Loader2 className="w-3 h-3 animate-spin text-teal" />
                         ) : (
-                          <Sparkles className="w-3 h-3 text-brand-600 dark:text-brand-400" />
+                          <Sparkles className="w-3 h-3 text-teal" />
                         )}
                         <span>{isVerifying ? 'Fetching' : 'Extract'}</span>
                       </button>
                     </div>
 
                     {urlError && (
-                      <p className="mt-1.5 text-xs text-rose-600 dark:text-rose-400 flex items-center gap-1">
+                      <p className="mt-1.5 text-xs text-ochre flex items-center gap-1">
                         <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                         <span>{urlError}</span>
                       </p>
                     )}
 
                     {isLinkVerified && !urlError && (
-                      <p className="mt-1.5 text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                      <p className="mt-1.5 text-xs text-teal flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                        <span>Verified problem metadata</span>
+                        <span>Verified problem link</span>
                       </p>
                     )}
                   </div>
@@ -757,27 +732,27 @@ export const AddProblemPanel: React.FC = () => {
                   {/* Title & Difficulty */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div className="sm:col-span-2">
-                      <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
-                        Problem Title <span className="text-rose-500">*</span>
+                      <label className="block text-xs font-medium text-paper-primary mb-1.5">
+                        Problem title <span className="text-ochre">*</span>
                       </label>
                       <input
                         type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         placeholder="e.g. Trapping Rain Water"
-                        className="w-full bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border focus:border-brand-500 rounded-lg px-3.5 py-2 text-xs text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none transition-colors"
+                        className="w-full bg-surface-subtle border border-surface-border focus:border-teal rounded-lg px-3.5 py-2 text-xs text-paper-primary placeholder:text-paper-muted focus:outline-none transition-colors"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
+                      <label className="block text-xs font-medium text-paper-primary mb-1.5">
                         Difficulty
                       </label>
                       <select
                         value={difficulty}
                         onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-                        className="w-full bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border focus:border-brand-500 rounded-lg px-2.5 py-2 text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none transition-colors"
+                        className="w-full bg-surface-subtle border border-surface-border focus:border-teal rounded-lg px-2.5 py-2 text-xs text-paper-primary focus:outline-none transition-colors cursor-pointer"
                       >
                         <option value="easy">Easy</option>
                         <option value="medium">Medium</option>
@@ -786,23 +761,23 @@ export const AddProblemPanel: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Organic Catalog Community Notice */}
-                  <div className="p-3 rounded-lg bg-neutral-100 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border text-xs text-neutral-600 dark:text-neutral-400 flex items-center gap-2">
-                    <Database className="w-4 h-4 text-brand-600 shrink-0" />
+                  {/* Community Notice */}
+                  <div className="p-3 rounded-lg bg-surface-subtle border border-surface-border text-xs text-paper-secondary flex items-center gap-2">
+                    <Database className="w-4 h-4 text-teal shrink-0" />
                     <span>
-                      Adding this link also adds it to the shared catalog so it's searchable next time.
+                      Adding this problem URL indexes it into the shared catalog for future recall.
                     </span>
                   </div>
                 </div>
               )}
 
-              {/* --- COMMON FIELDS (Shown once a problem is picked or in manual mode) --- */}
+              {/* --- COMMON FIELDS --- */}
               {(selectedCatalogProblem || mode === 'manual') && (
                 <>
                   {/* Tags / Patterns */}
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
-                      Algorithm Patterns
+                    <label className="block text-xs font-medium text-paper-primary mb-1.5">
+                      Algorithm archetypes
                     </label>
 
                     {selectedTags.length > 0 && (
@@ -810,13 +785,13 @@ export const AddProblemPanel: React.FC = () => {
                         {selectedTags.map((tag) => (
                           <span
                             key={tag}
-                            className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-dark-surfaceHover text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-dark-border"
+                            className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-md bg-surface-subtle text-paper-primary border border-surface-border"
                           >
                             <span>{tag}</span>
                             <button
                               type="button"
                               onClick={() => toggleTag(tag)}
-                              className="text-neutral-400 hover:text-neutral-600"
+                              className="text-paper-muted hover:text-paper-primary"
                             >
                               <X className="w-3 h-3" />
                             </button>
@@ -825,7 +800,7 @@ export const AddProblemPanel: React.FC = () => {
                       </div>
                     )}
 
-                    <div className="max-h-24 overflow-y-auto p-2 rounded-lg border border-neutral-200 dark:border-dark-border bg-neutral-50 dark:bg-dark-bg/60 flex flex-wrap gap-1">
+                    <div className="max-h-24 overflow-y-auto p-2 rounded-lg border border-surface-border bg-surface-subtle flex flex-wrap gap-1">
                       {PRESET_TAGS.map((tag) => {
                         const isSelected = selectedTags.includes(tag);
                         return (
@@ -833,10 +808,10 @@ export const AddProblemPanel: React.FC = () => {
                             key={tag}
                             type="button"
                             onClick={() => toggleTag(tag)}
-                            className={`text-[11px] font-medium px-2 py-0.5 rounded transition-colors ${
+                            className={`text-xs px-2 py-0.5 rounded transition-colors ${
                               isSelected
-                                ? 'bg-brand-600 text-white'
-                                : 'bg-white dark:bg-dark-surface text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover border border-neutral-200 dark:border-dark-border'
+                                ? 'bg-teal text-[#0E1614] font-medium'
+                                : 'bg-surface text-paper-secondary hover:text-paper-primary border border-surface-border'
                             }`}
                           >
                             {tag}
@@ -851,8 +826,8 @@ export const AddProblemPanel: React.FC = () => {
                         value={customTagInput}
                         onChange={(e) => setCustomTagInput(e.target.value)}
                         onKeyDown={handleAddCustomTag}
-                        placeholder="Add custom pattern..."
-                        className="flex-1 bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border focus:border-brand-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none transition-colors"
+                        placeholder="Add custom pattern…"
+                        className="flex-1 bg-surface-subtle border border-surface-border focus:border-teal rounded-lg px-3 py-1.5 text-xs text-paper-primary placeholder:text-paper-muted focus:outline-none transition-colors"
                       />
                       <button
                         type="button"
@@ -867,19 +842,19 @@ export const AddProblemPanel: React.FC = () => {
 
                   {/* Initial Confidence Rating */}
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                      Initial Confidence (SM-2 Interval)
+                    <label className="block text-xs font-medium text-paper-primary mb-1">
+                      Initial confidence (SM-2 interval)
                     </label>
-                    <p className="text-[11px] text-neutral-500 dark:text-dark-textMuted mb-2">
+                    <p className="text-xs text-paper-muted mb-2">
                       Determines when this problem will appear for your first active recall session.
                     </p>
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                       {[
                         { id: 'struggled', label: 'Struggled', sub: 'In 1 day' },
-                        { id: 'hints', label: 'Needed Hints', sub: 'In 1 day' },
+                        { id: 'hints', label: 'Needed hints', sub: 'In 1 day' },
                         { id: 'independent', label: 'Independent', sub: 'In 2 days' },
-                        { id: 'instant', label: 'Instant Master', sub: 'In 4 days' },
+                        { id: 'instant', label: 'Instant recall', sub: 'In 4 days' },
                       ].map((opt) => (
                         <button
                           key={opt.id}
@@ -887,12 +862,12 @@ export const AddProblemPanel: React.FC = () => {
                           onClick={() => setConfidence(opt.id as InitialConfidence)}
                           className={`p-2.5 rounded-lg border text-left transition-colors ${
                             confidence === opt.id
-                              ? 'border-brand-600 bg-brand-50/50 dark:bg-brand-950/30 text-brand-900 dark:text-brand-200 font-semibold'
-                              : 'border-neutral-200 dark:border-dark-border bg-white dark:bg-dark-bg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50'
+                              ? 'border-teal bg-teal/10 text-paper-primary font-medium'
+                              : 'border-surface-border bg-surface-subtle text-paper-secondary hover:bg-surface-hover'
                           }`}
                         >
                           <div className="text-xs">{opt.label}</div>
-                          <div className="text-[10px] text-neutral-400 mt-0.5">{opt.sub}</div>
+                          <div className="text-[10px] text-paper-muted mt-0.5">{opt.sub}</div>
                         </button>
                       ))}
                     </div>
@@ -900,27 +875,26 @@ export const AddProblemPanel: React.FC = () => {
 
                   {/* Notes */}
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                      Approach & Notes (Optional)
+                    <label className="block text-xs font-medium text-paper-primary mb-1">
+                      Approach & notes (optional)
                     </label>
                     <textarea
                       rows={3}
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
-                      placeholder="Key intuition, data structures used, edge cases, time/space complexity..."
-                      className="w-full bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border focus:border-brand-500 rounded-lg p-3 text-xs text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none transition-colors leading-relaxed"
+                      placeholder="Key algorithmic invariant, data structures used, edge cases, time/space complexity…"
+                      className="w-full bg-surface-subtle border border-surface-border focus:border-teal rounded-lg p-3 text-xs text-paper-primary placeholder:text-paper-muted focus:outline-none transition-colors leading-relaxed font-sans"
                     />
                   </div>
                 </>
               )}
 
               {/* Actions & Catalog Stats Footer */}
-              <div className="pt-4 border-t border-neutral-200 dark:border-dark-border flex flex-col sm:flex-row items-center justify-between gap-3">
-                <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 dark:text-dark-textMuted">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <div className="pt-4 border-t border-surface-border flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="flex items-center gap-1.5 text-xs text-paper-muted">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal" />
                   <span>
-                    Catalog: {catalogStats.leetcode.toLocaleString()} LeetCode ·{' '}
-                    {catalogStats.codeforces.toLocaleString()} Codeforces · GFG (growing)
+                    Catalog: {catalogStats.leetcode.toLocaleString()} LeetCode · {catalogStats.codeforces.toLocaleString()} Codeforces
                   </span>
                 </div>
 
@@ -934,7 +908,7 @@ export const AddProblemPanel: React.FC = () => {
                     className="btn-primary disabled:opacity-50 flex items-center gap-1.5"
                   >
                     {isSubmitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                    <span>Save to Revision Queue</span>
+                    <span>Save to revision queue</span>
                   </button>
                 </div>
               </div>
@@ -944,16 +918,16 @@ export const AddProblemPanel: React.FC = () => {
             <AnimatePresence>
               {toast && (
                 <motion.div
-                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute bottom-20 left-6 right-6 z-50 flex items-center justify-between gap-3 px-4 py-3 bg-neutral-900 dark:bg-dark-bg text-white rounded-xl shadow-2xl border border-neutral-700/80 dark:border-dark-border text-xs"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute bottom-20 left-6 right-6 z-50 flex items-center justify-between gap-3 px-4 py-3 bg-[#14171F] text-paper-primary rounded-xl shadow-elevated border border-surface-border text-xs"
                 >
                   <div className="flex items-center gap-2 truncate">
                     <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
-                      toast.type === 'added' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
+                      toast.type === 'added' ? 'bg-teal/20 text-teal' : 'bg-ochre/20 text-ochre'
                     }`}>
-                      {toast.type === 'added' ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Trash2 className="w-3 h-3" />}
+                      {toast.type === 'added' ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Trash2 className="w-3.5 h-3.5" />}
                     </div>
                     <span className="truncate">
                       {toast.type === 'added' ? 'Added ' : 'Removed '}
@@ -963,7 +937,7 @@ export const AddProblemPanel: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleUndo}
-                    className="flex items-center gap-1 font-semibold text-brand-400 hover:text-brand-300 px-2 py-1 rounded hover:bg-white/10 transition-colors shrink-0"
+                    className="flex items-center gap-1 font-medium text-teal hover:underline px-2 py-1 rounded hover:bg-surface transition-colors shrink-0"
                   >
                     <Undo2 className="w-3.5 h-3.5" />
                     <span>Undo</span>
