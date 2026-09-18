@@ -1,19 +1,16 @@
 /**
- * WelcomePage — shown when session === null after loading completes.
+ * WelcomePage — landing & authentication hub.
  *
- * Layout: Full-screen centered card.
- *   Left: Brand value prop + animated icon
- *   Right: 3 auth options with animated tab-switch (Login / Sign Up / Continue as Guest)
- *
- * Auth methods:
- *   - Continue as Guest: Instantly starts a guest session (zero fields, no barrier).
- *   - Email + Password: Login / Registration.
- *   - Google OAuth (available when configured).
- *
- * Designed to never block the user with disabled buttons or dead screens.
+ * Implements the lab-notebook visual identity:
+ * - Warm graphite base (#14171F), surface (#1C202B), border (#2C3140).
+ * - Fraunces serif for headings and problem flashcard.
+ * - Work Sans humanist body typography.
+ * - Looping interactive mini-demo of the physical flashcard flip mechanic ("Trapping Rain Water").
+ * - Direct, unpretentious action language ("Start reviewing", "Explore demo", "Continue as guest").
+ * - No trailing "→" arrows, no marketing buzzwords, no decorative gradients.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BookOpen,
@@ -22,24 +19,27 @@ import {
   Eye,
   EyeOff,
   User,
-  ArrowRight,
   Loader2,
   AlertCircle,
-  CheckCircle2,
+  Check,
+  RotateCcw,
+  Sparkles,
   ChevronLeft,
   X,
-  Sparkles,
+  Layers,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 import { PasswordStrengthMeter } from '../components/auth/PasswordStrengthMeter';
 import { useAuth } from '../contexts/AuthContext';
 import { track } from '../lib/analytics';
+import { PlatformBadge } from '../components/problems/PlatformBadge';
+import { DifficultyBadge } from '../components/problems/DifficultyBadge';
 
 type Screen = 'home' | 'login' | 'signup' | 'forgot' | 'check-inbox' | 'forgot-sent';
 
 const REDIRECT_URL = `${window.location.origin}/`;
 
-// ── Google logo SVG ─────────────────────────────────────────────────────────
+// ── Google Logo SVG ──────────────────────────────────────────────────────────
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden>
     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -51,9 +51,9 @@ const GoogleIcon = () => (
 
 // ── Shared input styling ─────────────────────────────────────────────────────
 const inputClass =
-  'w-full bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border rounded-lg px-3.5 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition-colors';
+  'w-full bg-[#14171F] border border-[#2C3140] rounded-lg px-3.5 py-2.5 text-xs text-[#E7E5DF] placeholder:text-[#656B7B] focus:outline-none focus:border-[#4F9C8D] transition-colors';
 
-const errorClass = 'text-[11px] text-rose-500 dark:text-rose-400 mt-1 flex items-center gap-1';
+const errorClass = 'text-[11px] text-ochre mt-1 flex items-center gap-1';
 
 // ── Field wrapper ────────────────────────────────────────────────────────────
 const Field: React.FC<{ label: string; error?: string; children: React.ReactNode }> = ({
@@ -62,7 +62,7 @@ const Field: React.FC<{ label: string; error?: string; children: React.ReactNode
   children,
 }) => (
   <div className="space-y-1">
-    <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">{label}</label>
+    <label className="text-xs font-medium text-paper-secondary">{label}</label>
     {children}
     {error && (
       <p className={errorClass}>
@@ -73,7 +73,154 @@ const Field: React.FC<{ label: string; error?: string; children: React.ReactNode
   </div>
 );
 
-// ── Main component ────────────────────────────────────────────────────────────
+// ── Looping Mini-Demo of Flashcard Flip Mechanic ─────────────────────────────
+const LoopingFlashcardDemo: React.FC = () => {
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [ratingState, setRatingState] = useState<'idle' | 'remembered' | 'again'>('idle');
+
+  useEffect(() => {
+    // Loop cycle: 
+    // 0s: show prompt
+    // 2.5s: reveal approach notes
+    // 5.0s: simulate rating (remembered)
+    // 7.0s: reset to prompt
+    const t1 = setTimeout(() => setIsRevealed(true), 2400);
+    const t2 = setTimeout(() => setRatingState('remembered'), 4800);
+    const t3 = setTimeout(() => {
+      setIsRevealed(false);
+      setRatingState('idle');
+    }, 7200);
+
+    const interval = setInterval(() => {
+      setIsRevealed(false);
+      setRatingState('idle');
+      setTimeout(() => setIsRevealed(true), 2400);
+      setTimeout(() => setRatingState('remembered'), 4800);
+    }, 7500);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearInterval(interval);
+    };
+  }, []);
+
+  return (
+    <div className="w-full max-w-md mx-auto deck-stack-wrap select-none">
+      {/* Peeking deck layer 2 */}
+      <div className="deck-card-layer-2" aria-hidden="true" />
+      {/* Peeking deck layer 1 */}
+      <div className="deck-card-layer-1" aria-hidden="true" />
+
+      {/* Front physical index card */}
+      <div className="relative z-10 physical-index-card p-6 sm:p-7 flex flex-col justify-between min-h-[340px]">
+        <div>
+          {/* Card Topline */}
+          <div className="flex items-center justify-between gap-2 mb-4">
+            <div className="flex items-center gap-2">
+              <PlatformBadge platform="leetcode" size="sm" />
+              <DifficultyBadge difficulty="hard" size="sm" />
+            </div>
+            <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-surface-subtle text-paper-secondary border border-surface-border">
+              Due today
+            </span>
+          </div>
+
+          {/* Problem Title in Fraunces serif */}
+          <h3 className="font-serif text-xl sm:text-2xl text-paper-primary font-normal leading-snug mb-3">
+            Trapping Rain Water
+          </h3>
+
+          {/* Topic Tags */}
+          <div className="flex items-center gap-1.5 mb-5">
+            <span className="text-xs px-2 py-0.5 rounded bg-surface-subtle text-paper-secondary border border-surface-border">
+              Two Pointers
+            </span>
+            <span className="text-xs px-2 py-0.5 rounded bg-surface-subtle text-paper-secondary border border-surface-border">
+              Monotonic Stack
+            </span>
+          </div>
+
+          {/* Card Interior / Approach Reveal */}
+          <div className="perspective-1000">
+            <AnimatePresence mode="wait">
+              {!isRevealed ? (
+                <motion.div
+                  key="front"
+                  initial={{ opacity: 0, rotateX: -15 }}
+                  animate={{ opacity: 1, rotateX: 0 }}
+                  exit={{ opacity: 0, rotateX: 15 }}
+                  transition={{ duration: 0.18 }}
+                  className="rounded-lg border border-dashed border-surface-border p-4 bg-surface-subtle/80 text-center flex flex-col items-center justify-center min-h-[110px]"
+                >
+                  <p className="font-serif text-sm text-paper-primary mb-1">
+                    What is the two-pointer invariant?
+                  </p>
+                  <p className="text-[11px] text-paper-secondary mb-2">
+                    Mentally reconstruct the algorithm before revealing.
+                  </p>
+                  <span className="text-[10px] text-teal font-medium border border-teal/30 bg-teal/10 px-2 py-0.5 rounded">
+                    Auto-revealing in 2s
+                  </span>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="back"
+                  initial={{ opacity: 0, rotateX: 15 }}
+                  animate={{ opacity: 1, rotateX: 0 }}
+                  exit={{ opacity: 0, rotateX: -15 }}
+                  transition={{ duration: 0.18 }}
+                  className="rounded-lg border border-surface-border bg-surface-subtle p-4 min-h-[110px]"
+                >
+                  <span className="text-xs font-medium text-teal block mb-1">
+                    Algorithm invariant
+                  </span>
+                  <p className="text-xs text-paper-primary leading-relaxed">
+                    Maintain <span className="font-mono text-[11px] bg-graphite-950 px-1 py-0.5 rounded">left_max</span> and <span className="font-mono text-[11px] bg-graphite-950 px-1 py-0.5 rounded">right_max</span>. Water trapped is <span className="font-mono text-[11px] bg-graphite-950 px-1 py-0.5 rounded">min(L, R) - height[i]</span>. Advance the smaller wall inward.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Rating Buttons in Footer */}
+        <div className="pt-4 border-t border-surface-border flex items-center justify-between gap-2 mt-4">
+          <div className="text-[11px] text-paper-secondary">
+            Recall quality:
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <span
+              className={`px-2.5 py-1 text-xs rounded-md border transition-all flex items-center gap-1 ${
+                ratingState === 'again'
+                  ? 'bg-ochre/25 text-ochre border-ochre font-semibold'
+                  : 'bg-surface text-paper-secondary border-surface-border'
+              }`}
+            >
+              <RotateCcw className="w-3 h-3 text-ochre" />
+              <span>Needs work</span>
+            </span>
+
+            <span
+              className={`px-2.5 py-1 text-xs rounded-md border transition-all flex items-center gap-1 ${
+                ratingState === 'remembered'
+                  ? 'bg-teal text-[#0E1614] border-teal font-medium'
+                  : 'bg-teal/10 text-teal border-teal/30'
+              }`}
+            >
+              <Check className="w-3 h-3" />
+              <span>Remembered (+3d)</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── Main Welcome Page ────────────────────────────────────────────────────────
 export const WelcomePage: React.FC<{ onClose?: () => void; onExploreDemo?: () => void }> = ({
   onClose,
   onExploreDemo,
@@ -81,67 +228,57 @@ export const WelcomePage: React.FC<{ onClose?: () => void; onExploreDemo?: () =>
   const [screen, setScreen] = useState<Screen>('home');
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-neutral-50 dark:bg-dark-bg bg-grid-pattern p-4 relative">
+    <div className="min-h-screen w-full flex items-center justify-center bg-graphite bg-grid-pattern p-4 sm:p-6 relative text-paper-primary">
       {onClose && (
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-full bg-white/80 dark:bg-dark-surface/80 hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover text-neutral-600 dark:text-neutral-300 transition-colors shadow-sm z-30"
+          className="absolute top-6 right-6 p-2 rounded-lg bg-surface hover:bg-surface-hover text-paper-secondary hover:text-paper-primary border border-surface-border transition-colors z-30"
           title="Close and return to demo"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
       )}
 
-      <div className="w-full max-w-4xl flex flex-col lg:flex-row rounded-2xl overflow-hidden shadow-2xl border border-neutral-200 dark:border-dark-border bg-white dark:bg-dark-surface">
-        {/* ── Left: Value prop ─────────────────────────────── */}
-        <div className="lg:w-5/12 bg-brand-600 dark:bg-brand-700 p-10 flex flex-col justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
-              <BookOpen className="w-4.5 h-4.5 text-white" />
+      <div className="w-full max-w-5xl flex flex-col lg:flex-row rounded-2xl overflow-hidden border border-surface-border bg-surface shadow-elevated">
+        {/* ── Left Side: Problem Lab & Flashcard Demo ──────────────────────── */}
+        <div className="lg:w-7/12 p-6 sm:p-10 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-surface-border bg-graphite-950/50">
+          <div>
+            {/* Minimalist Logo */}
+            <div className="flex items-center gap-2 mb-8">
+              <div className="w-7 h-7 rounded-lg bg-teal text-[#0E1614] flex items-center justify-center font-bold text-xs">
+                <BookOpen className="w-4 h-4" />
+              </div>
+              <span className="font-serif text-lg font-bold text-paper-primary tracking-tight">
+                RevisionDSA
+              </span>
             </div>
-            <span className="text-white font-bold text-base tracking-tight">RevisionDSA</span>
-          </div>
 
-          <div className="space-y-4 py-10">
-            {/* Animated icon */}
-            <motion.div
-              className="w-16 h-16 rounded-2xl bg-white/15 flex items-center justify-center"
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <BookOpen className="w-8 h-8 text-white" />
-            </motion.div>
-
-            <div className="space-y-2">
-              <h1 className="text-2xl font-bold text-white leading-tight">
-                Track your DSA grind.<br />Never forget a pattern again.
+            {/* Headline & Value Proposition */}
+            <div className="space-y-3 mb-8">
+              <h1 className="font-serif text-3xl sm:text-4xl text-paper-primary font-normal leading-tight">
+                Deliberate practice for algorithmic problem solving.
               </h1>
-              <p className="text-brand-100 text-sm leading-relaxed">
-                Spaced-repetition scheduling for LeetCode, Codeforces &amp; GFG problems. 
-                Review the right problem at exactly the right time.
+              <p className="text-xs sm:text-sm text-paper-secondary leading-relaxed max-w-lg">
+                RevisionDSA schedules LeetCode, Codeforces, and GeeksforGeeks problems using adaptive SM-2 spaced repetition, turning ephemeral solves into permanent intuition.
               </p>
             </div>
 
-            <div className="space-y-2 pt-2">
-              {[
-                'SM-2 algorithm — same tech as Anki',
-                '15,000+ problem catalog built-in',
-                'Online Code Compiler with Python, Java, C, C++',
-                'Works offline, syncs when connected',
-              ].map((feat) => (
-                <div key={feat} className="flex items-center gap-2 text-brand-100 text-xs">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-white/70 shrink-0" />
-                  <span>{feat}</span>
-                </div>
-              ))}
+            {/* Live Looping Flashcard Mini-Demo */}
+            <div className="py-2">
+              <LoopingFlashcardDemo />
             </div>
           </div>
 
-          <p className="text-brand-200 text-[11px]">No credit card required &middot; Free forever</p>
+          {/* Quiet feature indicators without marketing fluff */}
+          <div className="pt-6 border-t border-surface-border flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-paper-secondary">
+            <span>Adaptive SM-2 spacing</span>
+            <span>15,000+ indexed catalog</span>
+            <span>Integrated code compiler</span>
+          </div>
         </div>
 
-        {/* ── Right: Auth screens ───────────────────────────── */}
-        <div className="lg:w-7/12 p-8 flex flex-col justify-center">
+        {/* ── Right Side: Direct Action & Authentication ───────────────────── */}
+        <div className="lg:w-5/12 p-6 sm:p-10 flex flex-col justify-center bg-surface">
           <AnimatePresence mode="wait">
             {screen === 'home' && (
               <HomeScreen
@@ -158,13 +295,25 @@ export const WelcomePage: React.FC<{ onClose?: () => void; onExploreDemo?: () =>
               />
             )}
             {screen === 'login' && (
-              <LoginForm key="login" onBack={() => setScreen('home')} onForgot={() => setScreen('forgot')} />
+              <LoginForm
+                key="login"
+                onBack={() => setScreen('home')}
+                onForgot={() => setScreen('forgot')}
+              />
             )}
             {screen === 'signup' && (
-              <SignUpForm key="signup" onBack={() => setScreen('home')} onSuccess={() => setScreen('check-inbox')} />
+              <SignUpForm
+                key="signup"
+                onBack={() => setScreen('home')}
+                onSuccess={() => setScreen('check-inbox')}
+              />
             )}
             {screen === 'forgot' && (
-              <ForgotForm key="forgot" onBack={() => setScreen('login')} onSuccess={() => setScreen('forgot-sent')} />
+              <ForgotForm
+                key="forgot"
+                onBack={() => setScreen('login')}
+                onSuccess={() => setScreen('forgot-sent')}
+              />
             )}
             {screen === 'check-inbox' && (
               <CheckInbox key="inbox" onBack={() => setScreen('home')} />
@@ -179,7 +328,7 @@ export const WelcomePage: React.FC<{ onClose?: () => void; onExploreDemo?: () =>
   );
 };
 
-// ── Screen: Home (3 options + Live Demo) ──────────────────────────────────────
+// ── Screen: Home ─────────────────────────────────────────────────────────────
 const HomeScreen: React.FC<{
   onLogin: () => void;
   onSignUp: () => void;
@@ -195,9 +344,7 @@ const HomeScreen: React.FC<{
     setError('');
     try {
       const res = await signInAsGuest();
-      if (res?.error) {
-        setError(res.error);
-      }
+      if (res?.error) setError(res.error);
     } catch (err: any) {
       setError(err?.message || 'Failed to start guest session');
     } finally {
@@ -207,83 +354,78 @@ const HomeScreen: React.FC<{
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -16 }}
-      transition={{ duration: 0.2 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.15 }}
       className="space-y-5"
     >
       <div>
-        <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Get started</h2>
-        <p className="text-sm text-neutral-500 dark:text-dark-textMuted mt-1">
-          Choose how you'd like to continue.
+        <h2 className="font-serif text-2xl text-paper-primary font-normal">
+          Start practicing
+        </h2>
+        <p className="text-xs text-paper-secondary mt-1">
+          Select an option to access your revision queue.
         </p>
       </div>
 
       <div className="space-y-2.5">
-        {/* 1. Explore Live Demo — Zero barrier, reduces bounce rate immediately */}
+        {/* 1. Explore Live Demo — Zero barrier */}
         {onExploreDemo && (
           <button
             onClick={onExploreDemo}
-            className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-gradient-to-r from-brand-50 to-indigo-50 hover:from-brand-100 hover:to-indigo-100 dark:from-brand-950/40 dark:to-indigo-950/40 dark:hover:from-brand-900/50 dark:hover:to-indigo-900/50 border border-brand-200/80 dark:border-brand-800/60 text-brand-700 dark:text-brand-300 font-semibold text-sm transition-all group shadow-2xs"
+            className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-teal text-[#0E1614] hover:bg-teal-hover font-medium text-xs transition-colors shadow-xs"
           >
             <div className="text-left">
-              <div className="flex items-center gap-1.5 text-sm font-bold text-brand-700 dark:text-brand-300">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span>Explore Live Interactive Demo</span>
-              </div>
-              <span className="text-[11px] text-brand-600/80 dark:text-brand-400/80 font-normal">
-                Test spaced repetition, problem bank & compiler instantly
+              <span className="font-semibold block text-xs">
+                Explore interactive demo
+              </span>
+              <span className="text-[11px] opacity-90 block">
+                Test the spaced repetition queue and problem bank immediately
               </span>
             </div>
-            <ArrowRight className="w-4 h-4 text-brand-600 dark:text-brand-400 group-hover:translate-x-1 transition-transform" />
+            <Sparkles className="w-4 h-4 shrink-0" />
           </button>
         )}
 
-        {/* 2. Log In */}
-        <button
-          onClick={onLogin}
-          className="w-full btn-primary flex items-center justify-between px-4 py-2.5"
-        >
-          <span className="font-semibold">Log In</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
-
-        {/* 3. Sign Up */}
-        <button
-          onClick={onSignUp}
-          className="w-full btn-secondary flex items-center justify-between px-4 py-2.5"
-        >
-          <span className="font-semibold">Create Account</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
-
-        {/* Divider */}
-        <div className="relative flex items-center gap-3 py-0.5">
-          <div className="flex-1 h-px bg-neutral-200 dark:bg-dark-border" />
-          <span className="text-[11px] text-neutral-400 dark:text-neutral-500 font-medium">or</span>
-          <div className="flex-1 h-px bg-neutral-200 dark:bg-dark-border" />
-        </div>
-
-        {/* 4. Continue as Guest */}
+        {/* 2. Start Guest Session */}
         <button
           onClick={handleGuest}
           disabled={guestLoading}
-          className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg border border-neutral-200 dark:border-dark-border text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-dark-surfaceHover hover:border-neutral-300 dark:hover:border-neutral-600 transition-all font-medium text-xs group"
+          className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg border border-surface-border bg-surface-subtle hover:bg-surface-hover text-paper-primary transition-colors text-xs disabled:opacity-50"
         >
           <div className="text-left">
-            <span className="font-semibold block text-xs group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
-              Continue as Guest
+            <span className="font-medium block text-xs">
+              Continue as guest
             </span>
-            <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-normal">
-              No sign-up required · Saved on this device
+            <span className="text-[11px] text-paper-muted block">
+              No registration required · Progress saved on this device
             </span>
           </div>
-          {guestLoading ? (
-            <Loader2 className="w-3.5 h-3.5 animate-spin text-brand-500" />
-          ) : (
-            <ArrowRight className="w-3.5 h-3.5 text-neutral-400 group-hover:translate-x-0.5 group-hover:text-brand-500 transition-all" />
-          )}
+          {guestLoading && <Loader2 className="w-3.5 h-3.5 animate-spin text-teal" />}
+        </button>
+
+        {/* Divider */}
+        <div className="relative flex items-center gap-3 py-1">
+          <div className="flex-1 h-px bg-surface-border" />
+          <span className="text-[11px] text-paper-muted">or sync across devices</span>
+          <div className="flex-1 h-px bg-surface-border" />
+        </div>
+
+        {/* 3. Log In */}
+        <button
+          onClick={onLogin}
+          className="w-full btn-secondary flex items-center justify-center py-2.5 text-xs font-medium"
+        >
+          <span>Log in to existing account</span>
+        </button>
+
+        {/* 4. Sign Up */}
+        <button
+          onClick={onSignUp}
+          className="w-full flex items-center justify-center py-2 text-xs text-paper-secondary hover:text-paper-primary transition-colors"
+        >
+          <span>Create an account</span>
         </button>
       </div>
 
@@ -293,16 +435,15 @@ const HomeScreen: React.FC<{
           {error}
         </p>
       )}
-
-      <p className="text-[11px] text-neutral-400 dark:text-neutral-600 text-center">
-        By continuing, you agree to our terms of service.
-      </p>
     </motion.div>
   );
 };
 
 // ── Screen: Login ─────────────────────────────────────────────────────────────
-const LoginForm: React.FC<{ onBack: () => void; onForgot: () => void }> = ({ onBack, onForgot }) => {
+const LoginForm: React.FC<{ onBack: () => void; onForgot: () => void }> = ({
+  onBack,
+  onForgot,
+}) => {
   const { signInWithPassword } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -317,14 +458,12 @@ const LoginForm: React.FC<{ onBack: () => void; onForgot: () => void }> = ({ onB
     setError('');
     const res = await signInWithPassword(email, password);
     setLoading(false);
-    if (res?.error) {
-      setError(res.error);
-    }
+    if (res?.error) setError(res.error);
   };
 
   const handleGoogle = async () => {
     if (!isSupabaseConfigured || !supabase) {
-      setError('Google Sign-In requires Supabase configuration in .env.local. You can use Email login or Continue as Guest immediately.');
+      setError('Google Sign-In requires Supabase credentials in .env.local.');
       return;
     }
     setGoogleLoading(true);
@@ -333,62 +472,63 @@ const LoginForm: React.FC<{ onBack: () => void; onForgot: () => void }> = ({ onB
       provider: 'google',
       options: { redirectTo: REDIRECT_URL },
     });
-    if (err) { setError(err.message); setGoogleLoading(false); }
+    if (err) {
+      setError(err.message);
+      setGoogleLoading(false);
+    }
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 24 }}
+      initial={{ opacity: 0, x: 12 }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -24 }}
-      transition={{ duration: 0.2 }}
-      className="space-y-5"
+      exit={{ opacity: 0, x: -12 }}
+      transition={{ duration: 0.15 }}
+      className="space-y-4"
     >
-      <div className="flex items-center gap-3">
-        <button onClick={onBack} className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover text-neutral-500 transition-colors">
+      <div className="flex items-center gap-2">
+        <button
+          onClick={onBack}
+          className="p-1 rounded text-paper-muted hover:text-paper-primary transition-colors"
+        >
           <ChevronLeft className="w-4 h-4" />
         </button>
         <div>
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Welcome back</h2>
-          <p className="text-xs text-neutral-500 dark:text-dark-textMuted">Log in to your account.</p>
+          <h2 className="font-serif text-xl text-paper-primary font-normal">Log in</h2>
+          <p className="text-xs text-paper-secondary">Access your revision schedule.</p>
         </div>
       </div>
 
-      {/* Google */}
       <button
         onClick={handleGoogle}
         disabled={googleLoading}
-        className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-lg border border-neutral-200 dark:border-dark-border text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-dark-surfaceHover transition-all disabled:opacity-50"
+        className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-surface-border text-xs font-medium text-paper-primary hover:bg-surface-hover transition-colors disabled:opacity-50"
       >
-        {googleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <GoogleIcon />}
-        Continue with Google
+        {googleLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <GoogleIcon />}
+        <span>Continue with Google</span>
       </button>
 
       <div className="relative flex items-center gap-3">
-        <div className="flex-1 h-px bg-neutral-200 dark:bg-dark-border" />
-        <span className="text-[11px] text-neutral-400 font-medium">or with email</span>
-        <div className="flex-1 h-px bg-neutral-200 dark:bg-dark-border" />
+        <div className="flex-1 h-px bg-surface-border" />
+        <span className="text-[11px] text-paper-muted">or with email</span>
+        <div className="flex-1 h-px bg-surface-border" />
       </div>
 
-      <form onSubmit={handleLogin} className="space-y-4">
+      <form onSubmit={handleLogin} className="space-y-3">
         <Field label="Email">
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400 pointer-events-none" />
-            <input
-              type="email"
-              required
-              autoComplete="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={`${inputClass} pl-9`}
-            />
-          </div>
+          <input
+            type="email"
+            required
+            autoComplete="email"
+            placeholder="candidate@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={inputClass}
+          />
         </Field>
 
         <Field label="Password">
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400 pointer-events-none" />
             <input
               type={showPw ? 'text' : 'password'}
               required
@@ -396,12 +536,12 @@ const LoginForm: React.FC<{ onBack: () => void; onForgot: () => void }> = ({ onB
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={`${inputClass} pl-9 pr-9`}
+              className={`${inputClass} pr-8`}
             />
             <button
               type="button"
               onClick={() => setShowPw((v) => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-paper-muted hover:text-paper-primary"
             >
               {showPw ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
             </button>
@@ -409,24 +549,29 @@ const LoginForm: React.FC<{ onBack: () => void; onForgot: () => void }> = ({ onB
         </Field>
 
         <div className="flex justify-end">
-          <button type="button" onClick={onForgot} className="text-xs font-medium text-brand-600 dark:text-brand-400 hover:underline">
+          <button
+            type="button"
+            onClick={onForgot}
+            className="text-xs text-paper-secondary hover:text-paper-primary hover:underline"
+          >
             Forgot password?
           </button>
         </div>
 
         {error && (
           <p className={errorClass}>
-            <AlertCircle className="w-3.5 h-3.5 shrink-0" />{error}
+            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+            {error}
           </p>
         )}
 
         <button
           type="submit"
           disabled={loading || !email || !password}
-          className="w-full btn-primary flex items-center justify-center gap-2 py-2.5 disabled:opacity-50"
+          className="w-full btn-primary py-2 text-xs font-medium disabled:opacity-50 flex items-center justify-center gap-1.5"
         >
-          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-          {loading ? 'Logging in…' : 'Log In'}
+          {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+          <span>{loading ? 'Authenticating…' : 'Log in'}</span>
         </button>
       </form>
     </motion.div>
@@ -434,7 +579,10 @@ const LoginForm: React.FC<{ onBack: () => void; onForgot: () => void }> = ({ onB
 };
 
 // ── Screen: Sign Up ───────────────────────────────────────────────────────────
-const SignUpForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({ onBack, onSuccess }) => {
+const SignUpForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({
+  onBack,
+  onSuccess,
+}) => {
   const { signUpWithEmail } = useAuth();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -447,20 +595,16 @@ const SignUpForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({ o
   const [confirmError, setConfirmError] = useState('');
   const [error, setError] = useState('');
 
-  // Live validation
-  const validateEmail = (v: string) => {
-    if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) setEmailError('Enter a valid email address.');
-    else setEmailError('');
-  };
-  const validateConfirm = (v: string) => {
-    if (v && v !== password) setConfirmError('Passwords do not match.');
-    else setConfirmError('');
-  };
-
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirm) { setConfirmError('Passwords do not match.'); return; }
-    if (password.length < 8) { setError('Password must be at least 8 characters.'); return; }
+    if (password !== confirm) {
+      setConfirmError('Passwords do not match.');
+      return;
+    }
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters.');
+      return;
+    }
 
     setLoading(true);
     setError('');
@@ -475,7 +619,7 @@ const SignUpForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({ o
 
   const handleGoogle = async () => {
     if (!isSupabaseConfigured || !supabase) {
-      setError('Google Sign-In requires Supabase configuration in .env.local. You can use Email sign up or Continue as Guest immediately.');
+      setError('Google Sign-In requires Supabase credentials in .env.local.');
       return;
     }
     setGoogleLoading(true);
@@ -483,86 +627,91 @@ const SignUpForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({ o
       provider: 'google',
       options: { redirectTo: REDIRECT_URL },
     });
-    if (err) { setError(err.message); setGoogleLoading(false); }
+    if (err) {
+      setError(err.message);
+      setGoogleLoading(false);
+    }
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 24 }}
+      initial={{ opacity: 0, x: 12 }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -24 }}
-      transition={{ duration: 0.2 }}
+      exit={{ opacity: 0, x: -12 }}
+      transition={{ duration: 0.15 }}
       className="space-y-4"
     >
-      <div className="flex items-center gap-3">
-        <button onClick={onBack} className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover text-neutral-500 transition-colors">
+      <div className="flex items-center gap-2">
+        <button
+          onClick={onBack}
+          className="p-1 rounded text-paper-muted hover:text-paper-primary transition-colors"
+        >
           <ChevronLeft className="w-4 h-4" />
         </button>
         <div>
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Create account</h2>
-          <p className="text-xs text-neutral-500 dark:text-dark-textMuted">Start tracking your DSA grind.</p>
+          <h2 className="font-serif text-xl text-paper-primary font-normal">Create account</h2>
+          <p className="text-xs text-paper-secondary">Sync your problem bank across devices.</p>
         </div>
       </div>
 
-      {/* Google */}
       <button
         onClick={handleGoogle}
         disabled={googleLoading}
-        className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-lg border border-neutral-200 dark:border-dark-border text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-dark-surfaceHover transition-all disabled:opacity-50"
+        className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-surface-border text-xs font-medium text-paper-primary hover:bg-surface-hover transition-colors disabled:opacity-50"
       >
-        {googleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <GoogleIcon />}
-        Sign up with Google
+        {googleLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <GoogleIcon />}
+        <span>Sign up with Google</span>
       </button>
 
       <div className="relative flex items-center gap-3">
-        <div className="flex-1 h-px bg-neutral-200 dark:bg-dark-border" />
-        <span className="text-[11px] text-neutral-400 font-medium">or with email</span>
-        <div className="flex-1 h-px bg-neutral-200 dark:bg-dark-border" />
+        <div className="flex-1 h-px bg-surface-border" />
+        <span className="text-[11px] text-paper-muted">or with email</span>
+        <div className="flex-1 h-px bg-surface-border" />
       </div>
 
       <form onSubmit={handleSignUp} className="space-y-3">
         <Field label="Full name">
-          <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400 pointer-events-none" />
-            <input
-              type="text"
-              autoComplete="name"
-              placeholder="Candidate Name"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className={`${inputClass} pl-9`}
-            />
-          </div>
+          <input
+            type="text"
+            autoComplete="name"
+            placeholder="Candidate Name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            className={inputClass}
+          />
         </Field>
 
         <Field label="Email" error={emailError}>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400 pointer-events-none" />
-            <input
-              type="email"
-              required
-              autoComplete="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => { setEmail(e.target.value); validateEmail(e.target.value); }}
-              className={`${inputClass} pl-9 ${emailError ? 'border-rose-400' : ''}`}
-            />
-          </div>
+          <input
+            type="email"
+            required
+            autoComplete="email"
+            placeholder="candidate@example.com"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setEmailError('');
+            }}
+            className={inputClass}
+          />
         </Field>
 
         <Field label="Password">
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400 pointer-events-none" />
             <input
               type={showPw ? 'text' : 'password'}
               required
               autoComplete="new-password"
-              placeholder="At least 8 characters"
+              placeholder="Minimum 8 characters"
               value={password}
-              onChange={(e) => { setPassword(e.target.value); if (confirm) validateConfirm(confirm); }}
-              className={`${inputClass} pl-9 pr-9`}
+              onChange={(e) => setPassword(e.target.value)}
+              className={`${inputClass} pr-8`}
             />
-            <button type="button" onClick={() => setShowPw((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600">
+            <button
+              type="button"
+              onClick={() => setShowPw((v) => !v)}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-paper-muted hover:text-paper-primary"
+            >
               {showPw ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
             </button>
           </div>
@@ -570,33 +719,34 @@ const SignUpForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({ o
         </Field>
 
         <Field label="Confirm password" error={confirmError}>
-          <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400 pointer-events-none" />
-            <input
-              type={showPw ? 'text' : 'password'}
-              required
-              autoComplete="new-password"
-              placeholder="Repeat password"
-              value={confirm}
-              onChange={(e) => { setConfirm(e.target.value); validateConfirm(e.target.value); }}
-              className={`${inputClass} pl-9 ${confirmError ? 'border-rose-400' : ''}`}
-            />
-          </div>
+          <input
+            type={showPw ? 'text' : 'password'}
+            required
+            autoComplete="new-password"
+            placeholder="Repeat password"
+            value={confirm}
+            onChange={(e) => {
+              setConfirm(e.target.value);
+              setConfirmError('');
+            }}
+            className={inputClass}
+          />
         </Field>
 
         {error && (
           <p className={errorClass}>
-            <AlertCircle className="w-3.5 h-3.5 shrink-0" />{error}
+            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+            {error}
           </p>
         )}
 
         <button
           type="submit"
           disabled={loading || !email || !password || !!emailError || !!confirmError}
-          className="w-full btn-primary flex items-center justify-center gap-2 py-2.5 disabled:opacity-50"
+          className="w-full btn-primary py-2 text-xs font-medium disabled:opacity-50 flex items-center justify-center gap-1.5"
         >
-          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-          {loading ? 'Creating account…' : 'Create Account'}
+          {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+          <span>{loading ? 'Creating account…' : 'Create account'}</span>
         </button>
       </form>
     </motion.div>
@@ -604,7 +754,10 @@ const SignUpForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({ o
 };
 
 // ── Screen: Forgot Password ───────────────────────────────────────────────────
-const ForgotForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({ onBack, onSuccess }) => {
+const ForgotForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({
+  onBack,
+  onSuccess,
+}) => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -612,7 +765,7 @@ const ForgotForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({ o
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isSupabaseConfigured || !supabase) {
-      setError('Password recovery via email requires Supabase configuration in .env.local.');
+      setError('Password recovery via email requires Supabase configuration.');
       return;
     }
     setLoading(true);
@@ -627,47 +780,52 @@ const ForgotForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({ o
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 24 }}
+      initial={{ opacity: 0, x: 12 }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -24 }}
-      transition={{ duration: 0.2 }}
-      className="space-y-5"
+      exit={{ opacity: 0, x: -12 }}
+      transition={{ duration: 0.15 }}
+      className="space-y-4"
     >
-      <div className="flex items-center gap-3">
-        <button onClick={onBack} className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover text-neutral-500 transition-colors">
+      <div className="flex items-center gap-2">
+        <button
+          onClick={onBack}
+          className="p-1 rounded text-paper-muted hover:text-paper-primary transition-colors"
+        >
           <ChevronLeft className="w-4 h-4" />
         </button>
         <div>
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Reset password</h2>
-          <p className="text-xs text-neutral-500 dark:text-dark-textMuted">We'll send you a reset link.</p>
+          <h2 className="font-serif text-xl text-paper-primary font-normal">Reset password</h2>
+          <p className="text-xs text-paper-secondary">We'll send you a password reset link.</p>
         </div>
       </div>
 
-      <form onSubmit={handleReset} className="space-y-4">
+      <form onSubmit={handleReset} className="space-y-3">
         <Field label="Email address">
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400 pointer-events-none" />
-            <input
-              type="email"
-              required
-              autoComplete="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={`${inputClass} pl-9`}
-            />
-          </div>
+          <input
+            type="email"
+            required
+            autoComplete="email"
+            placeholder="candidate@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={inputClass}
+          />
         </Field>
 
-        {error && <p className={errorClass}><AlertCircle className="w-3.5 h-3.5 shrink-0" />{error}</p>}
+        {error && (
+          <p className={errorClass}>
+            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+            {error}
+          </p>
+        )}
 
         <button
           type="submit"
           disabled={loading || !email}
-          className="w-full btn-primary flex items-center justify-center gap-2 py-2.5 disabled:opacity-50"
+          className="w-full btn-primary py-2 text-xs font-medium disabled:opacity-50 flex items-center justify-center gap-1.5"
         >
-          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-          {loading ? 'Sending…' : 'Send Reset Link'}
+          {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+          <span>{loading ? 'Sending link…' : 'Send reset link'}</span>
         </button>
       </form>
     </motion.div>
@@ -677,23 +835,24 @@ const ForgotForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({ o
 // ── Screen: Check Inbox ───────────────────────────────────────────────────────
 const CheckInbox: React.FC<{ onBack: () => void }> = ({ onBack }) => (
   <motion.div
-    initial={{ opacity: 0, scale: 0.95 }}
-    animate={{ opacity: 1, scale: 1 }}
-    exit={{ opacity: 0 }}
-    transition={{ duration: 0.2 }}
-    className="text-center space-y-5 py-6"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="text-center space-y-4 py-4"
   >
-    <div className="w-16 h-16 mx-auto rounded-2xl bg-brand-50 dark:bg-brand-950/30 flex items-center justify-center">
-      <Mail className="w-8 h-8 text-brand-600 dark:text-brand-400" />
+    <div className="w-12 h-12 mx-auto rounded-xl bg-teal/15 text-teal flex items-center justify-center border border-teal/30">
+      <Mail className="w-6 h-6" />
     </div>
-    <div className="space-y-2">
-      <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Check your inbox</h2>
-      <p className="text-sm text-neutral-500 dark:text-dark-textMuted leading-relaxed max-w-xs mx-auto">
-        We sent you a confirmation email. Click the link in it to activate your account and start tracking.
+    <div>
+      <h2 className="font-serif text-xl text-paper-primary font-normal">Check your inbox</h2>
+      <p className="text-xs text-paper-secondary mt-1 max-w-xs mx-auto leading-relaxed">
+        Confirmation link sent. Click the link in the email to activate your account.
       </p>
     </div>
-    <button onClick={onBack} className="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-      Back to start
+    <button
+      onClick={onBack}
+      className="text-xs font-medium text-teal hover:underline"
+    >
+      Return to start
     </button>
   </motion.div>
 );
@@ -701,23 +860,24 @@ const CheckInbox: React.FC<{ onBack: () => void }> = ({ onBack }) => (
 // ── Screen: Forgot Sent ───────────────────────────────────────────────────────
 const ForgotSent: React.FC<{ onBack: () => void }> = ({ onBack }) => (
   <motion.div
-    initial={{ opacity: 0, scale: 0.95 }}
-    animate={{ opacity: 1, scale: 1 }}
-    exit={{ opacity: 0 }}
-    transition={{ duration: 0.2 }}
-    className="text-center space-y-5 py-6"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="text-center space-y-4 py-4"
   >
-    <div className="w-16 h-16 mx-auto rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 flex items-center justify-center">
-      <CheckCircle2 className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+    <div className="w-12 h-12 mx-auto rounded-xl bg-teal/15 text-teal flex items-center justify-center border border-teal/30">
+      <Check className="w-6 h-6" />
     </div>
-    <div className="space-y-2">
-      <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Reset link sent</h2>
-      <p className="text-sm text-neutral-500 dark:text-dark-textMuted leading-relaxed max-w-xs mx-auto">
+    <div>
+      <h2 className="font-serif text-xl text-paper-primary font-normal">Reset link dispatched</h2>
+      <p className="text-xs text-paper-secondary mt-1 max-w-xs mx-auto leading-relaxed">
         Check your email for the password reset link. It expires in 1 hour.
       </p>
     </div>
-    <button onClick={onBack} className="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-      Back to login
+    <button
+      onClick={onBack}
+      className="text-xs font-medium text-teal hover:underline"
+    >
+      Return to login
     </button>
   </motion.div>
 );

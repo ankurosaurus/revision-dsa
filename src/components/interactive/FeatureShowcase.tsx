@@ -6,9 +6,6 @@ import {
   Cpu,
   Layers,
   CheckCircle2,
-  ExternalLink,
-  ChevronRight,
-  Sparkles,
 } from 'lucide-react';
 import { useUIStore } from '../../store/useUIStore';
 
@@ -20,54 +17,54 @@ export const FeatureShowcase: React.FC = () => {
   const features = [
     {
       id: 'detection',
-      index: '01',
-      title: 'URL Intelligence',
-      tagline: 'Instant regex & metadata parsing across 3 platforms',
+      index: '1',
+      title: 'URL validation & canonical parsing',
+      tagline: 'Instant regex and metadata detection across 3 platforms',
       icon: Link2,
       description:
-        'Paste any problem link from LeetCode, GeeksforGeeks, or Codeforces. RevisionDSA instantly validates the URL, extracts title & difficulty, tags core patterns, and preserves a clickable canonical link.',
-      metricLabel: 'Platforms Supported',
-      metricValue: 'LeetCode • GFG • CF',
-      actionLabel: 'Try Logging a Problem',
+        'Paste any problem link from LeetCode, GeeksforGeeks, or Codeforces. RevisionDSA validates the URL format, extracts the title and difficulty, tags the algorithmic archetype, and links to the canonical problem statement.',
+      metricLabel: 'Platforms supported',
+      metricValue: 'LeetCode, GeeksforGeeks, Codeforces',
+      actionLabel: 'Log a problem',
       action: () => openAddPanel(),
     },
     {
       id: 'recall',
-      index: '02',
-      title: 'Active Recall Flow',
-      tagline: 'Enforce mental reconstruction before revealing notes',
+      index: '2',
+      title: 'Active recall flashcard loop',
+      tagline: 'Mental reconstruction before notes are revealed',
       icon: Brain,
       description:
-        'Passive reading creates an illusion of competence. RevisionDSA hides your approach notes until prompted, forcing you to mentally reconstruct the algorithm, data structure, and complexity first.',
-      metricLabel: 'Interactive Flashcard',
-      metricValue: 'Space to Reveal • 1-4 to Rate',
-      actionLabel: 'Enter Revision Queue',
+        'Passive rereading creates the illusion of competence. RevisionDSA holds back your approach notes until prompted, requiring you to retrieve the invariants, data structures, and edge cases from memory first.',
+      metricLabel: 'Card mechanics',
+      metricValue: 'Space to reveal, 1–4 to rate',
+      actionLabel: 'Open revision queue',
       action: () => setActiveView('queue'),
     },
     {
       id: 'sm2',
-      index: '03',
-      title: 'SM-2 Engine',
-      tagline: 'Scientific spaced intervals (1d → 3d → 7d → 21d)',
+      index: '3',
+      title: 'Adaptive SM-2 spacing schedule',
+      tagline: 'Interval expansion: 1d, 3d, 7d, 21d',
       icon: Cpu,
       description:
-        'Each recall rating dynamically recalculates the SuperMemo-2 ease factor, interval, and next review date. Problems you struggle with repeat quickly; problems you master space out to months.',
-      metricLabel: 'Interval Multiplier',
-      metricValue: '1.2x to 3.25x Dynamic',
-      actionLabel: 'View Analytics',
+        'Each recall rating updates the SuperMemo-2 ease factor, interval, and next due date. Difficult problems reappear promptly; mastered patterns space out over weeks and months.',
+      metricLabel: 'Interval multiplier',
+      metricValue: '1.2x to 3.25x adaptive',
+      actionLabel: 'Inspect analytics',
       action: () => setActiveView('stats'),
     },
     {
       id: 'patterns',
-      index: '04',
-      title: 'Pattern Matrix',
-      tagline: 'Pinpoint weak patterns before technical rounds',
+      index: '4',
+      title: 'Pattern archetype radar',
+      tagline: 'Identify weak algorithmic areas before interviews',
       icon: Layers,
       description:
-        'Track performance across 23 core algorithmic patterns (DP, Graph, Trees, Sliding Window). The pattern radar immediately highlights whether you are interview-ready or struggling on specific archetypes.',
-      metricLabel: 'Pre-seeded Patterns',
-      metricValue: '23 Core Interview Archetypes',
-      actionLabel: 'Explore Problem Bank',
+        'Track performance across core algorithmic archetypes like Dynamic Programming, Graphs, Trees, and Sliding Window. The radar identifies whether your recall is robust or if specific patterns require targeted practice.',
+      metricLabel: 'Archetypes tracked',
+      metricValue: '23 core interview patterns',
+      actionLabel: 'View problem bank',
       action: () => setActiveView('all'),
     },
   ];
@@ -76,19 +73,19 @@ export const FeatureShowcase: React.FC = () => {
   const CurrentIcon = current.icon;
 
   return (
-    <div className="editorial-surface p-6 sm:p-8">
+    <div className="editorial-surface p-6 sm:p-7">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs font-semibold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/40 px-2.5 py-0.5 rounded-full border border-brand-200/80 dark:border-brand-800/40">
-            Interactive Product Tour
+          <span className="text-xs font-medium text-teal">
+            System overview
           </span>
-          <span className="text-xs text-neutral-400 font-mono">
-            Designed for SDE Placements
+          <span className="text-xs text-paper-muted">
+            Engineered for deliberate interview practice
           </span>
         </div>
-        <h3 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-white tracking-tight">
-          How RevisionDSA Operates
+        <h3 className="font-serif text-xl sm:text-2xl text-paper-primary font-normal leading-snug">
+          How the revision loop operates
         </h3>
       </div>
 
@@ -102,27 +99,23 @@ export const FeatureShowcase: React.FC = () => {
             <button
               key={feat.id}
               onClick={() => setActiveTab(idx)}
-              className={`p-3 rounded-xl border text-left transition-all relative ${
+              className={`p-3 rounded-xl border text-left transition-all ${
                 isSelected
-                  ? 'bg-white dark:bg-dark-surface border-neutral-900 dark:border-white shadow-xs'
-                  : 'bg-neutral-50 dark:bg-dark-bg border-neutral-200/80 dark:border-dark-border text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover'
+                  ? 'bg-surface-hover border-teal text-paper-primary shadow-xs'
+                  : 'bg-surface-subtle border-surface-border text-paper-secondary hover:bg-surface-hover'
               }`}
             >
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[10px] font-mono font-semibold text-neutral-400 dark:text-neutral-500">
-                  {feat.index}
+                <span className="text-[11px] font-medium text-paper-muted">
+                  0{feat.index}
                 </span>
                 <Icon
                   className={`w-3.5 h-3.5 ${
-                    isSelected ? 'text-brand-600 dark:text-brand-400' : 'text-neutral-400'
+                    isSelected ? 'text-teal' : 'text-paper-muted'
                   }`}
                 />
               </div>
-              <div
-                className={`text-xs font-bold truncate ${
-                  isSelected ? 'text-neutral-900 dark:text-white' : 'text-neutral-700 dark:text-neutral-300'
-                }`}
-              >
+              <div className="text-xs font-medium truncate">
                 {feat.title}
               </div>
             </button>
@@ -131,80 +124,78 @@ export const FeatureShowcase: React.FC = () => {
       </div>
 
       {/* Dynamic Visual Stage */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center p-6 rounded-2xl bg-neutral-50 dark:bg-dark-bg border border-neutral-200/80 dark:border-dark-border">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center p-6 rounded-xl bg-surface-subtle border border-surface-border">
         {/* Left Side: Explanations & Actions */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="inline-flex items-center gap-2 text-xs font-mono text-neutral-500">
-            <span>Feature {current.index}</span>
-            <span>•</span>
-            <span className="text-brand-600 dark:text-brand-400 font-semibold">{current.tagline}</span>
+          <div className="text-xs text-paper-muted">
+            <span>Part {current.index}: </span>
+            <span className="text-teal font-medium">{current.tagline}</span>
           </div>
 
-          <h4 className="text-xl font-bold text-neutral-900 dark:text-white tracking-tight">
+          <h4 className="font-serif text-xl text-paper-primary font-normal leading-snug">
             {current.title}
           </h4>
 
-          <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+          <p className="text-xs sm:text-sm text-paper-secondary leading-relaxed font-sans">
             {current.description}
           </p>
 
           <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-4">
             <div>
-              <span className="text-[10px] uppercase font-mono text-neutral-400 block font-medium">
+              <span className="text-[11px] text-paper-muted block">
                 {current.metricLabel}
               </span>
-              <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200 font-mono">
+              <span className="text-xs font-medium text-paper-primary">
                 {current.metricValue}
               </span>
             </div>
 
             <button
               onClick={current.action}
-              className="btn-primary text-xs flex items-center gap-1.5 py-1.5 px-3 self-start"
+              className="btn-secondary text-xs self-start"
             >
               <span>{current.actionLabel}</span>
-              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
 
-        {/* Right Side: Interactive Morphing Preview Graphic */}
+        {/* Right Side: Interactive Preview Graphic */}
         <div className="lg:col-span-6">
           <AnimatePresence mode="wait">
             <motion.div
               key={current.id}
-              initial={{ opacity: 0, scale: 0.96 }}
+              initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.18 }}
-              className="w-full bg-white dark:bg-dark-surface rounded-xl p-5 border border-neutral-200/80 dark:border-dark-border shadow-xs"
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.15 }}
+              className="w-full bg-surface rounded-xl p-5 border border-surface-border shadow-xs"
             >
               {activeTab === 0 && (
                 /* Feature 01 Graphic: URL Detection */
-                <div className="space-y-3 font-mono text-xs">
-                  <div className="flex items-center justify-between text-neutral-400 text-[11px] pb-2 border-b border-neutral-100 dark:border-dark-border">
-                    <span>Input Problem URL</span>
-                    <span className="text-emerald-500 font-semibold flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3" /> Live Pattern Match
+                <div className="space-y-3 text-xs">
+                  <div className="flex items-center justify-between text-paper-secondary text-[11px] pb-2 border-b border-surface-border">
+                    <span>Input problem URL</span>
+                    <span className="text-teal font-medium flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> Canonical match
                     </span>
                   </div>
-                  <div className="p-2.5 rounded-lg bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border text-neutral-800 dark:text-neutral-200 truncate">
+                  <div className="p-2.5 rounded-lg bg-surface-subtle border border-surface-border text-paper-primary truncate font-mono text-xs">
                     https://leetcode.com/problems/trapping-rain-water/
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-[11px]">
-                    <div className="p-2 rounded bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border">
-                      <span className="text-neutral-400 block text-[10px]">Platform</span>
-                      <span className="font-bold text-amber-500">LeetCode</span>
+                    <div className="p-2 rounded bg-surface-subtle border border-surface-border">
+                      <span className="text-paper-muted block text-[10px]">Platform</span>
+                      <span className="font-medium text-paper-primary">LeetCode</span>
                     </div>
-                    <div className="p-2 rounded bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border">
-                      <span className="text-neutral-400 block text-[10px]">Extracted Difficulty</span>
-                      <span className="font-bold text-rose-500">Hard</span>
+                    <div className="p-2 rounded bg-surface-subtle border border-surface-border">
+                      <span className="text-paper-muted block text-[10px]">Difficulty</span>
+                      <span className="font-semibold text-ochre">Hard</span>
                     </div>
                   </div>
-                  <div className="p-2 rounded bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border text-[11px]">
-                    <span className="text-neutral-400 block text-[10px]">Detected Patterns</span>
-                    <span className="text-brand-600 dark:text-brand-400 font-semibold">
-                      Two Pointers • Stack • Monotonic
+                  <div className="p-2 rounded bg-surface-subtle border border-surface-border text-[11px]">
+                    <span className="text-paper-muted block text-[10px]">Detected archetypes</span>
+                    <span className="text-paper-primary font-medium">
+                      Two Pointers, Monotonic Stack
                     </span>
                   </div>
                 </div>
@@ -212,54 +203,54 @@ export const FeatureShowcase: React.FC = () => {
 
               {activeTab === 1 && (
                 /* Feature 02 Graphic: Active Recall */
-                <div className="space-y-3 font-mono text-xs">
-                  <div className="flex items-center justify-between pb-2 border-b border-neutral-100 dark:border-dark-border">
-                    <span className="text-neutral-400 text-[11px]">Flashcard Active Recall</span>
-                    <span className="text-xs px-2 py-0.5 rounded bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 font-bold">
+                <div className="space-y-3 text-xs">
+                  <div className="flex items-center justify-between pb-2 border-b border-surface-border">
+                    <span className="text-paper-muted text-[11px]">Flashcard active recall</span>
+                    <span className="text-xs text-paper-primary font-medium">
                       Medium
                     </span>
                   </div>
-                  <div className="font-bold text-neutral-900 dark:text-white text-sm">
+                  <div className="font-serif text-base text-paper-primary font-normal">
                     Course Schedule (Topological Sort)
                   </div>
-                  <div className="p-3 rounded-lg bg-neutral-50 dark:bg-dark-bg border border-dashed border-neutral-300 dark:border-neutral-700 text-center text-neutral-500">
-                    <span className="text-[11px] block">Approach notes hidden</span>
-                    <span className="text-[10px] text-brand-600 font-semibold">
-                      Press [Space] to reveal intuition & complexity
+                  <div className="p-3 rounded-lg bg-surface-subtle border border-dashed border-surface-border text-center text-paper-secondary">
+                    <span className="text-xs block mb-1">Approach notes withheld</span>
+                    <span className="text-[11px] text-teal">
+                      Press Space to reveal intuition
                     </span>
                   </div>
-                  <div className="grid grid-cols-4 gap-1 text-[10px] text-center">
-                    <div className="p-1 rounded bg-rose-50 text-rose-700 dark:bg-rose-950/30">Again (1)</div>
-                    <div className="p-1 rounded bg-amber-50 text-amber-700 dark:bg-amber-950/30">Hard (2)</div>
-                    <div className="p-1 rounded bg-neutral-100 text-neutral-800 dark:bg-dark-surfaceHover">Good (3)</div>
-                    <div className="p-1 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30">Easy (4)</div>
+                  <div className="grid grid-cols-4 gap-1.5 text-[11px] text-center">
+                    <div className="p-1.5 rounded bg-ochre/15 text-ochre">Needs work (1)</div>
+                    <div className="p-1.5 rounded bg-surface-subtle text-paper-secondary">Struggled (2)</div>
+                    <div className="p-1.5 rounded bg-teal/15 text-teal">Remembered (3)</div>
+                    <div className="p-1.5 rounded bg-teal text-[#0E1614] font-medium">Instinctive (4)</div>
                   </div>
                 </div>
               )}
 
               {activeTab === 2 && (
                 /* Feature 03 Graphic: SM-2 Engine */
-                <div className="space-y-3 font-mono text-xs">
-                  <div className="flex items-center justify-between pb-2 border-b border-neutral-100 dark:border-dark-border text-[11px] text-neutral-400">
-                    <span>SM-2 Spaced Interval Expansion</span>
-                    <span className="text-brand-600 font-bold">SM-2 Algorithm</span>
+                <div className="space-y-2.5 text-xs">
+                  <div className="flex items-center justify-between pb-2 border-b border-surface-border text-[11px] text-paper-muted">
+                    <span>SM-2 interval sequence</span>
+                    <span className="text-teal font-medium">SuperMemo-2</span>
                   </div>
-                  <div className="space-y-1.5 text-[11px]">
-                    <div className="flex items-center justify-between p-2 rounded bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border">
-                      <span className="text-neutral-500">Repetition 1</span>
-                      <span className="font-bold text-neutral-900 dark:text-white">Day 1 (+1d)</span>
+                  <div className="space-y-1.5 text-xs">
+                    <div className="flex items-center justify-between p-2 rounded bg-surface-subtle border border-surface-border">
+                      <span className="text-paper-secondary">Repetition 1</span>
+                      <span className="font-medium text-paper-primary">Day 1 (+1d)</span>
                     </div>
-                    <div className="flex items-center justify-between p-2 rounded bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border">
-                      <span className="text-neutral-500">Repetition 2 (Good)</span>
-                      <span className="font-bold text-neutral-900 dark:text-white">Day 3 (+2d)</span>
+                    <div className="flex items-center justify-between p-2 rounded bg-surface-subtle border border-surface-border">
+                      <span className="text-paper-secondary">Repetition 2</span>
+                      <span className="font-medium text-paper-primary">Day 3 (+2d)</span>
                     </div>
-                    <div className="flex items-center justify-between p-2 rounded bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border">
-                      <span className="text-neutral-500">Repetition 3 (Good)</span>
-                      <span className="font-bold text-neutral-900 dark:text-white">Day 8 (+5d)</span>
+                    <div className="flex items-center justify-between p-2 rounded bg-surface-subtle border border-surface-border">
+                      <span className="text-paper-secondary">Repetition 3</span>
+                      <span className="font-medium text-paper-primary">Day 8 (+5d)</span>
                     </div>
-                    <div className="flex items-center justify-between p-2 rounded bg-brand-50 dark:bg-brand-950/30 border border-brand-200 dark:border-brand-800/40">
-                      <span className="text-brand-700 dark:text-brand-300 font-semibold">Repetition 4 (Mastered)</span>
-                      <span className="font-bold text-brand-600 dark:text-brand-400">Day 22 (+14d)</span>
+                    <div className="flex items-center justify-between p-2 rounded bg-teal/10 border border-teal/30">
+                      <span className="text-teal font-medium">Repetition 4 (Consolidated)</span>
+                      <span className="font-medium text-teal">Day 22 (+14d)</span>
                     </div>
                   </div>
                 </div>
@@ -267,24 +258,24 @@ export const FeatureShowcase: React.FC = () => {
 
               {activeTab === 3 && (
                 /* Feature 04 Graphic: Pattern Matrix */
-                <div className="space-y-3 font-mono text-xs">
-                  <div className="flex items-center justify-between pb-2 border-b border-neutral-100 dark:border-dark-border text-[11px] text-neutral-400">
-                    <span>Core Pattern Breakdown</span>
-                    <span className="text-neutral-500">Interview Readiness</span>
+                <div className="space-y-2.5 text-xs">
+                  <div className="flex items-center justify-between pb-2 border-b border-surface-border text-[11px] text-paper-muted">
+                    <span>Archetype status</span>
+                    <span className="text-paper-secondary">Retention confidence</span>
                   </div>
-                  <div className="space-y-1.5 text-[11px]">
+                  <div className="space-y-1.5 text-xs">
                     {[
-                      { name: 'Dynamic Programming', status: 'Ready (2.85 Ease)', color: 'text-emerald-500' },
-                      { name: 'Graphs & BFS/DFS', status: 'Consolidating (2.50 Ease)', color: 'text-indigo-500' },
-                      { name: 'Sliding Window', status: 'Needs Review (2.20 Ease)', color: 'text-amber-500' },
-                      { name: 'Trie & Backtracking', status: 'Mastered (2.90 Ease)', color: 'text-emerald-500' },
+                      { name: 'Dynamic Programming', status: 'Ready (2.85 ease)', color: 'text-teal' },
+                      { name: 'Graphs & BFS/DFS', status: 'Consolidating (2.50 ease)', color: 'text-paper-primary' },
+                      { name: 'Sliding Window', status: 'Due soon (2.20 ease)', color: 'text-ochre' },
+                      { name: 'Trie & Backtracking', status: 'Mastered (2.90 ease)', color: 'text-teal' },
                     ].map((row) => (
                       <div
                         key={row.name}
-                        className="flex items-center justify-between p-2 rounded bg-neutral-50 dark:bg-dark-bg border border-neutral-200 dark:border-dark-border"
+                        className="flex items-center justify-between p-2 rounded bg-surface-subtle border border-surface-border"
                       >
-                        <span className="text-neutral-700 dark:text-neutral-300 font-medium">{row.name}</span>
-                        <span className={`font-semibold ${row.color}`}>{row.status}</span>
+                        <span className="text-paper-primary">{row.name}</span>
+                        <span className={`font-medium ${row.color}`}>{row.status}</span>
                       </div>
                     ))}
                   </div>
