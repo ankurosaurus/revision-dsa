@@ -30,25 +30,25 @@ export const RevisionQueue: React.FC = () => {
     );
   }
 
-  // If queue has 0 problems due
+  // If queue has 0 problems due (Clean engineering microcopy: "Queue clear. Next review due tomorrow.")
   if (totalDue === 0) {
     return (
       <div className="max-w-md mx-auto py-16 text-center flex flex-col items-center">
-        <div className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-dark-surfaceHover border border-neutral-200 dark:border-dark-border flex items-center justify-center text-neutral-400 dark:text-neutral-500 mb-4">
-          <CalendarCheck2 className="w-6 h-6" />
+        <div className="w-11 h-11 rounded-xl bg-surface border border-surface-border flex items-center justify-center text-paper-muted mb-3.5">
+          <CalendarCheck2 className="w-5 h-5" />
         </div>
-        <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 mb-1.5">
-          Revision Queue is Clear
+        <h2 className="font-serif text-2xl font-normal text-paper-primary mb-1">
+          Queue clear. Next review due tomorrow.
         </h2>
-        <p className="text-xs text-neutral-500 dark:text-dark-textMuted mb-5 leading-relaxed max-w-sm">
-          No problems are due for revision right now. Log your recent practice problems or solve new patterns to schedule upcoming reviews.
+        <p className="text-xs text-paper-secondary mb-5 leading-relaxed max-w-sm">
+          All scheduled problems for today have been reviewed. Log new problems you solve to schedule future recall intervals.
         </p>
         <button
           onClick={openAddPanel}
           className="btn-primary text-xs flex items-center gap-1.5"
         >
           <Plus className="w-4 h-4" />
-          <span>Log New Problem</span>
+          <span>Log problem</span>
         </button>
       </div>
     );
@@ -59,19 +59,21 @@ export const RevisionQueue: React.FC = () => {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-            <span>Revision Queue</span>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-dark-surfaceHover text-neutral-700 dark:text-neutral-300">
+          <div className="flex items-center gap-2">
+            <h1 className="font-serif text-2xl text-paper-primary font-normal">
+              Revision queue
+            </h1>
+            <span className="text-xs font-medium px-2 py-0.5 rounded-md bg-surface border border-surface-border text-paper-primary tabular-nums">
               {totalDue} due
             </span>
-          </h1>
-          <p className="text-xs text-neutral-500 dark:text-dark-textMuted mt-0.5">
+          </div>
+          <p className="text-xs text-paper-secondary mt-0.5">
             Active recall mode. Rate your memory accurately to let SM-2 calculate your ideal repetition spacing.
           </p>
         </div>
 
         {overdueCount > 0 && (
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-rose-50 dark:bg-rose-950/30 border border-rose-200/80 dark:border-rose-800/40 text-rose-700 dark:text-rose-400 text-xs font-medium shrink-0">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-ochre/15 border border-ochre/30 text-ochre text-xs font-medium shrink-0">
             <AlertCircle className="w-3.5 h-3.5 shrink-0" />
             <span>{overdueCount} overdue</span>
           </div>
@@ -87,8 +89,8 @@ export const RevisionQueue: React.FC = () => {
         />
       </div>
 
-      {/* Active Card */}
-      <div className="relative min-h-[380px]">
+      {/* Active Card Container */}
+      <div className="relative min-h-[380px] pt-2">
         <AnimatePresence mode="wait">
           {currentProblem && (
             <RecallCard
