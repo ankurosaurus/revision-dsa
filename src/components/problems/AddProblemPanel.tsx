@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
@@ -13,11 +13,13 @@ import {
   Database,
   ArrowLeft,
   Info,
-  Tag
+  Tag,
+  Undo2,
+  Trash2,
 } from 'lucide-react';
 import { useUIStore } from '../../store/useUIStore';
 import { useProblemStore } from '../../store/useProblemStore';
-import { Platform, Difficulty, InitialConfidence, CatalogProblem, CatalogStats } from '../../types';
+import { Platform, Difficulty, InitialConfidence, CatalogProblem, CatalogStats, Problem } from '../../types';
 import { detectAndValidateUrl, verifyAndFetchMetadata } from '../../lib/urlValidators';
 import { PRESET_TAGS } from '../../lib/sampleData';
 import { searchCatalog, getCatalogStats } from '../../lib/catalogService';
@@ -26,7 +28,29 @@ import { PlatformBadge } from './PlatformBadge';
 export const AddProblemPanel: React.FC = () => {
   const isOpen = useUIStore((s) => s.isAddPanelOpen);
   const closePanel = useUIStore((s) => s.closeAddPanel);
+  const problems = useProblemStore((s) => s.problems);
   const addProblem = useProblemStore((s) => s.addProblem);
+  const deleteProblem = useProblemStore((s) => s.deleteProblem);
+  const restoreProblem = useProblemStore((s) => s.restoreProblem);
+
+  // Fast single-pass O(1) map of user's active problems matching on catalog_id or url
+  const userProblemsMap = useMemo(() => {
+    const map = new Map<string, Problem>();
+    for (const p of problems) {
+      if (p.catalog_id) map.set(p.catalog_id, p);
+      if (p.url) map.set(p.url, p);
+    }
+    return map;
+  }, [problems]);
+
+  // Toast & optimistic add/remove state with 5s Undo
+  const [toast, setToast] = useState<{
+    type: 'added' | 'removed';
+    id: string;
+    title: string;
+    problem: Problem;
+  } | null>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Mode: 'catalog' (search-first) or 'manual' (direct link fallback)
   const [mode, setMode] = useState<'catalog' | 'manual'>('catalog');
@@ -151,17 +175,55 @@ export const AddProblemPanel: React.FC = () => {
     }, 50);
   };
 
-  const handleQuickAdd = async (e: React.MouseEvent, prob: CatalogProblem) => {
+  const handleToggleProblem = async (e: React.MouseEvent, prob: CatalogProblem) => {
     e.stopPropagation();
-    await addProblem({
-      catalog_id: prob.id,
-      title: prob.title,
-      url: prob.url,
-      platform: prob.platform,
-      difficulty: prob.difficulty || 'medium',
-      tags: prob.tags || [],
-    });
-    closePanel();
+    const existing = userProblemsMap.get(prob.id) || userProblemsMap.get(prob.url);
+    if (existing) {
+      try {
+        await deleteProblem(existing.id);
+        if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+        setToast({
+          type: 'removed',
+          id: existing.id,
+          title: prob.title,
+          problem: existing,
+        });
+        toastTimerRef.current = setTimeout(() => setToast(null), 5000);
+      } catch (err) {
+        console.error('Failed to remove problem:', err);
+      }
+    } else {
+      try {
+        const added = await addProblem({
+          catalog_id: prob.id,
+          title: prob.title,
+          url: prob.url,
+          platform: prob.platform,
+          difficulty: prob.difficulty || 'medium',
+          tags: prob.tags || [],
+        });
+        if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+        setToast({
+          type: 'added',
+          id: added.id,
+          title: prob.title,
+          problem: added,
+        });
+        toastTimerRef.current = setTimeout(() => setToast(null), 5000);
+      } catch (err) {
+        console.error('Failed to add problem:', err);
+      }
+    }
+  };
+
+  const handleUndo = async () => {
+    if (!toast) return;
+    if (toast.type === 'added') {
+      await deleteProblem(toast.id);
+    } else if (toast.type === 'removed') {
+      await restoreProblem(toast.problem);
+    }
+    setToast(null);
   };
 
   const handleAutoExtractManual = async () => {
@@ -569,15 +631,29 @@ export const AddProblemPanel: React.FC = () => {
                               </div>
 
                               <div className="flex items-center gap-1.5 shrink-0">
-                                <button
-                                  type="button"
-                                  onClick={(e) => handleQuickAdd(e, prob)}
-                                  className="px-2 py-1 text-[11px] font-semibold bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/50 dark:hover:bg-brand-900/50 text-brand-600 dark:text-brand-400 rounded-md border border-brand-200/60 dark:border-brand-800/40 transition-colors flex items-center gap-1"
-                                  title="Add instantly to revision queue"
-                                >
-                                  <Plus className="w-3 h-3" />
-                                  <span>1-Tap Add</span>
-                                </button>
+                                {userProblemsMap.has(prob.id) || userProblemsMap.has(prob.url) ? (
+                                  <button
+                                    type="button"
+                                    onClick={(e) => handleToggleProblem(e, prob)}
+                                    className="px-2.5 py-1 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 hover:bg-rose-50 hover:text-rose-700 dark:bg-emerald-950/40 dark:hover:bg-rose-950/40 dark:hover:text-rose-300 rounded-md border border-emerald-300/80 dark:border-emerald-700/60 hover:border-rose-300 dark:hover:border-rose-700/60 transition-colors flex items-center gap-1 group/btn"
+                                    title="Click to remove from revision queue (has 5s Undo)"
+                                  >
+                                    <CheckCircle2 className="w-3 h-3 group-hover/btn:hidden" />
+                                    <Trash2 className="w-3 h-3 hidden group-hover/btn:inline" />
+                                    <span className="group-hover/btn:hidden">✓ In Revision</span>
+                                    <span className="hidden group-hover/btn:inline">Remove</span>
+                                  </button>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={(e) => handleToggleProblem(e, prob)}
+                                    className="px-2 py-1 text-[11px] font-semibold bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/50 dark:hover:bg-brand-900/50 text-brand-600 dark:text-brand-400 rounded-md border border-brand-200/60 dark:border-brand-800/40 transition-colors flex items-center gap-1"
+                                    title="Add instantly to revision queue"
+                                  >
+                                    <Plus className="w-3 h-3" />
+                                    <span>+ Add</span>
+                                  </button>
+                                )}
                                 <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
                                   <span>Edit</span>
                                   <ChevronRight className="w-3.5 h-3.5" />
@@ -863,6 +939,38 @@ export const AddProblemPanel: React.FC = () => {
                 </div>
               </div>
             </form>
+
+            {/* 5-Second Undo Toast */}
+            <AnimatePresence>
+              {toast && (
+                <motion.div
+                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  className="absolute bottom-20 left-6 right-6 z-50 flex items-center justify-between gap-3 px-4 py-3 bg-neutral-900 dark:bg-dark-bg text-white rounded-xl shadow-2xl border border-neutral-700/80 dark:border-dark-border text-xs"
+                >
+                  <div className="flex items-center gap-2 truncate">
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
+                      toast.type === 'added' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
+                    }`}>
+                      {toast.type === 'added' ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Trash2 className="w-3 h-3" />}
+                    </div>
+                    <span className="truncate">
+                      {toast.type === 'added' ? 'Added ' : 'Removed '}
+                      <strong className="font-semibold">{toast.title}</strong>
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleUndo}
+                    className="flex items-center gap-1 font-semibold text-brand-400 hover:text-brand-300 px-2 py-1 rounded hover:bg-white/10 transition-colors shrink-0"
+                  >
+                    <Undo2 className="w-3.5 h-3.5" />
+                    <span>Undo</span>
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         </>
       )}

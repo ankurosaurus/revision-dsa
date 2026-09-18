@@ -12,8 +12,10 @@ import {
   Filter,
   CheckCircle2,
   Undo2,
+  Trash2,
+  Code2,
 } from 'lucide-react';
-import { CatalogProblem, Platform } from '../types';
+import { CatalogProblem, Platform, Problem } from '../types';
 import { browseCatalog, BrowseResult, getCatalogStats } from '../lib/catalogService';
 import { useProblemStore } from '../store/useProblemStore';
 import { useUIStore } from '../store/useUIStore';
@@ -48,7 +50,9 @@ export const CatalogPage: React.FC = () => {
   const problems = useProblemStore((s) => s.problems);
   const addProblem = useProblemStore((s) => s.addProblem);
   const deleteProblem = useProblemStore((s) => s.deleteProblem);
+  const restoreProblem = useProblemStore((s) => s.restoreProblem);
   const openAddPanel = useUIStore((s) => s.openAddPanel);
+  const openSolveView = useUIStore((s) => s.openSolveView);
 
   // Filters
   const [query, setQuery] = useState('');
@@ -63,20 +67,26 @@ export const CatalogPage: React.FC = () => {
   const [catalogLoaded, setCatalogLoaded] = useState(false);
   const [statsText, setStatsText] = useState('');
 
-  // Toast & optimistic add state
-  const [toast, setToast] = useState<{ id: string; title: string; url: string } | null>(null);
-  const [justAddedUrls, setJustAddedUrls] = useState<Set<string>>(new Set());
+  // Toast & optimistic add/remove state
+  const [toast, setToast] = useState<{
+    type: 'added' | 'removed';
+    id: string;
+    title: string;
+    problem: Problem;
+  } | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Track which problems are already in the user's revision bank
-  const alreadyAdded = useMemo(() => {
-    const set = new Set(problems.map((p) => p.url));
-    justAddedUrls.forEach((u) => set.add(u));
-    return set;
-  }, [problems, justAddedUrls]);
+  // Fast single-pass O(1) map of user's active problems matching on catalog_id or url
+  const userProblemsMap = useMemo(() => {
+    const map = new Map<string, Problem>();
+    for (const p of problems) {
+      if (p.catalog_id) map.set(p.catalog_id, p);
+      if (p.url) map.set(p.url, p);
+    }
+    return map;
+  }, [problems]);
 
   const handleAddProblem = useCallback(async (prob: CatalogProblem) => {
-    setJustAddedUrls((prev) => new Set(prev).add(prob.url));
     try {
       const added = await addProblem({
         catalog_id: prob.id,
@@ -88,28 +98,69 @@ export const CatalogPage: React.FC = () => {
       });
 
       if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-      setToast({ id: added.id, title: prob.title, url: prob.url });
+      setToast({
+        type: 'added',
+        id: added.id,
+        title: prob.title,
+        problem: added,
+      });
       toastTimerRef.current = setTimeout(() => {
         setToast(null);
       }, 5000);
     } catch (e) {
-      setJustAddedUrls((prev) => {
-        const next = new Set(prev);
-        next.delete(prob.url);
-        return next;
-      });
+      console.error('Failed to add problem:', e);
     }
   }, [addProblem]);
 
-  const handleUndo = useCallback(async (id: string, url: string) => {
-    await deleteProblem(id);
-    setJustAddedUrls((prev) => {
-      const next = new Set(prev);
-      next.delete(url);
-      return next;
-    });
+  const handleRemoveProblem = useCallback(async (prob: CatalogProblem) => {
+    const existing = userProblemsMap.get(prob.id) || userProblemsMap.get(prob.url);
+    if (!existing) return;
+
+    try {
+      await deleteProblem(existing.id);
+
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      setToast({
+        type: 'removed',
+        id: existing.id,
+        title: prob.title,
+        problem: existing,
+      });
+      toastTimerRef.current = setTimeout(() => {
+        setToast(null);
+      }, 5000);
+    } catch (e) {
+      console.error('Failed to remove problem:', e);
+    }
+  }, [deleteProblem, userProblemsMap]);
+
+  const handleUndo = useCallback(async () => {
+    if (!toast) return;
+    if (toast.type === 'added') {
+      await deleteProblem(toast.id);
+    } else if (toast.type === 'removed') {
+      await restoreProblem(toast.problem);
+    }
     setToast(null);
-  }, [deleteProblem]);
+  }, [toast, deleteProblem, restoreProblem]);
+
+  const handleSolve = useCallback((prob: CatalogProblem) => {
+    const existing = userProblemsMap.get(prob.id) || userProblemsMap.get(prob.url);
+    if (existing) {
+      openSolveView(existing);
+    } else {
+      addProblem({
+        catalog_id: prob.id,
+        title: prob.title,
+        url: prob.url,
+        platform: prob.platform,
+        difficulty: prob.difficulty || 'medium',
+        tags: prob.tags || [],
+      }).then((newProb) => {
+        openSolveView(newProb);
+      });
+    }
+  }, [userProblemsMap, openSolveView, addProblem]);
 
   // Debounce query input
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -314,13 +365,15 @@ export const CatalogPage: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-neutral-100 dark:divide-dark-border/40">
                 {result.items.map((prob) => {
-                  const added = alreadyAdded.has(prob.url);
+                  const added = userProblemsMap.has(prob.id) || userProblemsMap.has(prob.url);
                   return (
                     <ProblemRow
                       key={prob.id}
                       prob={prob}
                       added={added}
                       onAdd={handleAddProblem}
+                      onRemove={handleRemoveProblem}
+                      onSolve={handleSolve}
                     />
                   );
                 })}
@@ -396,7 +449,7 @@ export const CatalogPage: React.FC = () => {
         )}
       </div>
 
-      {/* Floating Optimistic Toast Notification with Undo */}
+      {/* Floating Optimistic Toast Notification with 5s Undo */}
       <AnimatePresence>
         {toast && (
           <motion.div
@@ -405,15 +458,21 @@ export const CatalogPage: React.FC = () => {
             exit={{ opacity: 0, y: 15, scale: 0.95 }}
             className="fixed bottom-20 md:bottom-8 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-neutral-900 dark:bg-dark-surface text-white rounded-xl shadow-2xl border border-neutral-700/80 dark:border-dark-border max-w-md text-xs"
           >
-            <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-              <CheckCircle2 className="w-4 h-4" />
+            <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
+              toast.type === 'added' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
+            }`}>
+              {toast.type === 'added' ? <CheckCircle2 className="w-4 h-4" /> : <Trash2 className="w-3.5 h-3.5" />}
             </div>
             <div className="flex-1 truncate">
-              <span>Added <strong className="text-white font-semibold">{toast.title}</strong> to revision queue</span>
+              <span>
+                {toast.type === 'added' ? 'Added ' : 'Removed '}
+                <strong className="text-white font-semibold">{toast.title}</strong>
+                {toast.type === 'added' ? ' to revision queue' : ' from revision list'}
+              </span>
             </div>
             <button
-              onClick={() => handleUndo(toast.id, toast.url)}
-              className="flex items-center gap-1 font-semibold text-brand-400 hover:text-brand-300 px-2 py-1 rounded hover:bg-white/10 transition-colors ml-1 shrink-0"
+              onClick={handleUndo}
+              className="flex items-center gap-1 font-semibold text-brand-400 hover:text-brand-300 px-2.5 py-1 rounded hover:bg-white/10 transition-colors ml-1 shrink-0"
             >
               <Undo2 className="w-3.5 h-3.5" />
               <span>Undo</span>
@@ -430,20 +489,28 @@ const ProblemRow = React.memo(({
   prob,
   added,
   onAdd,
+  onRemove,
+  onSolve,
 }: {
   prob: CatalogProblem;
   added: boolean;
   onAdd: (prob: CatalogProblem) => Promise<void>;
+  onRemove: (prob: CatalogProblem) => Promise<void>;
+  onSolve: (prob: CatalogProblem) => void;
 }) => {
-  const [isAdding, setIsAdding] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleAddClick = async () => {
-    if (added || isAdding) return;
-    setIsAdding(true);
+  const handleToggle = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
     try {
-      await onAdd(prob);
+      if (added) {
+        await onRemove(prob);
+      } else {
+        await onAdd(prob);
+      }
     } finally {
-      setIsAdding(false);
+      setIsProcessing(false);
     }
   };
 
@@ -516,28 +583,54 @@ const ProblemRow = React.memo(({
         </div>
       </td>
 
-      {/* Action: 1-Tap Add */}
+      {/* Action: 1-Tap Add / Remove Toggle & Solve */}
       <td className="px-4 py-2.5 text-right">
-        {added ? (
-          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-200/50 dark:border-emerald-800/30">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Added ✓</span>
-          </span>
-        ) : (
+        <div className="inline-flex items-center gap-1.5">
           <button
-            onClick={handleAddClick}
-            disabled={isAdding}
-            className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/40 dark:hover:bg-brand-900/40 px-2.5 py-1 rounded transition-colors disabled:opacity-50"
-            title="Add to revision queue"
+            type="button"
+            onClick={() => onSolve(prob)}
+            className="p-1.5 rounded-md text-neutral-400 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-dark-surfaceHover transition-colors"
+            title="Open in Solve View"
           >
-            {isAdding ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              <Plus className="w-3.5 h-3.5" />
-            )}
-            <span>Add</span>
+            <Code2 className="w-3.5 h-3.5" />
           </button>
-        )}
+
+          {added ? (
+            <button
+              type="button"
+              onClick={handleToggle}
+              disabled={isProcessing}
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 hover:bg-rose-50 hover:text-rose-700 dark:bg-emerald-950/40 dark:hover:bg-rose-950/40 dark:hover:text-rose-300 px-2.5 py-1 rounded border border-emerald-300/80 dark:border-emerald-700/60 hover:border-rose-300 dark:hover:border-rose-700/60 transition-colors group/btn"
+              title="Click to remove from revision list (has 5s Undo)"
+            >
+              {isProcessing ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <>
+                  <CheckCircle2 className="w-3.5 h-3.5 group-hover/btn:hidden" />
+                  <Trash2 className="w-3.5 h-3.5 hidden group-hover/btn:inline" />
+                  <span className="group-hover/btn:hidden">✓ In Revision</span>
+                  <span className="hidden group-hover/btn:inline">Remove</span>
+                </>
+              )}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleToggle}
+              disabled={isProcessing}
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/40 dark:hover:bg-brand-900/40 px-2.5 py-1 rounded transition-colors disabled:opacity-50"
+              title="Add to revision queue"
+            >
+              {isProcessing ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Plus className="w-3.5 h-3.5" />
+              )}
+              <span>+ Add</span>
+            </button>
+          )}
+        </div>
       </td>
     </tr>
   );
