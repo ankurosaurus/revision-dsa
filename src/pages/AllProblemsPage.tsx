@@ -1,11 +1,12 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useProblemStore } from '../store/useProblemStore';
 import { useUIStore } from '../store/useUIStore';
 import { ProblemCard } from '../components/problems/ProblemCard';
 import { ProblemTable } from '../components/problems/ProblemTable';
 import { searchProblems } from '../lib/fuzzySearch';
 import { PRESET_TAGS } from '../lib/sampleData';
-import { Platform, Difficulty } from '../types';
+import { Platform, Difficulty, Problem } from '../types';
 import {
   LayoutGrid,
   List,
@@ -13,14 +14,40 @@ import {
   X,
   ArrowUpDown,
   BookOpen,
+  Trash2,
+  Undo2,
 } from 'lucide-react';
 
 export const AllProblemsPage: React.FC = () => {
   const problems = useProblemStore((s) => s.problems);
+  const deleteProblem = useProblemStore((s) => s.deleteProblem);
+  const restoreProblem = useProblemStore((s) => s.restoreProblem);
   const openAddPanel = useUIStore((s) => s.openAddPanel);
   const setActiveTab = useUIStore((s) => s.setActiveTab);
+  const openSolveView = useUIStore((s) => s.openSolveView);
   const searchQuery = useUIStore((s) => s.searchQuery);
   const setSearchQuery = useUIStore((s) => s.setSearchQuery);
+
+  // 5-Second Undo Toast state
+  const [toast, setToast] = useState<{ id: string; title: string; problem: Problem } | null>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleRemoveProblem = async (problem: Problem) => {
+    try {
+      await deleteProblem(problem.id);
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      setToast({ id: problem.id, title: problem.title, problem });
+      toastTimerRef.current = setTimeout(() => setToast(null), 5000);
+    } catch (e) {
+      console.error('Failed to delete problem:', e);
+    }
+  };
+
+  const handleUndo = async () => {
+    if (!toast) return;
+    await restoreProblem(toast.problem);
+    setToast(null);
+  };
 
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | 'all'>('all');
@@ -255,6 +282,8 @@ export const AllProblemsPage: React.FC = () => {
               key={problem.id}
               problem={problem}
               onSelectForReview={() => setActiveTab('queue')}
+              onRemove={handleRemoveProblem}
+              onSolve={openSolveView}
             />
           ))}
         </div>
@@ -262,8 +291,36 @@ export const AllProblemsPage: React.FC = () => {
         <ProblemTable
           problems={filteredProblems}
           onSelectForReview={() => setActiveTab('queue')}
+          onRemove={handleRemoveProblem}
+          onSolve={openSolveView}
         />
       )}
+
+      {/* 5-Second Undo Toast */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 15, scale: 0.95 }}
+            className="fixed bottom-20 md:bottom-8 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-neutral-900 dark:bg-dark-surface text-white rounded-xl shadow-2xl border border-neutral-700/80 dark:border-dark-border max-w-md text-xs"
+          >
+            <div className="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+              <Trash2 className="w-3.5 h-3.5" />
+            </div>
+            <div className="flex-1 truncate">
+              <span>Removed <strong className="text-white font-semibold">{toast.title}</strong> from problem bank</span>
+            </div>
+            <button
+              onClick={handleUndo}
+              className="flex items-center gap-1 font-semibold text-brand-400 hover:text-brand-300 px-2.5 py-1 rounded hover:bg-white/10 transition-colors ml-1 shrink-0"
+            >
+              <Undo2 className="w-3.5 h-3.5" />
+              <span>Undo</span>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

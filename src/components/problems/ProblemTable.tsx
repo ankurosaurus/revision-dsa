@@ -3,16 +3,25 @@ import { Problem } from '../../types';
 import { PlatformBadge } from './PlatformBadge';
 import { DifficultyBadge } from './DifficultyBadge';
 import { isProblemDue, isProblemOverdue, getDaysUntilDue } from '../../lib/spacedRepetition';
-import { ExternalLink, Trash2 } from 'lucide-react';
+import { ExternalLink, Trash2, Code2 } from 'lucide-react';
 import { useProblemStore } from '../../store/useProblemStore';
+import { useUIStore } from '../../store/useUIStore';
 
 interface ProblemTableProps {
   problems: Problem[];
   onSelectForReview?: (problem: Problem) => void;
+  onRemove?: (problem: Problem) => void;
+  onSolve?: (problem: Problem) => void;
 }
 
-export const ProblemTable: React.FC<ProblemTableProps> = ({ problems, onSelectForReview }) => {
+export const ProblemTable: React.FC<ProblemTableProps> = ({
+  problems,
+  onSelectForReview,
+  onRemove,
+  onSolve,
+}) => {
   const deleteProblem = useProblemStore((s) => s.deleteProblem);
+  const openSolveView = useUIStore((s) => s.openSolveView);
 
   if (problems.length === 0) {
     return null;
@@ -47,14 +56,14 @@ export const ProblemTable: React.FC<ProblemTableProps> = ({ problems, onSelectFo
               >
                 {/* Title */}
                 <td className="py-3 px-4">
-                  <a
-                    href={problem.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-semibold text-neutral-900 dark:text-neutral-100 hover:text-brand-600 dark:hover:text-brand-400 transition-colors inline-flex items-center gap-1.5"
+                  <button
+                    type="button"
+                    onClick={() => onSolve ? onSolve(problem) : openSolveView(problem)}
+                    className="font-semibold text-neutral-900 dark:text-neutral-100 hover:text-brand-600 dark:hover:text-brand-400 transition-colors inline-flex items-center gap-1.5 text-left"
+                    title="Click to open Solve Workspace"
                   >
                     <span>{problem.title}</span>
-                  </a>
+                  </button>
                 </td>
 
                 {/* Platform */}
@@ -114,10 +123,19 @@ export const ProblemTable: React.FC<ProblemTableProps> = ({ problems, onSelectFo
                 {/* Actions */}
                 <td className="py-3 px-4 text-right whitespace-nowrap">
                   <div className="inline-flex items-center gap-1.5">
+                    <button
+                      onClick={() => onSolve ? onSolve(problem) : openSolveView(problem)}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-md bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300 hover:bg-brand-100 dark:hover:bg-brand-900/50 transition-colors"
+                      title="Open in Solve Workspace"
+                    >
+                      <Code2 className="w-3.5 h-3.5" />
+                      <span>Solve</span>
+                    </button>
+
                     {isDue && onSelectForReview && (
                       <button
                         onClick={() => onSelectForReview(problem)}
-                        className="px-2 py-1 text-xs font-semibold rounded-md bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300 hover:bg-brand-100 transition-colors"
+                        className="px-2 py-1 text-xs font-semibold rounded-md bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 hover:bg-amber-100 transition-colors"
                       >
                         Review
                       </button>
@@ -128,19 +146,21 @@ export const ProblemTable: React.FC<ProblemTableProps> = ({ problems, onSelectFo
                       target="_blank"
                       rel="noopener noreferrer"
                       className="p-1.5 rounded-md text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-dark-surfaceHover transition-colors"
-                      title="Open Problem in new tab"
+                      title="Open Original Problem ↗"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
 
                     <button
                       onClick={() => {
-                        if (confirm(`Delete "${problem.title}"?`)) {
+                        if (onRemove) {
+                          onRemove(problem);
+                        } else {
                           deleteProblem(problem.id);
                         }
                       }}
                       className="p-1.5 rounded-md text-neutral-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
-                      title="Delete"
+                      title="Remove from revision list"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>

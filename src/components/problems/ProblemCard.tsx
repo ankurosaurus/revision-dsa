@@ -3,16 +3,25 @@ import { Problem } from '../../types';
 import { PlatformBadge } from './PlatformBadge';
 import { DifficultyBadge } from './DifficultyBadge';
 import { isProblemDue, isProblemOverdue, getDaysUntilDue } from '../../lib/spacedRepetition';
-import { ExternalLink, Trash2, Calendar, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
+import { ExternalLink, Trash2, Calendar, RotateCcw, ChevronDown, ChevronUp, Code2 } from 'lucide-react';
 import { useProblemStore } from '../../store/useProblemStore';
+import { useUIStore } from '../../store/useUIStore';
 
 interface ProblemCardProps {
   problem: Problem;
   onSelectForReview?: (problem: Problem) => void;
+  onRemove?: (problem: Problem) => void;
+  onSolve?: (problem: Problem) => void;
 }
 
-export const ProblemCard: React.FC<ProblemCardProps> = ({ problem, onSelectForReview }) => {
+export const ProblemCard: React.FC<ProblemCardProps> = ({
+  problem,
+  onSelectForReview,
+  onRemove,
+  onSolve,
+}) => {
   const deleteProblem = useProblemStore((s) => s.deleteProblem);
+  const openSolveView = useUIStore((s) => s.openSolveView);
   const [showNotes, setShowNotes] = useState(false);
 
   const isDue = isProblemDue(problem.next_review_date);
@@ -22,7 +31,9 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({ problem, onSelectForRe
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (confirm(`Remove "${problem.title}" from revision tracker?`)) {
+    if (onRemove) {
+      onRemove(problem);
+    } else {
       deleteProblem(problem.id);
     }
   };
@@ -113,10 +124,19 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({ problem, onSelectForRe
 
         {/* Buttons */}
         <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => onSolve ? onSolve(problem) : openSolveView(problem)}
+            className="px-2.5 py-1 text-xs font-semibold rounded-md bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300 hover:bg-brand-100 dark:hover:bg-brand-900/50 transition-colors inline-flex items-center gap-1"
+            title="Open in Solve Workspace"
+          >
+            <Code2 className="w-3.5 h-3.5" />
+            <span>Solve</span>
+          </button>
+
           {onSelectForReview && isDue && (
             <button
               onClick={() => onSelectForReview(problem)}
-              className="px-2 py-1 text-xs font-semibold rounded-md bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300 hover:bg-brand-100 dark:hover:bg-brand-900/50 transition-colors"
+              className="px-2 py-1 text-xs font-semibold rounded-md bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 hover:bg-amber-100 transition-colors"
             >
               Review
             </button>
@@ -126,7 +146,7 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({ problem, onSelectForRe
             href={problem.url}
             target="_blank"
             rel="noopener noreferrer"
-            title="Open Problem in new tab"
+            title="Open Original Problem ↗"
             className="btn-secondary px-2 py-1 text-xs inline-flex items-center gap-1 rounded-md"
           >
             <span>Open</span>
@@ -135,7 +155,7 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({ problem, onSelectForRe
 
           <button
             onClick={handleDelete}
-            title="Delete Problem"
+            title="Remove Problem"
             className="p-1 rounded text-neutral-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
           >
             <Trash2 className="w-3.5 h-3.5" />
