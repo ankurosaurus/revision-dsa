@@ -54,7 +54,7 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({
                 Overdue ({Math.abs(daysUntil)}d)
               </span>
             ) : isDue ? (
-              <span className="text-[11px] font-medium px-2 py-0.5 rounded-[6px] bg-[#C4923A]/10 text-[#C4923A] border border-[#C4923A]/20">
+              <span className="text-[11px] font-medium px-2 py-0.5 rounded-[6px] bg-[#FAFAF8] text-[#6E6E73] border border-[#E5E4E0]">
                 Due today
               </span>
             ) : isMastered ? (

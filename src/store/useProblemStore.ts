@@ -60,7 +60,25 @@ function loadInitialProblems(): Problem[] {
     if (saved) {
       const parsed = JSON.parse(saved);
       if (Array.isArray(parsed)) {
-        return parsed;
+        return parsed.map((p: Problem) => {
+          if (
+            p.notes &&
+            (p.notes.startsWith('### Approach:') ||
+              p.notes.startsWith('### Logic:') ||
+              p.notes.startsWith('### Structure:') ||
+              p.notes.startsWith('### Topological Sort:') ||
+              p.notes.startsWith('### Formula:') ||
+              p.notes.startsWith('### Two pointers:') ||
+              p.notes.startsWith('### Recursion with global max:') ||
+              p.notes.startsWith("### Kadane's Algorithm:") ||
+              p.notes.startsWith('Count rows where sum') ||
+              p.notes.startsWith('Insert dictionary into Trie') ||
+              p.notes.startsWith('Participant advances if'))
+          ) {
+            return { ...p, notes: '' };
+          }
+          return p;
+        });
       }
     }
   } catch (e) {

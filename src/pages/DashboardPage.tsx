@@ -101,14 +101,15 @@ export const DashboardPage: React.FC = () => {
           <div>
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
-                <Clock className={`w-4 h-4 ${dueProblems.length > 0 ? 'text-[#C4923A]' : 'text-[#8E8E93]'}`} strokeWidth={1.8} />
+                <Clock className={`w-4 h-4 ${dueProblems.length > 0 ? 'text-[#2D5A6B]' : 'text-[#8E8E93]'}`} strokeWidth={1.8} />
                 <span className="text-[13px] font-medium text-[#6E6E73]">
                   Due for Review Today
                 </span>
               </div>
               {dueProblems.length > 0 && (
-                <span className="text-[11px] font-medium px-2 py-0.5 rounded-[6px] bg-[#C4923A]/10 text-[#C4923A] border border-[#C4923A]/25">
-                  Needs Attention
+                <span className="text-[11px] font-medium px-2 py-0.5 rounded-[6px] bg-[#FAFAF8] text-[#6E6E73] border border-[#E5E4E0] flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#2D5A6B]" />
+                  <span>Action required</span>
                 </span>
               )}
             </div>

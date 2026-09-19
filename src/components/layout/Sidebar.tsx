@@ -49,7 +49,7 @@ export const Sidebar: React.FC = () => {
       label: 'Revision Queue',
       icon: Brain,
       badge: dueCount > 0 ? dueCount : undefined,
-      badgeColor: 'bg-[#C4923A]/10 text-[#C4923A] border border-[#C4923A]/25',
+      badgeColor: 'bg-[#2D5A6B]/10 text-[#2D5A6B] border border-[#2D5A6B]/20',
     },
     {
       id: 'all' as NavTab,
