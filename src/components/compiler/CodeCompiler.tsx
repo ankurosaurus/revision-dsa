@@ -245,35 +245,35 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
     switch (status) {
       case 'SUCCESS':
         return (
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-teal bg-teal/10 px-2 py-0.5 rounded border border-teal/30">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#5A9367] bg-emerald-50 dark:bg-emerald-950/20 px-2 py-0.5 rounded-[10px] border border-emerald-200 dark:border-emerald-900/40">
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Success</span>
           </span>
         );
       case 'COMPILE_ERROR':
         return (
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-ochre bg-ochre/10 px-2 py-0.5 rounded border border-ochre/30">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#C25B5B] bg-rose-50 dark:bg-rose-950/20 px-2 py-0.5 rounded-[10px] border border-rose-200 dark:border-rose-900/40">
             <AlertTriangle className="w-3.5 h-3.5" />
             <span>Compile error</span>
           </span>
         );
       case 'RUNTIME_ERROR':
         return (
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-400 bg-rose-950/20 px-2 py-0.5 rounded border border-rose-900/40">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#C25B5B] bg-rose-50 dark:bg-rose-950/20 px-2 py-0.5 rounded-[10px] border border-rose-200 dark:border-rose-900/40">
             <AlertTriangle className="w-3.5 h-3.5" />
             <span>Runtime error</span>
           </span>
         );
       case 'TIMEOUT':
         return (
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-400 bg-rose-950/20 px-2 py-0.5 rounded border border-rose-900/40">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#C4923A] bg-amber-50 dark:bg-amber-950/20 px-2 py-0.5 rounded-[10px] border border-amber-200 dark:border-amber-900/40">
             <Clock className="w-3.5 h-3.5" />
             <span>Time limit exceeded</span>
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-paper-muted bg-graphite-base px-2 py-0.5 rounded border border-graphite-hairline">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-ink-muted bg-surface-subtle px-2 py-0.5 rounded-[10px] border border-line">
             <span>Finished</span>
           </span>
         );
@@ -281,16 +281,16 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full rounded-xl border border-graphite-hairline bg-surface overflow-hidden shadow-deck">
+    <div className="flex flex-col h-full rounded-[10px] border border-line bg-surface overflow-hidden">
       {/* ── Top Bar / Controls ──────────────────────────────────────────────── */}
-      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 border-b border-graphite-hairline bg-graphite-base">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 border-b border-line bg-surface-subtle">
         <div className="flex items-center gap-2">
-          <Code2 className="w-4 h-4 text-teal" />
+          <Code2 className="w-4 h-4 text-ink-secondary" />
           {/* Language Selector */}
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
-            className="text-xs font-medium bg-surface border border-graphite-hairline rounded px-2.5 py-1.5 text-paper-primary focus:outline-none focus:border-teal cursor-pointer"
+            className="text-xs font-medium bg-surface border border-line rounded-[10px] px-2.5 py-1.5 text-ink focus:outline-none focus:border-[#2D5A6B] cursor-pointer"
           >
             {(Object.keys(SUPPORTED_LANGUAGES) as SupportedLanguage[]).map((langKey) => (
               <option key={langKey} value={langKey}>
@@ -301,13 +301,13 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
 
           {/* Autosave Status */}
           {saveStatus === 'saving' && (
-            <span className="text-xs text-paper-muted flex items-center gap-1">
+            <span className="text-xs text-ink-muted flex items-center gap-1">
               <Cloud className="w-3 h-3 animate-pulse" />
               <span>Saving...</span>
             </span>
           )}
           {saveStatus === 'saved' && (
-            <span className="text-xs text-teal flex items-center gap-1">
+            <span className="text-xs text-[#5A9367] flex items-center gap-1">
               <Check className="w-3 h-3" />
               <span>Saved</span>
             </span>
@@ -320,17 +320,17 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
           <button
             type="button"
             onClick={handleCopyCode}
-            className="p-1.5 rounded border border-graphite-hairline text-paper-muted hover:text-paper-primary hover:bg-graphite-hover transition-colors"
+            className="p-1.5 rounded-[10px] border border-line text-ink-muted hover:text-ink hover:bg-surface-hover transition-colors"
             title="Copy Code"
           >
-            {isCopied ? <Check className="w-3.5 h-3.5 text-teal" /> : <Copy className="w-3.5 h-3.5" />}
+            {isCopied ? <Check className="w-3.5 h-3.5 text-[#5A9367]" /> : <Copy className="w-3.5 h-3.5" />}
           </button>
 
           {/* Reset Button */}
           <button
             type="button"
             onClick={handleResetCode}
-            className="p-1.5 rounded border border-graphite-hairline text-paper-muted hover:text-paper-primary hover:bg-graphite-hover transition-colors"
+            className="p-1.5 rounded-[10px] border border-line text-ink-muted hover:text-ink hover:bg-surface-hover transition-colors"
             title="Reset to Starter Template"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -365,7 +365,7 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
           theme="vs-dark"
           options={{
             fontSize: 13,
-            fontFamily: 'JetBrains Mono, Menlo, Monaco, monospace',
+            fontFamily: 'Geist Mono, JetBrains Mono, Menlo, Monaco, monospace',
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
             wordWrap: 'on',
@@ -378,17 +378,17 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
       </div>
 
       {/* ── Collapsible Custom Stdin Panel ─────────────────────────────────── */}
-      <div className="border-t border-graphite-hairline bg-graphite-base">
+      <div className="border-t border-line bg-surface-subtle">
         <button
           type="button"
           onClick={() => setIsStdinOpen((prev) => !prev)}
-          className="w-full px-4 py-2 flex items-center justify-between text-xs font-medium text-paper-muted hover:text-paper-primary transition-colors"
+          className="w-full px-4 py-2 flex items-center justify-between text-xs font-medium text-ink-muted hover:text-ink transition-colors"
         >
           <span className="flex items-center gap-1.5">
             <Terminal className="w-3.5 h-3.5" />
             <span>Custom input (stdin)</span>
             {stdin.trim() && (
-              <span className="w-1.5 h-1.5 rounded-full bg-ochre inline-block" />
+              <span className="w-1.5 h-1.5 rounded-full bg-ink inline-block" />
             )}
           </span>
           {isStdinOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -401,7 +401,7 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
               onChange={(e) => setStdin(e.target.value)}
               placeholder="Enter test inputs passed to stdin (e.g. 5, array elements, strings)..."
               rows={3}
-              className="w-full font-mono text-xs p-2.5 rounded border border-graphite-hairline bg-surface text-paper-primary placeholder:text-paper-muted focus:outline-none focus:border-teal resize-none"
+              className="w-full font-mono text-xs p-2.5 rounded-[10px] border border-line bg-surface text-ink placeholder:text-ink-muted focus:outline-none focus:border-[#2D5A6B] resize-none"
             />
           </div>
         )}
@@ -409,14 +409,14 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
 
       {/* ── Output Panel ───────────────────────────────────────────────────── */}
       {result && (
-        <div className="border-t border-graphite-hairline bg-graphite-base text-paper-primary p-4 space-y-2">
-          <div className="flex items-center justify-between gap-2 border-b border-graphite-hairline pb-2">
+        <div className="border-t border-line bg-surface-subtle text-ink p-4 space-y-2">
+          <div className="flex items-center justify-between gap-2 border-b border-line pb-2">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-paper-muted">Verdict</span>
+              <span className="text-xs font-medium text-ink-muted">Verdict</span>
               {renderStatusBadge(result.status)}
             </div>
             {result.durationMs > 0 && (
-              <span className="text-xs text-paper-muted font-mono">
+              <span className="text-xs text-ink-muted font-mono">
                 {result.durationMs}ms
               </span>
             )}
@@ -425,8 +425,8 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
           {/* Standard Output */}
           {result.stdout && (
             <div className="space-y-1">
-              <span className="text-xs font-medium text-paper-muted">stdout:</span>
-              <pre className="font-mono text-xs bg-surface p-2.5 rounded border border-graphite-hairline overflow-x-auto text-teal whitespace-pre-wrap">
+              <span className="text-xs font-medium text-ink-muted">stdout:</span>
+              <pre className="font-mono text-xs bg-surface p-2.5 rounded-[10px] border border-line overflow-x-auto text-ink whitespace-pre-wrap">
                 {result.stdout}
               </pre>
             </div>
@@ -435,15 +435,15 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
           {/* Stderr / Compile / Runtime Errors */}
           {result.stderr && (
             <div className="space-y-1">
-              <span className="text-xs font-medium text-rose-400">stderr / error:</span>
-              <pre className="font-mono text-xs bg-rose-950/20 p-2.5 rounded border border-rose-900/40 overflow-x-auto text-rose-300 whitespace-pre-wrap">
+              <span className="text-xs font-medium text-[#C25B5B]">stderr / error:</span>
+              <pre className="font-mono text-xs bg-rose-50 dark:bg-rose-950/20 p-2.5 rounded-[10px] border border-rose-200 dark:border-rose-900/40 overflow-x-auto text-[#C25B5B] whitespace-pre-wrap">
                 {result.stderr}
               </pre>
             </div>
           )}
 
           {!result.stdout && !result.stderr && (
-            <p className="text-xs text-paper-muted italic">Program executed with empty output.</p>
+            <p className="text-xs text-ink-muted italic">Program executed with empty output.</p>
           )}
         </div>
       )}

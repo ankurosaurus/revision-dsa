@@ -19,7 +19,7 @@ export const QueueCelebration: React.FC<QueueCelebrationProps> = () => {
         particleCount: 30,
         spread: 50,
         origin: { y: 0.65 },
-        colors: ['#4F9C8D', '#C98A3B'],
+        colors: ['#4C9F4C', '#E8791A'],
       });
     } catch {
       // safe fallback
@@ -29,33 +29,33 @@ export const QueueCelebration: React.FC<QueueCelebrationProps> = () => {
   return (
     <div className="w-full max-w-lg mx-auto saas-card p-8 text-center flex flex-col items-center">
       {/* Icon */}
-      <div className="w-11 h-11 rounded-xl bg-teal/15 text-teal flex items-center justify-center mb-4 border border-teal/30">
+      <div className="w-11 h-11 rounded-[10px] bg-emerald-50 dark:bg-emerald-950/20 text-[#5A9367] flex items-center justify-center mb-4 border border-emerald-200 dark:border-emerald-900/40">
         <Check className="w-5 h-5" />
       </div>
 
-      <h2 className="font-serif text-2xl font-normal text-paper-primary mb-1">
+      <h2 className="text-xl sm:text-2xl font-semibold text-ink mb-1">
         Queue clear. Next review due tomorrow.
       </h2>
-      <p className="text-xs text-paper-secondary max-w-sm mb-6 leading-relaxed">
+      <p className="text-xs text-ink-secondary max-w-sm mb-6 leading-relaxed">
         All due problems for today have been reviewed. Spaced repetition intervals have been recalculated.
       </p>
 
       {/* Summary Stats */}
       <div className="w-full grid grid-cols-2 gap-3 mb-6">
-        <div className="p-3 rounded-lg bg-surface-subtle border border-surface-border text-center">
-          <div className="font-serif text-2xl font-normal text-paper-primary tabular-nums">
+        <div className="p-3 rounded-[10px] bg-surface-subtle border border-line text-center">
+          <div className="text-2xl font-semibold text-[#C4923A] tabular-nums">
             {streak.currentStreak}d
           </div>
-          <div className="text-xs text-paper-secondary mt-0.5">
+          <div className="text-xs text-ink-secondary mt-0.5">
             Active streak
           </div>
         </div>
 
-        <div className="p-3 rounded-lg bg-surface-subtle border border-surface-border text-center">
-          <div className="font-serif text-2xl font-normal text-paper-primary tabular-nums">
+        <div className="p-3 rounded-[10px] bg-surface-subtle border border-line text-center">
+          <div className="text-2xl font-semibold text-ink tabular-nums">
             {streak.todayCount}
           </div>
-          <div className="text-xs text-paper-secondary mt-0.5">
+          <div className="text-xs text-ink-secondary mt-0.5">
             Reviewed today
           </div>
         </div>

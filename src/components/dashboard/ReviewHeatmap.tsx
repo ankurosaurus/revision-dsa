@@ -58,34 +58,34 @@ export const ReviewHeatmap: React.FC = () => {
     };
   }, [reviewLogs]);
 
-  // Teal functional accent steps for practice/growth
+  // Restrained desaturated teal-blue (#2D5A6B) steps
   const getCellColor = (count: number) => {
-    if (count === 0) return 'bg-[#171B24] border-[#222735]';
-    if (count <= 2) return 'bg-[#24463F] border-[#315F56]';
-    if (count <= 4) return 'bg-[#356B60] border-[#428477]';
-    if (count <= 6) return 'bg-[#43887B] border-[#4F9C8D]';
-    return 'bg-[#4F9C8D] border-[#6BBBAA]';
+    if (count === 0) return 'bg-[#F4F4F0] border-[#E5E4E0]';
+    if (count <= 2) return 'bg-[#2D5A6B]/20 border-[#2D5A6B]/30';
+    if (count <= 4) return 'bg-[#2D5A6B]/40 border-[#2D5A6B]/50';
+    if (count <= 6) return 'bg-[#2D5A6B]/70 border-[#2D5A6B]/80 text-white';
+    return 'bg-[#2D5A6B] border-[#2D5A6B] text-white';
   };
 
   return (
-    <div className="saas-card p-5">
+    <div className="bg-[#FFFFFF] border border-[#E5E4E0] rounded-[10px] p-5 shadow-card">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
         <div>
-          <h3 className="text-sm font-semibold text-paper-primary">
-            Daily practice consistency
+          <h3 className="text-[14px] font-medium text-[#1C1C1E]">
+            Daily Practice Consistency
           </h3>
-          <p className="text-xs text-paper-secondary mt-0.5">
+          <p className="text-[13px] text-[#6E6E73] mt-0.5">
             {totalInPeriod} problem revisions across {activeDays} active days in the last 16 weeks
           </p>
         </div>
 
-        {/* Minimalist Legend with Teal steps */}
-        <div className="flex items-center gap-1.5 text-xs text-paper-muted">
+        {/* Minimalist Legend with Desaturated Teal steps */}
+        <div className="flex items-center gap-1.5 text-[12px] text-[#8E8E93]">
           <span>Less</span>
-          <span className="w-2.5 h-2.5 rounded-xs bg-[#171B24] border border-[#222735]" />
-          <span className="w-2.5 h-2.5 rounded-xs bg-[#24463F]" />
-          <span className="w-2.5 h-2.5 rounded-xs bg-[#356B60]" />
-          <span className="w-2.5 h-2.5 rounded-xs bg-[#4F9C8D]" />
+          <span className="w-2.5 h-2.5 rounded-[3px] bg-[#F4F4F0] border border-[#E5E4E0]" />
+          <span className="w-2.5 h-2.5 rounded-[3px] bg-[#2D5A6B]/20 border border-[#2D5A6B]/30" />
+          <span className="w-2.5 h-2.5 rounded-[3px] bg-[#2D5A6B]/40 border border-[#2D5A6B]/50" />
+          <span className="w-2.5 h-2.5 rounded-[3px] bg-[#2D5A6B]" />
           <span>More</span>
         </div>
       </div>
@@ -99,7 +99,7 @@ export const ReviewHeatmap: React.FC = () => {
                 <div
                   key={day.dateStr}
                   title={`${day.dateStr}: ${day.count} revision${day.count === 1 ? '' : 's'}`}
-                  className={`w-3 h-3 rounded-xs border transition-transform hover:scale-125 cursor-pointer ${getCellColor(
+                  className={`w-3 h-3 rounded-[3px] border transition-transform hover:scale-125 cursor-pointer ${getCellColor(
                     day.count
                   )}`}
                 />

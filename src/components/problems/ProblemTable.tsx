@@ -28,9 +28,9 @@ export const ProblemTable: React.FC<ProblemTableProps> = ({
   }
 
   return (
-    <div className="w-full overflow-x-auto rounded-xl border border-surface-border bg-surface shadow-xs">
-      <table className="w-full text-left text-xs font-sans">
-        <thead className="bg-surface-subtle border-b border-surface-border text-paper-secondary font-medium">
+    <div className="w-full overflow-x-auto rounded-[10px] border border-[#E5E4E0] bg-[#FFFFFF] shadow-card">
+      <table className="w-full text-left text-[13px]">
+        <thead className="bg-[#FAFAF8] border-b border-[#E5E4E0] text-[#6E6E73] font-medium">
           <tr>
             <th className="py-2.5 px-4 font-medium">Problem</th>
             <th className="py-2.5 px-3 font-medium">Platform</th>
@@ -42,7 +42,7 @@ export const ProblemTable: React.FC<ProblemTableProps> = ({
             <th className="py-2.5 px-4 font-medium text-right">Actions</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-surface-border">
+        <tbody className="divide-y divide-[#E5E4E0]">
           {problems.map((problem) => {
             const isDue = isProblemDue(problem.next_review_date);
             const isOverdue = isProblemOverdue(problem.next_review_date);
@@ -52,14 +52,14 @@ export const ProblemTable: React.FC<ProblemTableProps> = ({
             return (
               <tr
                 key={problem.id}
-                className="hover:bg-surface-hover/70 transition-colors group"
+                className="hover:bg-[#F7F7F5] transition-colors group"
               >
-                {/* Title in Fraunces serif */}
+                {/* Title */}
                 <td className="py-3 px-4">
                   <button
                     type="button"
                     onClick={() => onSolve ? onSolve(problem) : openSolveView(problem)}
-                    className="font-serif text-sm font-normal text-paper-primary hover:text-teal transition-colors inline-flex items-center gap-1.5 text-left"
+                    className="text-[14px] font-medium text-[#1C1C1E] hover:text-[#2D5A6B] transition-colors inline-flex items-center gap-1.5 text-left"
                     title="Click to open Solve Workspace"
                   >
                     <span>{problem.title}</span>
@@ -82,13 +82,13 @@ export const ProblemTable: React.FC<ProblemTableProps> = ({
                     {problem.tags.slice(0, 3).map((tag) => (
                       <span
                         key={tag}
-                        className="text-[11px] px-1.5 py-0.5 rounded bg-surface-subtle text-paper-secondary border border-surface-border"
+                        className="text-[11px] px-1.5 py-0.5 rounded-[4px] bg-[#FAFAF8] text-[#6E6E73] border border-[#E5E4E0]"
                       >
                         {tag}
                       </span>
                     ))}
                     {problem.tags.length > 3 && (
-                      <span className="text-[11px] text-paper-muted self-center">
+                      <span className="text-[11px] text-[#8E8E93] self-center">
                         +{problem.tags.length - 3}
                       </span>
                     )}
@@ -96,27 +96,27 @@ export const ProblemTable: React.FC<ProblemTableProps> = ({
                 </td>
 
                 {/* Reps */}
-                <td className="py-3 px-3 text-center text-paper-primary font-medium tabular-nums">
+                <td className="py-3 px-3 text-center text-[#1C1C1E] font-medium tabular-nums">
                   {problem.repetitions}
                 </td>
 
                 {/* Interval */}
-                <td className="py-3 px-3 text-center text-paper-secondary tabular-nums">
+                <td className="py-3 px-3 text-center text-[#6E6E73] tabular-nums">
                   {problem.interval_days}d
                 </td>
 
                 {/* Next Review */}
                 <td className="py-3 px-3 whitespace-nowrap">
                   {isOverdue ? (
-                    <span className="text-ochre font-medium">
+                    <span className="text-[#C25B5B] font-medium">
                       Overdue ({Math.abs(daysUntil)}d)
                     </span>
                   ) : isDue ? (
-                    <span className="text-paper-primary font-medium">Due today</span>
+                    <span className="text-[#C4923A] font-medium">Due today</span>
                   ) : isMastered ? (
-                    <span className="text-teal font-medium">Mastered</span>
+                    <span className="text-[#5A9367] font-medium">Mastered</span>
                   ) : (
-                    <span className="text-paper-muted tabular-nums">In {daysUntil}d</span>
+                    <span className="text-[#8E8E93] tabular-nums">In {daysUntil}d</span>
                   )}
                 </td>
 
@@ -125,17 +125,17 @@ export const ProblemTable: React.FC<ProblemTableProps> = ({
                   <div className="inline-flex items-center gap-1.5">
                     <button
                       onClick={() => onSolve ? onSolve(problem) : openSolveView(problem)}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-md bg-teal/10 text-teal border border-teal/30 hover:bg-teal/20 transition-colors"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 text-[12px] font-medium rounded-[6px] bg-[#FAFAF8] text-[#1C1C1E] border border-[#E5E4E0] hover:bg-[#F7F7F5] transition-colors"
                       title="Open in Solve Workspace"
                     >
-                      <Code2 className="w-3.5 h-3.5" />
+                      <Code2 className="w-3.5 h-3.5" strokeWidth={1.8} />
                       <span>Solve</span>
                     </button>
 
                     {isDue && onSelectForReview && (
                       <button
                         onClick={() => onSelectForReview(problem)}
-                        className="px-2 py-1 text-xs font-medium rounded-md bg-ochre/15 text-ochre border border-ochre/30 hover:bg-ochre/25 transition-colors"
+                        className="px-2 py-1 text-[12px] font-medium rounded-[6px] bg-[#2D5A6B] text-white hover:bg-[#234754] transition-colors"
                       >
                         Review
                       </button>
@@ -145,10 +145,10 @@ export const ProblemTable: React.FC<ProblemTableProps> = ({
                       href={problem.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-1.5 rounded-md text-paper-muted hover:text-paper-primary transition-colors"
+                      className="p-1.5 rounded-[6px] text-[#8E8E93] hover:text-[#1C1C1E] transition-colors"
                       title="Open problem URL in new tab"
                     >
-                      <ExternalLink className="w-3.5 h-3.5" />
+                      <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.8} />
                     </a>
 
                     <button
@@ -159,10 +159,10 @@ export const ProblemTable: React.FC<ProblemTableProps> = ({
                           deleteProblem(problem.id);
                         }
                       }}
-                      className="p-1.5 rounded-md text-paper-muted hover:text-ochre transition-colors"
+                      className="p-1.5 rounded-[6px] text-[#8E8E93] hover:text-[#C25B5B] transition-colors"
                       title="Remove from revision list"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-3.5 h-3.5" strokeWidth={1.8} />
                     </button>
                   </div>
                 </td>

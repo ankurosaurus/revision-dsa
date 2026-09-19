@@ -43,51 +43,52 @@ export const TagRadarChart: React.FC<TagRadarChartProps> = ({ problems }) => {
   }, [problems]);
 
   return (
-    <div className="saas-card p-5 flex flex-col justify-between">
+    <div className="bg-[#FFFFFF] border border-[#E5E4E0] rounded-[10px] p-5 flex flex-col justify-between shadow-card">
       <div className="flex items-center justify-between mb-2">
         <div>
-          <h3 className="text-sm font-semibold text-paper-primary">
-            Pattern mastery
+          <h3 className="text-[14px] font-medium text-[#1C1C1E]">
+            Pattern Mastery
           </h3>
-          <p className="text-xs text-paper-secondary mt-0.5">
+          <p className="text-[13px] text-[#6E6E73] mt-0.5">
             Average SM-2 ease factor per algorithmic pattern
           </p>
         </div>
       </div>
 
       {data.length < 3 ? (
-        <div className="h-44 flex items-center justify-center text-xs text-paper-muted text-center px-4">
+        <div className="h-44 flex items-center justify-center text-[13px] text-[#8E8E93] text-center px-4">
           Log problems across 3+ patterns (DP, Graph, Trees, etc.) to visualize your pattern radar.
         </div>
       ) : (
         <div className="w-full h-44">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={data}>
-              <PolarGrid stroke="#2C3140" strokeOpacity={0.8} />
+              <PolarGrid stroke="#E5E4E0" strokeOpacity={0.8} />
               <PolarAngleAxis
                 dataKey="pattern"
-                tick={{ fill: '#9AA0AE', fontSize: 11 }}
+                tick={{ fill: '#6E6E73', fontSize: 11 }}
               />
               <PolarRadiusAxis
                 angle={30}
                 domain={[1.3, 3.5]}
-                stroke="#2C3140"
-                tick={{ fill: '#656B7B', fontSize: 10 }}
+                stroke="#E5E4E0"
+                tick={{ fill: '#8E8E93', fontSize: 10 }}
               />
               <Radar
                 name="Ease factor"
                 dataKey="ease"
-                stroke="#4F9C8D"
-                fill="#4F9C8D"
-                fillOpacity={0.22}
+                stroke="#2D5A6B"
+                fill="#2D5A6B"
+                fillOpacity={0.15}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1C202B',
-                  borderColor: '#2C3140',
+                  backgroundColor: '#FFFFFF',
+                  borderColor: '#E5E4E0',
                   borderRadius: '8px',
                   fontSize: '12px',
-                  color: '#E7E5DF',
+                  color: '#1C1C1E',
+                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)',
                 }}
                 formatter={(value: any) => [`${value} (Average ease)`, 'Mastery']}
               />

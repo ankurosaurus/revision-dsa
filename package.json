@@ -27,6 +27,7 @@
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "framer-motion": "^13.3.0",
+    "geist": "^1.7.2",
     "lucide-react": "^1.46.0",
     "postcss": "^8.5.28",
     "posthog-js": "^1.433.6",

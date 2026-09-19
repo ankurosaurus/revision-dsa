@@ -8,43 +8,43 @@ export const StreakCard: React.FC = () => {
   const profile = useProblemStore((s) => s.profile);
 
   return (
-    <div className="bg-surface border border-graphite-hairline rounded-xl p-5 flex flex-col justify-between h-full shadow-deck">
+    <div className="bg-[#FFFFFF] border border-[#E5E4E0] rounded-[10px] p-5 flex flex-col justify-between h-full shadow-card">
       <div>
         <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-paper-muted">
-            Consistency streak
+          <span className="text-[13px] font-medium text-[#6E6E73]">
+            Consistency Streak
           </span>
-          <div className="w-8 h-8 rounded-lg bg-ochre/10 border border-ochre/30 flex items-center justify-center text-ochre">
-            <Flame className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-[8px] bg-[#C4923A]/10 border border-[#C4923A]/20 flex items-center justify-center text-[#C4923A]">
+            <Flame className="w-4 h-4" strokeWidth={1.8} />
           </div>
         </div>
 
         <div className="flex items-baseline gap-2 mt-3">
-          <h2 className="text-3xl font-serif font-bold text-paper-primary">
+          <div className="text-[28px] font-semibold text-[#1C1C1E] tracking-tight">
             {streak.currentStreak}
-          </h2>
-          <span className="text-xs text-paper-muted">
+          </div>
+          <span className="text-[13px] text-[#6E6E73]">
             consecutive day{streak.currentStreak === 1 ? '' : 's'}
           </span>
         </div>
       </div>
 
-      <div className="mt-5 pt-3 border-t border-graphite-hairline flex items-center justify-between text-xs">
-        <div className="flex items-center gap-1.5 text-paper-muted">
+      <div className="mt-5 pt-3 border-t border-[#E5E4E0] flex items-center justify-between text-[13px]">
+        <div className="flex items-center gap-1.5 text-[#6E6E73]">
           {streak.isTodayDone ? (
             <>
-              <CheckCircle2 className="w-3.5 h-3.5 text-teal" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#5A9367]" strokeWidth={1.8} />
               <span>Goal: {streak.todayCount}/{profile.daily_goal} today</span>
             </>
           ) : (
             <>
-              <Clock className="w-3.5 h-3.5 text-ochre" />
+              <Clock className="w-3.5 h-3.5 text-[#C4923A]" strokeWidth={1.8} />
               <span>Revise today to advance</span>
             </>
           )}
         </div>
 
-        <div className="text-paper-muted text-xs">
+        <div className="text-[#8E8E93] text-[12px]">
           Best: {streak.longestStreak}d
         </div>
       </div>

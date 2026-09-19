@@ -36,7 +36,7 @@ export const DashboardPage: React.FC = () => {
         particleCount: 40,
         spread: 50,
         origin: { y: 0.6 },
-        colors: ['#4F9C8D', '#C98A3B'],
+        colors: ['#2D5A6B', '#5A9367'],
       });
     } finally {
       setIsAddingEssentials(false);
@@ -52,18 +52,18 @@ export const DashboardPage: React.FC = () => {
   const recentProblems = problems.slice(0, 3);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-9">
+    <div className="max-w-6xl mx-auto space-y-8">
       {/* 1. Header & Direct Action */}
       <section className="flex flex-col md:flex-row md:items-end justify-between gap-4 pt-1">
         <div className="max-w-2xl">
-          <div className="flex items-center gap-2 text-xs text-teal mb-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-teal" />
-            <span>Spaced repetition practice ledger</span>
+          <div className="flex items-center gap-2 text-[13px] text-[#2D5A6B] font-medium mb-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#2D5A6B]" />
+            <span>Spaced Repetition Practice Ledger</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl text-paper-primary font-normal tracking-tight leading-tight">
-            Retention and practice ledger
+          <h1 className="text-[28px] sm:text-[32px] font-semibold text-[#1C1C1E] tracking-tight leading-tight">
+            Retention and Practice Ledger
           </h1>
-          <p className="text-xs sm:text-sm text-paper-secondary mt-1.5 leading-relaxed">
+          <p className="text-[14px] text-[#6E6E73] mt-1 leading-relaxed">
             Deliberate spaced repetition for interview algorithms. Review problems according to SuperMemo SM-2 decay intervals.
           </p>
         </div>
@@ -71,121 +71,117 @@ export const DashboardPage: React.FC = () => {
         <div className="flex items-center gap-2.5 shrink-0">
           <button
             onClick={openAddPanel}
-            className="btn-secondary text-xs flex items-center gap-1.5 py-2 px-3.5"
+            className="btn-secondary text-[13px] flex items-center gap-1.5 py-2 px-3.5"
           >
-            <Plus className="w-4 h-4" />
-            <span>Log problem</span>
+            <Plus className="w-4 h-4" strokeWidth={1.8} />
+            <span>Log Problem</span>
           </button>
           {dueProblems.length > 0 ? (
             <button
               onClick={() => setActiveTab('queue')}
-              className="btn-primary text-xs flex items-center gap-1.5 py-2 px-4 font-medium"
+              className="btn-primary text-[13px] flex items-center gap-1.5 py-2 px-4 font-medium"
             >
-              <span>Start reviewing ({dueProblems.length})</span>
+              <span>Start Reviewing ({dueProblems.length})</span>
             </button>
           ) : (
             <button
               onClick={() => setActiveTab('queue')}
-              className="btn-secondary text-xs py-2 px-3.5 text-paper-secondary"
+              className="btn-secondary text-[13px] py-2 px-3.5 text-[#6E6E73]"
             >
-              <span>Queue clear</span>
+              <span>Queue Clear</span>
             </button>
           )}
         </div>
       </section>
 
-      {/* 2. Asymmetric Metric Anchors (Broke the uniform 4-card grid!) */}
+      {/* 2. Restrained Metric Cards */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        {/* Large Primary Anchor: Due Today (Ochre emphasis when active) */}
-        <div className={`lg:col-span-7 p-6 sm:p-7 rounded-xl border flex flex-col justify-between transition-all ${
-          dueProblems.length > 0
-            ? 'bg-surface border-ochre/40 shadow-sm'
-            : 'bg-surface border-surface-border'
-        }`}>
+        {/* Due Today Anchor */}
+        <div className="lg:col-span-7 p-6 rounded-[10px] border border-[#E5E4E0] bg-[#FFFFFF] flex flex-col justify-between shadow-card">
           <div>
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
-                <Clock className={`w-4 h-4 ${dueProblems.length > 0 ? 'text-ochre' : 'text-paper-muted'}`} />
-                <span className="text-xs font-medium text-paper-secondary">
-                  Due for review today
+                <Clock className={`w-4 h-4 ${dueProblems.length > 0 ? 'text-[#C4923A]' : 'text-[#8E8E93]'}`} strokeWidth={1.8} />
+                <span className="text-[13px] font-medium text-[#6E6E73]">
+                  Due for Review Today
                 </span>
               </div>
               {dueProblems.length > 0 && (
-                <span className="text-xs font-medium px-2 py-0.5 rounded bg-ochre/15 text-ochre border border-ochre/30">
-                  Needs attention
+                <span className="text-[11px] font-medium px-2 py-0.5 rounded-[6px] bg-[#C4923A]/10 text-[#C4923A] border border-[#C4923A]/25">
+                  Needs Attention
                 </span>
               )}
             </div>
 
             <div className="flex items-baseline gap-3 my-2">
-              <span className="font-serif text-4xl sm:text-5xl font-normal text-paper-primary tracking-tight">
+              <span className="text-[36px] font-semibold text-[#1C1C1E] tracking-tight">
                 {dueProblems.length}
               </span>
-              <span className="text-xs text-paper-secondary">
+              <span className="text-[13px] text-[#6E6E73]">
                 {dueProblems.length === 1 ? 'problem due now' : 'problems due now'}
               </span>
             </div>
 
-            <p className="text-xs text-paper-secondary leading-relaxed max-w-md mt-1">
+            <p className="text-[13px] text-[#6E6E73] leading-relaxed max-w-md mt-1">
               {dueProblems.length > 0
                 ? 'These problems have reached their SM-2 review threshold. Prompt mental reconstruction before checking notes.'
-                : 'Queue clear. Next review due tomorrow.'}
+                : 'Queue is clear. Next scheduled reviews arrive according to your retention curve.'}
             </p>
           </div>
 
-          <div className="pt-5 mt-4 border-t border-surface-border flex items-center justify-between">
+          <div className="pt-4 mt-4 border-t border-[#E5E4E0] flex items-center justify-between">
             {dueProblems.length > 0 ? (
               <button
                 onClick={() => setActiveTab('queue')}
-                className="text-xs font-medium text-ochre hover:underline flex items-center gap-1"
+                className="text-[13px] font-medium text-[#2D5A6B] hover:underline flex items-center gap-1"
               >
                 <span>Launch revision session</span>
               </button>
             ) : (
-              <span className="text-xs text-paper-muted">All scheduled reviews up to date</span>
+              <span className="text-[13px] text-[#8E8E93]">All scheduled reviews up to date</span>
             )}
-            <span className="text-xs text-paper-muted">{dueThisWeek} scheduled over the next 7 days</span>
+            <span className="text-[12px] text-[#8E8E93]">{dueThisWeek} scheduled over next 7 days</span>
           </div>
         </div>
 
         {/* Supporting Anchor: Streak & Consistency */}
-        <div className="lg:col-span-5 p-6 sm:p-7 rounded-xl border border-surface-border bg-surface flex flex-col justify-between">
+        <div className="lg:col-span-5 p-6 rounded-[10px] border border-[#E5E4E0] bg-[#FFFFFF] flex flex-col justify-between shadow-card">
           <div>
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
-                <Flame className="w-4 h-4 text-ochre" />
-                <span className="text-xs font-medium text-paper-secondary">
-                  Consistency streak
+                <Flame className="w-4 h-4 text-[#C4923A]" strokeWidth={1.8} />
+                <span className="text-[13px] font-medium text-[#6E6E73]">
+                  Consistency Streak
                 </span>
               </div>
-              <span className="text-xs text-paper-muted">Best: {streak.longestStreak}d</span>
+              <span className="text-[12px] text-[#8E8E93]">Best: {streak.longestStreak}d</span>
             </div>
 
             <div className="flex items-baseline gap-2.5 my-2">
-              <span className="font-serif text-4xl sm:text-5xl font-normal text-paper-primary tracking-tight">
+              <span className="text-[36px] font-semibold text-[#1C1C1E] tracking-tight">
                 {streak.currentStreak}
               </span>
-              <span className="text-xs text-paper-secondary">
+              <span className="text-[13px] text-[#6E6E73]">
                 consecutive day{streak.currentStreak === 1 ? '' : 's'}
               </span>
             </div>
 
-            <p className="text-xs text-paper-secondary leading-relaxed mt-1">
+            <p className="text-[13px] text-[#6E6E73] leading-relaxed mt-1">
               {streak.isTodayDone
                 ? 'Daily review completed. Consistency locks algorithmic patterns into long-term recall.'
                 : 'Complete one review session today to maintain your consecutive practice record.'}
             </p>
           </div>
 
-          {/* Compact secondary metrics strip inside */}
-          <div className="pt-4 mt-4 border-t border-surface-border grid grid-cols-2 gap-4">
+          {/* Compact secondary metrics strip */}
+          <div className="pt-4 mt-4 border-t border-[#E5E4E0] grid grid-cols-2 gap-4">
             <div>
-              <span className="text-[11px] text-paper-muted block">Problems tracked</span>
-              <span className="text-base font-medium text-paper-primary">{problems.length}</span>
+              <span className="text-[12px] text-[#8E8E93] block">Problems Tracked</span>
+              <span className="text-[16px] font-medium text-[#1C1C1E]">{problems.length}</span>
             </div>
             <div>
-              <span className="text-[11px] text-paper-muted block">Mastered (5+ reps)</span>
-              <span className="text-base font-medium text-teal">
+              <span className="text-[12px] text-[#8E8E93] block">Mastered (5+ reps)</span>
+              <span className="text-[16px] font-medium text-[#5A9367]">
                 {masteredCount} {problems.length > 0 && `(${Math.round((masteredCount / problems.length) * 100)}%)`}
               </span>
             </div>
@@ -217,10 +213,10 @@ export const DashboardPage: React.FC = () => {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-serif text-xl text-paper-primary font-normal">
-              {dueProblems.length > 0 ? 'Problems due for review' : 'Recent problem bank'}
+            <h3 className="text-[17px] font-medium text-[#1C1C1E]">
+              {dueProblems.length > 0 ? 'Problems Due for Review' : 'Recent Problem Bank'}
             </h3>
-            <p className="text-xs text-paper-secondary mt-0.5">
+            <p className="text-[13px] text-[#6E6E73] mt-0.5">
               {dueProblems.length > 0
                 ? 'Scheduled based on your past recall ratings and SM-2 ease factors.'
                 : 'Recently solved problems across LeetCode, GeeksforGeeks, and Codeforces.'}
@@ -229,22 +225,22 @@ export const DashboardPage: React.FC = () => {
 
           <button
             onClick={() => setActiveTab(dueProblems.length > 0 ? 'queue' : 'all')}
-            className="text-xs font-medium text-teal hover:underline"
+            className="text-[13px] font-medium text-[#2D5A6B] hover:underline"
           >
-            <span>{dueProblems.length > 0 ? 'Start review session' : 'View all problems'}</span>
+            <span>{dueProblems.length > 0 ? 'Start Review Session' : 'View All Problems'}</span>
           </button>
         </div>
 
         {problems.length === 0 ? (
-          <div className="editorial-surface p-8 text-center flex flex-col items-center rounded-xl border border-surface-border bg-surface-subtle">
-            <div className="w-10 h-10 rounded-xl bg-surface border border-surface-border flex items-center justify-center text-teal mb-3">
-              <BookOpen className="w-5 h-5" />
+          <div className="p-8 text-center flex flex-col items-center rounded-[10px] border border-[#E5E4E0] bg-[#FFFFFF] shadow-card">
+            <div className="w-10 h-10 rounded-[10px] bg-[#FAFAF8] border border-[#E5E4E0] flex items-center justify-center text-[#2D5A6B] mb-3">
+              <BookOpen className="w-5 h-5" strokeWidth={1.8} />
             </div>
 
-            <h4 className="font-serif text-lg text-paper-primary font-normal mb-1">
+            <h4 className="text-[17px] font-medium text-[#1C1C1E] mb-1">
               Start your spaced repetition problem bank
             </h4>
-            <p className="text-xs text-paper-secondary max-w-md mb-5 leading-relaxed">
+            <p className="text-[13px] text-[#6E6E73] max-w-md mb-5 leading-relaxed">
               Seed your queue with 5 foundational interview problems tested across technical screening rounds.
             </p>
 
@@ -258,11 +254,11 @@ export const DashboardPage: React.FC = () => {
               ].map((item) => (
                 <div
                   key={item.title}
-                  className="px-3 py-1.5 rounded-lg bg-surface border border-surface-border text-xs flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-[8px] bg-[#FAFAF8] border border-[#E5E4E0] text-[13px] flex items-center gap-1.5"
                 >
-                  <CheckCircle2 className="w-3.5 h-3.5 text-teal" />
-                  <span className="font-medium text-paper-primary">{item.title}</span>
-                  <span className="text-[10px] text-paper-muted">({item.tag})</span>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#5A9367]" strokeWidth={1.8} />
+                  <span className="font-medium text-[#1C1C1E]">{item.title}</span>
+                  <span className="text-[11px] text-[#8E8E93]">({item.tag})</span>
                 </div>
               ))}
             </div>
@@ -272,12 +268,12 @@ export const DashboardPage: React.FC = () => {
                 type="button"
                 onClick={handleAddEssentials}
                 disabled={isAddingEssentials}
-                className="btn-primary text-xs py-2 px-4 flex items-center gap-2 font-medium disabled:opacity-50"
+                className="btn-primary text-[13px] py-2 px-4 flex items-center gap-2 font-medium disabled:opacity-50"
               >
                 {isAddingEssentials ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin" strokeWidth={2} />
                 ) : (
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-4 h-4" strokeWidth={2} />
                 )}
                 <span>Add 5 starter problems</span>
               </button>
@@ -285,9 +281,9 @@ export const DashboardPage: React.FC = () => {
               <button
                 type="button"
                 onClick={openAddPanel}
-                className="btn-secondary text-xs py-2 px-4 flex items-center gap-1.5 font-medium"
+                className="btn-secondary text-[13px] py-2 px-4 flex items-center gap-1.5 font-medium"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-4 h-4" strokeWidth={1.8} />
                 <span>Log custom problem</span>
               </button>
             </div>

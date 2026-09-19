@@ -81,20 +81,18 @@ export const MemoryCurveSimulator: React.FC = () => {
   const graphWidth = width - paddingX * 2;
   const graphHeight = height - paddingY * 2;
 
-  // Map day values to SVG X
   const getX = (day: number) => {
     return paddingX + (day / 60) * graphWidth;
   };
 
-  // Map retention % to SVG Y
   const getY = (pct: number) => {
     return height - paddingY - (pct / 100) * graphHeight;
   };
 
-  // Standard forgetting curve path (Ochre faded)
+  // Standard forgetting curve path (Muted desaturated amber-red)
   const forgettingPath = `M ${getX(0)} ${getY(100)} Q ${getX(5)} ${getY(40)}, ${getX(20)} ${getY(15)} T ${getX(60)} ${getY(5)}`;
 
-  // SM-2 spaced repetition curve path (Teal solid)
+  // SM-2 spaced repetition curve path (Desaturated teal-blue)
   const sm2Points = [
     { day: 0, pct: 100 },
     { day: 1, pct: 60 },
@@ -118,46 +116,46 @@ export const MemoryCurveSimulator: React.FC = () => {
   const activeY = getY(activeStage.retentionWith);
 
   return (
-    <div className="editorial-surface p-6 sm:p-7 relative overflow-hidden">
+    <div className="bg-[#FFFFFF] border border-[#E5E4E0] rounded-[10px] p-6 sm:p-7 relative overflow-hidden shadow-card">
       {/* Header & Stage Controller */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-medium text-teal">
-              Memory retention model
+            <span className="text-[13px] font-medium text-[#2D5A6B]">
+              Memory Retention Model
             </span>
-            <span className="text-xs text-paper-muted">
+            <span className="text-[13px] text-[#8E8E93]">
               (Ebbinghaus decay vs. SM-2 intervals)
             </span>
           </div>
-          <h3 className="font-serif text-xl sm:text-2xl text-paper-primary font-normal leading-snug">
+          <h3 className="text-[20px] font-semibold text-[#1C1C1E] leading-snug">
             How spaced intervals prevent forgetting
           </h3>
-          <p className="text-xs text-paper-secondary mt-0.5">
+          <p className="text-[13px] text-[#6E6E73] mt-0.5">
             Select a milestone to inspect how periodic active recall flattens the forgetting curve.
           </p>
         </div>
 
         {/* Probability Readout */}
-        <div className="flex items-center gap-4 bg-surface-subtle p-3 rounded-xl border border-surface-border shrink-0">
+        <div className="flex items-center gap-4 bg-[#FAFAF8] p-3 rounded-[10px] border border-[#E5E4E0] shrink-0">
           <div>
-            <span className="text-[11px] text-paper-muted block">
+            <span className="text-[11px] text-[#8E8E93] block">
               Without review
             </span>
-            <span className="text-base font-semibold text-ochre">
+            <span className="text-[16px] font-semibold text-[#C25B5B]">
               {activeStage.retentionWithout}%
             </span>
           </div>
 
-          <div className="h-7 w-px bg-surface-border" />
+          <div className="h-7 w-px bg-[#E5E4E0]" />
 
           <div>
-            <span className="text-[11px] text-teal font-medium block">
+            <span className="text-[11px] text-[#5A9367] font-medium block">
               With SM-2 recall
             </span>
-            <span className="text-base font-semibold text-paper-primary flex items-center gap-1">
+            <span className="text-[16px] font-semibold text-[#1C1C1E] flex items-center gap-1">
               <span>{activeStage.retentionWith}%</span>
-              <TrendingUp className="w-3.5 h-3.5 text-teal" />
+              <TrendingUp className="w-3.5 h-3.5 text-[#5A9367]" strokeWidth={1.8} />
             </span>
           </div>
         </div>
@@ -175,7 +173,7 @@ export const MemoryCurveSimulator: React.FC = () => {
                   y1={getY(pct)}
                   x2={width - paddingX}
                   y2={getY(pct)}
-                  stroke="#2C3140"
+                  stroke="#E5E4E0"
                   strokeDasharray="2 2"
                   strokeWidth="1"
                 />
@@ -183,7 +181,7 @@ export const MemoryCurveSimulator: React.FC = () => {
                   x={paddingX - 8}
                   y={getY(pct) + 4}
                   textAnchor="end"
-                  fill="#656B7B"
+                  fill="#8E8E93"
                   fontSize="10"
                 >
                   {pct}%
@@ -191,22 +189,22 @@ export const MemoryCurveSimulator: React.FC = () => {
               </g>
             ))}
 
-            {/* Standard Forgetting Curve (Ochre dashed) */}
+            {/* Standard Forgetting Curve (Muted red-amber dashed) */}
             <path
               d={forgettingPath}
               fill="none"
-              stroke="#C98A3B"
-              strokeWidth="2"
+              stroke="#C4923A"
+              strokeWidth="1.5"
               strokeDasharray="4 4"
-              strokeOpacity="0.6"
+              strokeOpacity="0.7"
             />
 
             {/* SM-2 Spaced Repetition Curve (Teal solid) */}
             <path
               d={sm2Path}
               fill="none"
-              stroke="#4F9C8D"
-              strokeWidth="2.5"
+              stroke="#2D5A6B"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -217,8 +215,8 @@ export const MemoryCurveSimulator: React.FC = () => {
               y1={paddingY}
               x2={activeX}
               y2={height - paddingY}
-              stroke="#4F9C8D"
-              strokeWidth="1.5"
+              stroke="#2D5A6B"
+              strokeWidth="1"
               strokeDasharray="2 2"
               strokeOpacity="0.8"
             />
@@ -227,15 +225,15 @@ export const MemoryCurveSimulator: React.FC = () => {
             <circle
               cx={activeX}
               cy={activeY}
-              r="5"
-              fill="#4F9C8D"
+              r="4.5"
+              fill="#2D5A6B"
             />
             <circle
               cx={activeX}
               cy={activeY}
-              r="11"
-              fill="#4F9C8D"
-              fillOpacity="0.2"
+              r="9"
+              fill="#2D5A6B"
+              fillOpacity="0.15"
             />
 
             {/* Stage Milestone Pins */}
@@ -253,14 +251,14 @@ export const MemoryCurveSimulator: React.FC = () => {
                   <circle
                     cx={x}
                     cy={y}
-                    r={isSelected ? '5' : '3.5'}
-                    fill={isSelected ? '#4F9C8D' : '#656B7B'}
+                    r={isSelected ? '4.5' : '3'}
+                    fill={isSelected ? '#2D5A6B' : '#8E8E93'}
                   />
                   <text
                     x={x}
                     y={height - 6}
                     textAnchor="middle"
-                    fill={isSelected ? '#4F9C8D' : '#9AA0AE'}
+                    fill={isSelected ? '#2D5A6B' : '#8E8E93'}
                     fontSize="10"
                     fontWeight={isSelected ? '600' : '400'}
                   >
@@ -281,17 +279,17 @@ export const MemoryCurveSimulator: React.FC = () => {
             <button
               key={st.day}
               onClick={() => setSelectedStageIndex(index)}
-              className={`p-2.5 rounded-lg border text-left transition-all ${
+              className={`p-2.5 rounded-[8px] border text-left transition-all ${
                 isSelected
-                  ? 'bg-surface-hover border-teal text-paper-primary shadow-xs'
-                  : 'bg-surface-subtle border-surface-border text-paper-secondary hover:bg-surface-hover'
+                  ? 'bg-[#F7F7F5] border-[#2D5A6B] text-[#1C1C1E] shadow-xs'
+                  : 'bg-[#FAFAF8] border-[#E5E4E0] text-[#6E6E73] hover:bg-[#F7F7F5]'
               }`}
             >
-              <div className="flex items-center justify-between text-[10px] text-paper-muted mb-1">
+              <div className="flex items-center justify-between text-[10px] text-[#8E8E93] mb-1">
                 <span>{st.interval}</span>
                 {st.repetition > 0 && <span>#{st.repetition}</span>}
               </div>
-              <div className="text-xs font-medium truncate">{st.label}</div>
+              <div className="text-[13px] font-medium truncate">{st.label}</div>
             </button>
           );
         })}
@@ -303,16 +301,16 @@ export const MemoryCurveSimulator: React.FC = () => {
         initial={{ opacity: 0, y: 3 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.12 }}
-        className="mt-4 p-3.5 rounded-xl bg-surface-subtle border border-surface-border flex items-start gap-3 text-xs"
+        className="mt-4 p-3.5 rounded-[8px] bg-[#FAFAF8] border border-[#E5E4E0] flex items-start gap-3 text-[13px]"
       >
-        <div className="p-1.5 rounded-lg bg-teal/10 text-teal shrink-0 mt-0.5">
-          <Brain className="w-4 h-4" />
+        <div className="p-1.5 rounded-[6px] bg-[#2D5A6B]/10 text-[#2D5A6B] shrink-0 mt-0.5">
+          <Brain className="w-4 h-4" strokeWidth={1.8} />
         </div>
         <div>
-          <span className="font-semibold text-paper-primary mr-1.5">
+          <span className="font-semibold text-[#1C1C1E] mr-1.5">
             {activeStage.label}:
           </span>
-          <span className="text-paper-secondary leading-relaxed">
+          <span className="text-[#6E6E73] leading-relaxed">
             {activeStage.description}
           </span>
         </div>

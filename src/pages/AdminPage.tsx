@@ -36,7 +36,7 @@ interface AdminStats {
   platform_breakdown: PlatformStat[];
 }
 
-const PIE_COLORS = ['#C98A3B', '#4F9C8D', '#9AA0AE'];
+const PIE_COLORS = ['#2D5A6B', '#5A9367', '#C4923A', '#8E8E93'];
 
 const fmt = (d: string) => {
   const dt = new Date(d);
@@ -47,13 +47,13 @@ const fmt = (d: string) => {
 const StatCard: React.FC<{
   label: string; value: string | number; sub?: string; icon: React.ReactNode;
 }> = ({ label, value, sub, icon }) => (
-  <div className="bg-surface border border-graphite-hairline rounded-xl p-5 shadow-deck">
+  <div className="bg-surface border border-line rounded-[10px] p-5">
     <div className="flex items-start justify-between mb-3">
-      <span className="text-xs font-medium text-paper-muted">{label}</span>
-      <div className="text-teal">{icon}</div>
+      <span className="text-xs font-medium text-ink-muted">{label}</span>
+      <div className="text-ink-secondary">{icon}</div>
     </div>
-    <div className="text-2xl sm:text-3xl font-serif font-bold text-paper-primary">{value}</div>
-    {sub && <div className="text-xs text-paper-muted mt-1">{sub}</div>}
+    <div className="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">{value}</div>
+    {sub && <div className="text-xs text-ink-muted mt-1">{sub}</div>}
   </div>
 );
 
@@ -100,20 +100,20 @@ export const AdminPage: React.FC = () => {
   // ── Not admin ──────────────────────────────────────────────────────────────
   if (isAdmin === false) {
     return (
-      <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
-        <div className="w-14 h-14 rounded-2xl bg-rose-950/20 border border-rose-900/40 flex items-center justify-center">
-          <ShieldAlert className="w-7 h-7 text-rose-400" />
+      <div className="flex flex-col items-center justify-center h-full gap-4 text-center py-16">
+        <div className="w-12 h-12 rounded-[10px] bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/40 flex items-center justify-center">
+          <ShieldAlert className="w-6 h-6 text-[#C25B5B]" />
         </div>
         <div>
-          <h2 className="text-lg font-serif font-bold text-paper-primary">Access Denied</h2>
-          <p className="text-xs text-paper-muted mt-1 max-w-xs">
+          <h2 className="text-lg font-semibold text-ink">Access Denied</h2>
+          <p className="text-xs text-ink-muted mt-1 max-w-xs">
             This ledger is restricted to admin accounts only.
             {!isSupabaseConfigured && ' Supabase is not configured.'}
           </p>
         </div>
-        <div className="p-3 rounded-lg bg-graphite-base border border-graphite-hairline text-xs text-paper-muted font-mono max-w-sm text-left">
+        <div className="p-3.5 rounded-[10px] bg-surface border border-line text-xs text-ink-muted font-mono max-w-sm text-left">
           To grant admin access, run in Supabase SQL Editor:<br />
-          <span className="text-teal">
+          <span className="text-ink">
             UPDATE profiles SET is_admin = true<br />
             WHERE id = &apos;{user?.id ?? '<your-auth-uid>'}&apos;;
           </span>
@@ -125,8 +125,8 @@ export const AdminPage: React.FC = () => {
   // ── Loading ────────────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full gap-3 text-paper-muted">
-        <Loader2 className="w-5 h-5 animate-spin text-teal" />
+      <div className="flex items-center justify-center h-full gap-3 text-ink-muted py-24">
+        <Loader2 className="w-5 h-5 animate-spin text-ink" />
         <span className="text-sm">Loading admin metrics…</span>
       </div>
     );
@@ -135,10 +135,10 @@ export const AdminPage: React.FC = () => {
   // ── Error ─────────────────────────────────────────────────────────────────
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-full gap-3 text-center">
-        <ShieldAlert className="w-8 h-8 text-rose-500" />
-        <p className="text-sm text-neutral-700 dark:text-neutral-300">{error}</p>
-        <p className="text-xs text-neutral-500">Make sure the admin migration has been applied.</p>
+      <div className="flex flex-col items-center justify-center h-full gap-3 text-center py-24">
+        <ShieldAlert className="w-8 h-8 text-[#C25B5B]" />
+        <p className="text-sm text-ink">{error}</p>
+        <p className="text-xs text-ink-muted">Make sure the admin migration has been applied.</p>
       </div>
     );
   }
@@ -152,15 +152,15 @@ export const AdminPage: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-paper-primary tracking-tight flex items-center gap-2">
-            <ShieldAlert className="w-5 h-5 text-ochre" />
+          <h1 className="text-2xl font-semibold text-ink tracking-tight flex items-center gap-2">
+            <ShieldAlert className="w-5 h-5 text-[#2D5A6B]" />
             Admin Dashboard
           </h1>
-          <p className="text-xs sm:text-sm text-paper-muted mt-0.5">
+          <p className="text-xs sm:text-sm text-ink-muted mt-0.5">
             Internal analytics ledger — restricted to authenticated administrator accounts.
           </p>
         </div>
-        <span className="text-xs px-2.5 py-0.5 rounded border border-rose-900/50 bg-rose-950/20 text-rose-400 font-medium">
+        <span className="text-xs px-2.5 py-0.5 rounded-[10px] border border-rose-200 dark:border-rose-900/50 bg-rose-50 dark:bg-rose-950/20 text-[#C25B5B] font-medium">
           Admin only
         </span>
       </div>
@@ -195,38 +195,38 @@ export const AdminPage: React.FC = () => {
 
       {/* ── Charts Row 1: Signups + Problems ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
-          <h2 className="text-base font-serif font-bold text-paper-primary mb-4">
-            New signups / day <span className="text-xs font-normal text-paper-muted">(last 30 days)</span>
+        <div className="bg-surface border border-line rounded-[10px] p-6">
+          <h2 className="text-base font-semibold text-ink mb-4">
+            New signups / day <span className="text-xs font-normal text-ink-muted">(last 30 days)</span>
           </h2>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={(stats.signups_per_day ?? []).map(d => ({ ...d, date: fmt(d.date) }))}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#2C3140" />
-              <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#656B7B" />
-              <YAxis allowDecimals={false} tick={{ fontSize: 10 }} stroke="#656B7B" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#E5E4E0" />
+              <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#8E8E93" />
+              <YAxis allowDecimals={false} tick={{ fontSize: 10 }} stroke="#8E8E93" />
               <Tooltip
-                contentStyle={{ background: '#1C202B', border: '1px solid #2C3140', borderRadius: 8, fontSize: 11, color: '#E7E5DF' }}
-                labelStyle={{ color: '#9AA0AE' }}
+                contentStyle={{ background: '#FFFFFF', border: '1px solid #E5E4E0', borderRadius: 10, fontSize: 11, color: '#1C1C1E', boxShadow: '0 4px 16px rgba(0,0,0,0.06)' }}
+                labelStyle={{ color: '#6E6E73' }}
               />
-              <Line type="monotone" dataKey="count" stroke="#4F9C8D" strokeWidth={2} dot={false} name="Signups" />
+              <Line type="monotone" dataKey="count" stroke="#2D5A6B" strokeWidth={2} dot={false} name="Signups" />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
-          <h2 className="text-base font-serif font-bold text-paper-primary mb-4">
-            Problems added / day <span className="text-xs font-normal text-paper-muted">(last 30 days)</span>
+        <div className="bg-surface border border-line rounded-[10px] p-6">
+          <h2 className="text-base font-semibold text-ink mb-4">
+            Problems added / day <span className="text-xs font-normal text-ink-muted">(last 30 days)</span>
           </h2>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={(stats.problems_per_day ?? []).map(d => ({ ...d, date: fmt(d.date) }))}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#2C3140" />
-              <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#656B7B" />
-              <YAxis allowDecimals={false} tick={{ fontSize: 10 }} stroke="#656B7B" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#E5E4E0" />
+              <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#8E8E93" />
+              <YAxis allowDecimals={false} tick={{ fontSize: 10 }} stroke="#8E8E93" />
               <Tooltip
-                contentStyle={{ background: '#1C202B', border: '1px solid #2C3140', borderRadius: 8, fontSize: 11, color: '#E7E5DF' }}
-                labelStyle={{ color: '#9AA0AE' }}
+                contentStyle={{ background: '#FFFFFF', border: '1px solid #E5E4E0', borderRadius: 10, fontSize: 11, color: '#1C1C1E', boxShadow: '0 4px 16px rgba(0,0,0,0.06)' }}
+                labelStyle={{ color: '#6E6E73' }}
               />
-              <Line type="monotone" dataKey="count" stroke="#C98A3B" strokeWidth={2} dot={false} name="Problems" />
+              <Line type="monotone" dataKey="count" stroke="#C4923A" strokeWidth={2} dot={false} name="Problems" />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -234,30 +234,30 @@ export const AdminPage: React.FC = () => {
 
       {/* ── Charts Row 2: Revisions + Platform Pie ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
-          <h2 className="text-base font-serif font-bold text-paper-primary mb-4">
-            Revisions / day <span className="text-xs font-normal text-paper-muted">(last 30 days)</span>
+        <div className="bg-surface border border-line rounded-[10px] p-6">
+          <h2 className="text-base font-semibold text-ink mb-4">
+            Revisions / day <span className="text-xs font-normal text-ink-muted">(last 30 days)</span>
           </h2>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={(stats.revisions_per_day ?? []).map(d => ({ ...d, date: fmt(d.date) }))}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#2C3140" />
-              <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#656B7B" />
-              <YAxis allowDecimals={false} tick={{ fontSize: 10 }} stroke="#656B7B" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#E5E4E0" />
+              <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#8E8E93" />
+              <YAxis allowDecimals={false} tick={{ fontSize: 10 }} stroke="#8E8E93" />
               <Tooltip
-                contentStyle={{ background: '#1C202B', border: '1px solid #2C3140', borderRadius: 8, fontSize: 11, color: '#E7E5DF' }}
-                labelStyle={{ color: '#9AA0AE' }}
+                contentStyle={{ background: '#FFFFFF', border: '1px solid #E5E4E0', borderRadius: 10, fontSize: 11, color: '#1C1C1E', boxShadow: '0 4px 16px rgba(0,0,0,0.06)' }}
+                labelStyle={{ color: '#6E6E73' }}
               />
-              <Line type="monotone" dataKey="count" stroke="#4F9C8D" strokeWidth={2} dot={false} name="Revisions" />
+              <Line type="monotone" dataKey="count" stroke="#5A9367" strokeWidth={2} dot={false} name="Revisions" />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
-          <h2 className="text-base font-serif font-bold text-paper-primary mb-4">
+        <div className="bg-surface border border-line rounded-[10px] p-6">
+          <h2 className="text-base font-semibold text-ink mb-4">
             Platform breakdown
           </h2>
           {(stats.platform_breakdown ?? []).length === 0 ? (
-            <div className="flex items-center justify-center h-[200px] text-paper-muted text-xs">No data recorded yet</div>
+            <div className="flex items-center justify-center h-[200px] text-ink-muted text-xs">No data recorded yet</div>
           ) : (
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
@@ -281,10 +281,10 @@ export const AdminPage: React.FC = () => {
                   iconType="circle"
                   iconSize={8}
                   wrapperStyle={{ fontSize: 11 }}
-                  formatter={(value) => <span style={{ color: '#9AA0AE' }}>{value}</span>}
+                  formatter={(value) => <span className="text-ink-secondary">{value}</span>}
                 />
                 <Tooltip
-                  contentStyle={{ background: '#1C202B', border: '1px solid #2C3140', borderRadius: 8, fontSize: 11, color: '#E7E5DF' }}
+                  contentStyle={{ background: '#FFFFFF', border: '1px solid #E5E4E0', borderRadius: 10, fontSize: 11, color: '#1C1C1E', boxShadow: '0 4px 16px rgba(0,0,0,0.06)' }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -293,25 +293,25 @@ export const AdminPage: React.FC = () => {
       </div>
 
       {/* ── Raw stat table ── */}
-      <div className="bg-surface border border-graphite-hairline rounded-xl p-6 shadow-deck">
-        <h2 className="text-base font-serif font-bold text-paper-primary mb-4">User cohort breakdown</h2>
+      <div className="bg-surface border border-line rounded-[10px] p-6">
+        <h2 className="text-base font-semibold text-ink mb-4">User cohort breakdown</h2>
         <table className="w-full text-xs">
           <thead>
-            <tr className="border-b border-graphite-hairline text-left text-paper-muted">
+            <tr className="border-b border-line text-left text-ink-muted">
               <th className="pb-2 font-medium">Cohort</th>
               <th className="pb-2 font-medium text-right">Count</th>
               <th className="pb-2 font-medium text-right">Share</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-graphite-hairline">
+          <tbody className="divide-y divide-line">
             {[
               { label: 'Registered (email / Google)', count: stats.registered_users },
               { label: 'Active guests (anonymous)', count: stats.guest_users },
             ].map((row) => (
               <tr key={row.label}>
-                <td className="py-2.5 text-paper-primary">{row.label}</td>
-                <td className="py-2.5 text-right font-serif font-semibold text-paper-primary">{row.count?.toLocaleString() ?? '—'}</td>
-                <td className="py-2.5 text-right text-paper-muted">
+                <td className="py-2.5 text-ink">{row.label}</td>
+                <td className="py-2.5 text-right font-medium text-ink">{row.count?.toLocaleString() ?? '—'}</td>
+                <td className="py-2.5 text-right text-ink-muted">
                   {stats.total_users ? `${((row.count / stats.total_users) * 100).toFixed(1)}%` : '—'}
                 </td>
               </tr>

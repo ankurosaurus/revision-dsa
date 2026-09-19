@@ -38,7 +38,7 @@ interface Props {
 }
 
 const inputClass =
-  'w-full bg-graphite-base border border-graphite-hairline rounded-lg px-3.5 py-2.5 text-sm text-paper-primary placeholder:text-paper-muted focus:outline-none focus:border-teal transition-colors';
+  'w-full bg-surface-subtle border border-line rounded-[10px] px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-[#2D5A6B] transition-colors';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden>
@@ -139,7 +139,7 @@ export const UpgradeModal: React.FC<Props> = ({ isOpen, onClose }) => {
         <>
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 bg-graphite-base/80 backdrop-blur-xs z-50"
+            className="fixed inset-0 bg-surface-subtle/80 backdrop-blur-xs z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -154,21 +154,21 @@ export const UpgradeModal: React.FC<Props> = ({ isOpen, onClose }) => {
             exit={{ opacity: 0, y: 32, scale: 0.96 }}
             transition={{ duration: 0.22 }}
           >
-            <div className="bg-surface rounded-xl border border-graphite-hairline shadow-deck overflow-hidden">
+            <div className="bg-surface rounded-[10px] border border-line shadow-lg overflow-hidden">
               {/* Header */}
-              <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-graphite-hairline">
+              <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-line">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-graphite-hover border border-graphite-hairline flex items-center justify-center text-teal">
+                  <div className="w-8 h-8 rounded-[10px] bg-surface-hover border border-line flex items-center justify-center text-ink">
                     <UserPlus className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-serif font-bold text-paper-primary">Save your progress</h3>
-                    <p className="text-xs text-paper-muted">
+                    <h3 className="text-sm font-semibold text-ink">Save your progress</h3>
+                    <p className="text-xs text-ink-muted">
                       Your existing problems will stay linked to this account.
                     </p>
                   </div>
                 </div>
-                <button onClick={handleClose} className="p-1 text-paper-muted hover:text-paper-primary rounded hover:bg-graphite-hover transition-colors">
+                <button onClick={handleClose} className="p-1 text-ink-muted hover:text-ink rounded-[10px] hover:bg-surface-hover transition-colors">
                   <X className="w-4 h-4" />
                 </button>
               </div>
@@ -176,12 +176,12 @@ export const UpgradeModal: React.FC<Props> = ({ isOpen, onClose }) => {
               <div className="p-6">
                 {success ? (
                   <div className="text-center space-y-3 py-4">
-                    <div className="w-12 h-12 mx-auto rounded-xl bg-teal/15 border border-teal/30 flex items-center justify-center">
-                      <CheckCircle2 className="w-6 h-6 text-teal" />
+                    <div className="w-12 h-12 mx-auto rounded-[10px] bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/40 flex items-center justify-center">
+                      <CheckCircle2 className="w-6 h-6 text-[#5A9367]" />
                     </div>
                     <div>
-                      <p className="font-serif font-bold text-paper-primary">Account created</p>
-                      <p className="text-xs text-paper-muted mt-1">
+                      <p className="font-semibold text-ink">Account created</p>
+                      <p className="text-xs text-ink-muted mt-1">
                         Your progress is permanently preserved.
                       </p>
                     </div>
@@ -190,15 +190,15 @@ export const UpgradeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 ) : (
                   <>
                     {/* Tabs */}
-                    <div className="flex p-0.5 bg-graphite-base border border-graphite-hairline rounded-lg mb-5">
+                    <div className="flex p-0.5 bg-surface-subtle border border-line rounded-[10px] mb-5">
                       {(['email', 'google'] as Tab[]).map((t) => (
                         <button
                           key={t}
                           onClick={() => setTab(t)}
-                          className={`flex-1 py-1.5 text-xs font-medium rounded transition-all ${
+                          className={`flex-1 py-1.5 text-xs font-medium rounded-[10px] transition-all ${
                             tab === t
-                              ? 'bg-graphite-hover text-paper-primary shadow-xs border border-graphite-hairline'
-                              : 'text-paper-muted hover:text-paper-primary'
+                              ? 'bg-surface text-ink shadow-xs border border-line'
+                              : 'text-ink-muted hover:text-ink'
                           }`}
                         >
                           {t === 'email' ? 'Email & Password' : 'Google'}
@@ -209,9 +209,9 @@ export const UpgradeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     {tab === 'email' ? (
                       <form onSubmit={handleEmailUpgrade} className="space-y-3">
                         <div className="space-y-1">
-                          <label className="text-xs font-medium text-paper-primary">Email</label>
+                          <label className="text-xs font-medium text-ink">Email</label>
                           <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-paper-muted pointer-events-none" />
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-ink-muted pointer-events-none" />
                             <input
                               type="email" required autoComplete="email" placeholder="you@example.com"
                               value={email} onChange={(e) => setEmail(e.target.value)}
@@ -221,9 +221,9 @@ export const UpgradeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-xs font-medium text-paper-primary">Password</label>
+                          <label className="text-xs font-medium text-ink">Password</label>
                           <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-paper-muted pointer-events-none" />
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-ink-muted pointer-events-none" />
                             <input
                               type={showPw ? 'text' : 'password'} required autoComplete="new-password"
                               placeholder="At least 8 characters"
@@ -231,7 +231,7 @@ export const UpgradeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                               onChange={(e) => { setPassword(e.target.value); if (confirm) validateConfirm(confirm); }}
                               className={`${inputClass} pl-9 pr-9`}
                             />
-                            <button type="button" onClick={() => setShowPw((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-paper-muted hover:text-paper-primary">
+                            <button type="button" onClick={() => setShowPw((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink">
                               {showPw ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                             </button>
                           </div>
@@ -239,9 +239,9 @@ export const UpgradeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-xs font-medium text-paper-primary">Confirm password</label>
+                          <label className="text-xs font-medium text-ink">Confirm password</label>
                           <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-paper-muted pointer-events-none" />
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-ink-muted pointer-events-none" />
                             <input
                               type={showPw ? 'text' : 'password'} required autoComplete="new-password"
                               placeholder="Repeat password"
@@ -274,7 +274,7 @@ export const UpgradeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                       </form>
                     ) : (
                       <div className="space-y-4">
-                        <p className="text-xs text-paper-muted leading-relaxed">
+                        <p className="text-xs text-ink-muted leading-relaxed">
                           Link your Google account to this session. Your existing problems will remain accessible after signing in with Google.
                         </p>
                         {error && (
@@ -285,7 +285,7 @@ export const UpgradeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                         <button
                           onClick={handleGoogleUpgrade}
                           disabled={googleLoading}
-                          className="w-full flex items-center justify-center gap-2.5 px-4 py-2 rounded-lg border border-graphite-hairline bg-graphite-hover hover:bg-graphite-active text-xs font-medium text-paper-primary transition-all disabled:opacity-50"
+                          className="w-full flex items-center justify-center gap-2.5 px-4 py-2 rounded-[10px] border border-line bg-surface hover:bg-surface-hover text-xs font-medium text-ink transition-all disabled:opacity-50"
                         >
                           {googleLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <GoogleIcon />}
                           Continue with Google

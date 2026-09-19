@@ -7,9 +7,9 @@ interface PlatformDonutChartProps {
 }
 
 const PLATFORM_CONFIG = {
-  leetcode: { name: 'LeetCode', color: '#C98A3B' }, // Ochre
-  gfg: { name: 'GeeksforGeeks', color: '#4F9C8D' }, // Teal
-  codeforces: { name: 'Codeforces', color: '#656B7B' }, // Paper muted/secondary
+  leetcode: { name: 'LeetCode', color: '#C4923A' },
+  gfg: { name: 'GeeksforGeeks', color: '#5A9367' },
+  codeforces: { name: 'Codeforces', color: '#2D5A6B' },
 };
 
 export const PlatformDonutChart: React.FC<PlatformDonutChartProps> = ({ problems }) => {
@@ -30,16 +30,16 @@ export const PlatformDonutChart: React.FC<PlatformDonutChartProps> = ({ problems
   const total = problems.length;
 
   return (
-    <div className="saas-card p-5 flex flex-col justify-between">
+    <div className="bg-[#FFFFFF] border border-[#E5E4E0] rounded-[10px] p-5 flex flex-col justify-between shadow-card">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-semibold text-paper-primary">
-          Platform distribution
+        <h3 className="text-[14px] font-medium text-[#1C1C1E]">
+          Platform Distribution
         </h3>
-        <span className="text-xs text-paper-secondary">{total} total</span>
+        <span className="text-[13px] text-[#6E6E73]">{total} total</span>
       </div>
 
       {total === 0 ? (
-        <div className="h-44 flex items-center justify-center text-xs text-paper-muted text-center px-4">
+        <div className="h-44 flex items-center justify-center text-[13px] text-[#8E8E93] text-center px-4">
           No problems added yet. Log LeetCode, GFG, or Codeforces problems to view breakdown.
         </div>
       ) : (
@@ -63,34 +63,35 @@ export const PlatformDonutChart: React.FC<PlatformDonutChartProps> = ({ problems
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#1C202B',
-                    borderColor: '#2C3140',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E5E4E0',
                     borderRadius: '8px',
                     fontSize: '12px',
-                    color: '#E7E5DF',
+                    color: '#1C1C1E',
+                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)',
                   }}
-                  itemStyle={{ color: '#E7E5DF' }}
+                  itemStyle={{ color: '#1C1C1E' }}
                 />
               </PieChart>
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-xl font-bold text-paper-primary">{total}</span>
-              <span className="text-[10px] text-paper-muted">Problems</span>
+              <span className="text-[20px] font-semibold text-[#1C1C1E]">{total}</span>
+              <span className="text-[11px] text-[#8E8E93]">Problems</span>
             </div>
           </div>
 
-          <div className="w-full sm:w-1/2 space-y-2 text-xs">
+          <div className="w-full sm:w-1/2 space-y-2 text-[13px]">
             {data.map((item) => {
               const pct = total > 0 ? Math.round((item.value / total) * 100) : 0;
               return (
                 <div key={item.name} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-xs" style={{ backgroundColor: item.color }} />
-                    <span className="text-paper-primary font-medium">{item.name}</span>
+                    <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
+                    <span className="text-[#1C1C1E] font-medium">{item.name}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-paper-primary">{item.value}</span>
-                    <span className="text-paper-muted text-[11px]">({pct}%)</span>
+                    <span className="font-semibold text-[#1C1C1E]">{item.value}</span>
+                    <span className="text-[#8E8E93] text-[12px]">({pct}%)</span>
                   </div>
                 </div>
               );

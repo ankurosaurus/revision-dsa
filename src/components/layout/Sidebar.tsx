@@ -32,7 +32,6 @@ export const Sidebar: React.FC = () => {
   const { user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // Check admin status once when user changes
   useEffect(() => {
     if (!isSupabaseConfigured || !supabase || !user) { setIsAdmin(false); return; }
     supabase
@@ -47,24 +46,24 @@ export const Sidebar: React.FC = () => {
     { id: 'dashboard' as NavTab, label: 'Dashboard', icon: LayoutDashboard },
     {
       id: 'queue' as NavTab,
-      label: 'Revision queue',
+      label: 'Revision Queue',
       icon: Brain,
       badge: dueCount > 0 ? dueCount : undefined,
-      badgeColor: 'bg-ochre/15 text-ochre border border-ochre/30',
+      badgeColor: 'bg-[#C4923A]/10 text-[#C4923A] border border-[#C4923A]/25',
     },
     {
       id: 'all' as NavTab,
-      label: 'Problem bank',
+      label: 'Problem Bank',
       icon: Layers,
       badge: totalCount > 0 ? totalCount : undefined,
-      badgeColor: 'bg-surface-subtle text-paper-secondary border border-surface-border',
+      badgeColor: 'bg-[#FAFAF8] text-[#6E6E73] border border-[#E5E4E0]',
     },
     {
       id: 'catalog' as NavTab,
-      label: 'Browse catalog',
+      label: 'Browse Catalog',
       icon: Library,
       badge: '15k' as unknown as number,
-      badgeColor: 'bg-teal/15 text-teal border border-teal/30',
+      badgeColor: 'bg-[#2D5A6B]/10 text-[#2D5A6B] border border-[#2D5A6B]/20',
     },
     { id: 'stats' as NavTab, label: 'Analytics', icon: BarChart3 },
     { id: 'settings' as NavTab, label: 'Settings', icon: Settings },
@@ -73,41 +72,38 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`hidden md:flex flex-col justify-between border-r border-surface-border bg-surface transition-all duration-150 z-30 select-none ${
+      className={`hidden md:flex flex-col justify-between border-r border-[#E5E4E0] bg-[#FFFFFF] transition-all duration-150 z-30 select-none ${
         isCollapsed ? 'w-18' : 'w-60'
       }`}
     >
       <div>
         {/* Brand Header */}
-        <div className="h-14 flex items-center justify-between px-4 border-b border-surface-border">
+        <div className="h-14 flex items-center justify-between px-4 border-b border-[#E5E4E0]">
           {!isCollapsed ? (
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-teal text-[#0E1614] flex items-center justify-center font-bold text-xs">
-                <BookOpen className="w-4 h-4" />
+              <div className="w-7 h-7 rounded-[10px] bg-[#2D5A6B] text-white flex items-center justify-center font-medium text-xs shadow-sm">
+                <BookOpen className="w-4 h-4" strokeWidth={1.8} />
               </div>
               <div className="flex items-baseline gap-1.5">
-                <span className="font-serif font-bold text-sm tracking-tight text-paper-primary">
-                  Revision<span className="text-teal">DSA</span>
-                </span>
-                <span className="text-[10px] text-paper-muted font-sans">
-                  lab
+                <span className="font-semibold text-[15px] tracking-tight text-[#1C1C1E]">
+                  RevisionDSA
                 </span>
               </div>
             </div>
           ) : (
-            <div className="w-7 h-7 mx-auto rounded-lg bg-teal text-[#0E1614] flex items-center justify-center font-bold text-xs">
-              <BookOpen className="w-4 h-4" />
+            <div className="w-7 h-7 mx-auto rounded-[10px] bg-[#2D5A6B] text-white flex items-center justify-center font-medium text-xs">
+              <BookOpen className="w-4 h-4" strokeWidth={1.8} />
             </div>
           )}
 
           <button
             onClick={toggleSidebar}
-            className={`p-1.5 rounded-md text-paper-muted hover:text-paper-primary hover:bg-surface-hover transition-colors ${
+            className={`p-1.5 rounded-[8px] text-[#6E6E73] hover:text-[#1C1C1E] hover:bg-[#F7F7F5] transition-colors ${
               isCollapsed ? 'hidden' : 'block'
             }`}
             title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-4 h-4" strokeWidth={1.8} />
           </button>
         </div>
 
@@ -120,13 +116,13 @@ export const Sidebar: React.FC = () => {
             }`}
             title="Log DSA problem"
           >
-            <Plus className="w-4 h-4 shrink-0" strokeWidth={2.2} />
-            {!isCollapsed && <span>Log problem</span>}
+            <Plus className="w-4 h-4 shrink-0" strokeWidth={2} />
+            {!isCollapsed && <span className="font-medium">Log problem</span>}
           </button>
         </div>
 
         {/* Navigation list */}
-        <nav className="px-2.5 py-1 space-y-0.5 font-sans">
+        <nav className="px-2.5 py-1 space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -135,19 +131,17 @@ export const Sidebar: React.FC = () => {
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-[10px] text-[14px] font-medium transition-colors ${
                   isActive
-                    ? 'bg-surface-hover text-paper-primary font-semibold'
-                    : 'text-paper-secondary hover:text-paper-primary hover:bg-surface-hover/60'
+                    ? 'bg-[#2D5A6B]/10 text-[#2D5A6B] font-semibold'
+                    : 'text-[#6E6E73] hover:text-[#1C1C1E] hover:bg-[#F7F7F5]'
                 } ${isCollapsed ? 'justify-center' : 'justify-between'}`}
                 title={item.label}
               >
                 <div className="flex items-center gap-2.5">
                   <Icon
                     className={`w-4 h-4 shrink-0 transition-colors ${
-                      isActive
-                        ? 'text-teal'
-                        : 'text-paper-muted'
+                      isActive ? 'text-[#2D5A6B]' : 'text-[#6E6E73]'
                     }`}
                     strokeWidth={1.8}
                   />
@@ -156,14 +150,14 @@ export const Sidebar: React.FC = () => {
 
                 {!isCollapsed && item.badge !== undefined && (
                   <span
-                    className={`text-[11px] font-normal px-2 py-0.5 rounded-md tabular-nums ${item.badgeColor}`}
+                    className={`text-[11px] font-medium px-2 py-0.5 rounded-[6px] tabular-nums ${item.badgeColor}`}
                   >
                     {item.badge}
                   </span>
                 )}
 
                 {isCollapsed && item.badge !== undefined && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal absolute top-2 right-2" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#2D5A6B] absolute top-2 right-2" />
                 )}
               </button>
             );
@@ -172,25 +166,25 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* Bottom Profile / Expand Toggle */}
-      <div className="p-3 border-t border-surface-border">
+      <div className="p-3 border-t border-[#E5E4E0]">
         {isCollapsed ? (
           <button
             onClick={toggleSidebar}
-            className="w-full py-1.5 flex items-center justify-center text-paper-muted hover:text-paper-primary rounded-md hover:bg-surface-hover transition-colors"
+            className="w-full py-1.5 flex items-center justify-center text-[#6E6E73] hover:text-[#1C1C1E] rounded-[8px] hover:bg-[#F7F7F5] transition-colors"
             title="Expand sidebar"
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-4 h-4" strokeWidth={1.8} />
           </button>
         ) : (
-          <div className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg">
-            <div className="w-7 h-7 rounded-full bg-surface-subtle text-paper-primary font-medium text-xs flex items-center justify-center shrink-0 border border-surface-border">
+          <div className="flex items-center gap-2.5 px-2 py-1.5 rounded-[10px]">
+            <div className="w-7 h-7 rounded-full bg-[#F4F4F0] text-[#1C1C1E] font-medium text-xs flex items-center justify-center shrink-0 border border-[#E5E4E0]">
               {user?.email?.charAt(0)?.toUpperCase() || 'P'}
             </div>
             <div className="flex flex-col overflow-hidden text-left">
-              <span className="text-xs font-medium text-paper-primary truncate">
+              <span className="text-[13px] font-medium text-[#1C1C1E] truncate">
                 {user?.email || 'Candidate'}
               </span>
-              <span className="text-[11px] text-paper-muted truncate">
+              <span className="text-[11px] text-[#6E6E73] truncate">
                 Algorithmic recall
               </span>
             </div>

@@ -23,7 +23,7 @@ export function useStreak(): StreakInfo {
         todayCount: 0,
         totalReviews: 0,
         flameLevel: 1,
-        flameColor: '#C98A3B',
+        flameColor: '#C4923A',
         isTodayDone: false,
       };
     }
@@ -96,20 +96,20 @@ export function useStreak(): StreakInfo {
 
     // Flame intensity level
     let flameLevel: 1 | 2 | 3 | 4 | 5 = 1;
-    let flameColor = '#C98A3B'; // Ochre default
+    let flameColor = '#C4923A';
 
     if (currentStreak >= 21) {
       flameLevel = 5;
-      flameColor = '#E09F4C'; // Radiant ochre
+      flameColor = '#D4A045';
     } else if (currentStreak >= 14) {
       flameLevel = 4;
-      flameColor = '#D99443';
+      flameColor = '#C4923A';
     } else if (currentStreak >= 7) {
       flameLevel = 3;
-      flameColor = '#C98A3B';
+      flameColor = '#C4923A';
     } else if (currentStreak >= 3) {
       flameLevel = 2;
-      flameColor = '#BA7F34';
+      flameColor = '#B5842F';
     }
 
     return {

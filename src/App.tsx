@@ -34,13 +34,13 @@ const queryClient = new QueryClient({
 
 // ── Full-screen loading spinner ───────────────────────────────────────────────
 const LoadingScreen = () => (
-  <div className="min-h-screen w-full flex flex-col items-center justify-center gap-4 bg-graphite-base">
-    <div className="w-10 h-10 rounded-xl bg-surface border border-graphite-hairline flex items-center justify-center shadow-deck">
-      <BookOpen className="w-5 h-5 text-teal animate-pulse" />
+  <div className="min-h-screen w-full flex flex-col items-center justify-center gap-4 bg-background">
+    <div className="w-10 h-10 rounded-[10px] bg-surface border border-line flex items-center justify-center">
+      <BookOpen className="w-5 h-5 text-ink animate-pulse" />
     </div>
     <div className="text-center space-y-1">
-      <p className="text-sm font-serif font-bold text-paper-primary">RevisionDSA</p>
-      <p className="text-xs text-paper-muted">Preparing deliberate practice lab…</p>
+      <p className="text-sm font-semibold text-ink">RevisionDSA</p>
+      <p className="text-xs text-ink-muted">Preparing deliberate practice lab…</p>
     </div>
   </div>
 );

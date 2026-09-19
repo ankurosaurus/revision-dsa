@@ -39,48 +39,48 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({
   };
 
   return (
-    <div className="group saas-card p-5 flex flex-col justify-between">
+    <div className="group bg-[#FFFFFF] border border-[#E5E4E0] rounded-[10px] p-5 flex flex-col justify-between shadow-card hover:border-[#D1D0CB] transition-colors">
       {/* Top Header: Platform, Difficulty & Review Status */}
       <div>
         <div className="flex items-center justify-between gap-2 mb-3">
-          <div className="flex items-center gap-1.5 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap">
             <PlatformBadge platform={problem.platform} size="sm" />
             <DifficultyBadge difficulty={problem.difficulty} size="sm" />
           </div>
 
           <div>
             {isOverdue ? (
-              <span className="text-xs font-medium px-2 py-0.5 rounded bg-ochre/15 text-ochre border border-ochre/30">
+              <span className="text-[11px] font-medium px-2 py-0.5 rounded-[6px] bg-[#C25B5B]/10 text-[#C25B5B] border border-[#C25B5B]/20">
                 Overdue ({Math.abs(daysUntil)}d)
               </span>
             ) : isDue ? (
-              <span className="text-xs font-medium px-2 py-0.5 rounded bg-surface-subtle text-paper-secondary border border-surface-border">
+              <span className="text-[11px] font-medium px-2 py-0.5 rounded-[6px] bg-[#C4923A]/10 text-[#C4923A] border border-[#C4923A]/20">
                 Due today
               </span>
             ) : isMastered ? (
-              <span className="text-xs font-medium px-2 py-0.5 rounded bg-teal/10 text-teal border border-teal/30">
+              <span className="text-[11px] font-medium px-2 py-0.5 rounded-[6px] bg-[#5A9367]/10 text-[#5A9367] border border-[#5A9367]/20">
                 Mastered
               </span>
             ) : (
-              <span className="text-xs font-normal text-paper-muted">
+              <span className="text-[12px] text-[#8E8E93]">
                 Due in {daysUntil}d
               </span>
             )}
           </div>
         </div>
 
-        {/* Title in Fraunces serif */}
-        <h3 className="font-serif text-base text-paper-primary font-normal mb-2 group-hover:text-teal transition-colors line-clamp-1">
+        {/* Title */}
+        <h3 className="text-[15px] font-medium text-[#1C1C1E] mb-2 line-clamp-1">
           {problem.title}
         </h3>
 
         {/* Tags */}
         {problem.tags && problem.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-3.5">
+          <div className="flex flex-wrap gap-1.5 mb-3.5">
             {problem.tags.map((tag) => (
               <span
                 key={tag}
-                className="text-xs px-2 py-0.5 rounded bg-surface-subtle text-paper-secondary border border-surface-border"
+                className="text-[11px] px-2 py-0.5 rounded-[6px] bg-[#FAFAF8] text-[#6E6E73] border border-[#E5E4E0]"
               >
                 {tag}
               </span>
@@ -93,14 +93,14 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({
           <div className="mb-3.5">
             <button
               onClick={() => setShowNotes(!showNotes)}
-              className="inline-flex items-center gap-1 text-xs text-paper-muted hover:text-paper-primary transition-colors font-medium"
+              className="inline-flex items-center gap-1 text-[12px] text-[#8E8E93] hover:text-[#1C1C1E] transition-colors"
             >
               <span>{showNotes ? 'Hide notes' : 'View notes'}</span>
-              {showNotes ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              {showNotes ? <ChevronUp className="w-3.5 h-3.5" strokeWidth={1.8} /> : <ChevronDown className="w-3.5 h-3.5" strokeWidth={1.8} />}
             </button>
 
             {showNotes && (
-              <div className="mt-2 p-3 rounded-lg bg-surface-subtle border border-surface-border text-xs text-paper-secondary whitespace-pre-wrap leading-relaxed max-h-36 overflow-y-auto">
+              <div className="mt-2 p-3 rounded-[8px] bg-[#FAFAF8] border border-[#E5E4E0] text-[13px] text-[#6E6E73] whitespace-pre-wrap leading-relaxed max-h-36 overflow-y-auto">
                 {problem.notes}
               </div>
             )}
@@ -109,15 +109,15 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({
       </div>
 
       {/* Footer Info & Actions */}
-      <div className="pt-3 border-t border-surface-border flex items-center justify-between gap-3 text-xs">
-        {/* Subtle Metadata with clean numbers */}
-        <div className="flex items-center gap-3 text-paper-muted">
+      <div className="pt-3 border-t border-[#E5E4E0] flex items-center justify-between gap-3 text-[12px]">
+        {/* Subtle Metadata */}
+        <div className="flex items-center gap-3 text-[#8E8E93]">
           <span className="inline-flex items-center gap-1" title="Interval in days">
-            <Calendar className="w-3.5 h-3.5" />
+            <Calendar className="w-3.5 h-3.5" strokeWidth={1.8} />
             <span>{problem.interval_days}d</span>
           </span>
           <span className="inline-flex items-center gap-1" title="Repetitions completed">
-            <RotateCcw className="w-3.5 h-3.5" />
+            <RotateCcw className="w-3.5 h-3.5" strokeWidth={1.8} />
             <span>{problem.repetitions} reps</span>
           </span>
         </div>
@@ -126,17 +126,17 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => onSolve ? onSolve(problem) : openSolveView(problem)}
-            className="px-2.5 py-1 text-xs font-medium rounded-md bg-teal/10 text-teal hover:bg-teal/20 border border-teal/30 transition-colors inline-flex items-center gap-1"
+            className="px-2.5 py-1 text-[12px] font-medium rounded-[6px] bg-[#FAFAF8] text-[#1C1C1E] hover:bg-[#F7F7F5] border border-[#E5E4E0] transition-colors inline-flex items-center gap-1"
             title="Open in Solve Workspace"
           >
-            <Code2 className="w-3.5 h-3.5" />
+            <Code2 className="w-3.5 h-3.5" strokeWidth={1.8} />
             <span>Solve</span>
           </button>
 
           {onSelectForReview && isDue && (
             <button
               onClick={() => onSelectForReview(problem)}
-              className="px-2.5 py-1 text-xs font-medium rounded-md bg-ochre/15 text-ochre hover:bg-ochre/25 border border-ochre/30 transition-colors"
+              className="px-2.5 py-1 text-[12px] font-medium rounded-[6px] bg-[#2D5A6B] text-white hover:bg-[#234754] transition-colors"
             >
               Review
             </button>
@@ -147,17 +147,17 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             title="Open original problem in new tab"
-            className="p-1 rounded-md text-paper-muted hover:text-paper-primary transition-colors"
+            className="p-1 rounded-[6px] text-[#8E8E93] hover:text-[#1C1C1E] transition-colors"
           >
-            <ExternalLink className="w-3.5 h-3.5" />
+            <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.8} />
           </a>
 
           <button
             onClick={handleDelete}
             title="Remove from problem bank"
-            className="p-1 rounded-md text-paper-muted hover:text-ochre transition-colors"
+            className="p-1 rounded-[6px] text-[#8E8E93] hover:text-[#C25B5B] transition-colors"
           >
-            <Trash2 className="w-3.5 h-3.5" />
+            <Trash2 className="w-3.5 h-3.5" strokeWidth={1.8} />
           </button>
         </div>
       </div>

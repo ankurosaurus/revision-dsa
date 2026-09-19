@@ -73,18 +73,18 @@ export const FeatureShowcase: React.FC = () => {
   const CurrentIcon = current.icon;
 
   return (
-    <div className="editorial-surface p-6 sm:p-7">
+    <div className="bg-[#FFFFFF] border border-[#E5E4E0] rounded-[10px] p-6 sm:p-7 shadow-card">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs font-medium text-teal">
-            System overview
+          <span className="text-[13px] font-medium text-[#2D5A6B]">
+            System Overview
           </span>
-          <span className="text-xs text-paper-muted">
+          <span className="text-[13px] text-[#8E8E93]">
             Engineered for deliberate interview practice
           </span>
         </div>
-        <h3 className="font-serif text-xl sm:text-2xl text-paper-primary font-normal leading-snug">
+        <h3 className="text-[20px] font-semibold text-[#1C1C1E] leading-snug">
           How the revision loop operates
         </h3>
       </div>
@@ -99,23 +99,24 @@ export const FeatureShowcase: React.FC = () => {
             <button
               key={feat.id}
               onClick={() => setActiveTab(idx)}
-              className={`p-3 rounded-xl border text-left transition-all ${
+              className={`p-3 rounded-[8px] border text-left transition-all ${
                 isSelected
-                  ? 'bg-surface-hover border-teal text-paper-primary shadow-xs'
-                  : 'bg-surface-subtle border-surface-border text-paper-secondary hover:bg-surface-hover'
+                  ? 'bg-[#F7F7F5] border-[#2D5A6B] text-[#1C1C1E] shadow-xs'
+                  : 'bg-[#FAFAF8] border-[#E5E4E0] text-[#6E6E73] hover:bg-[#F7F7F5]'
               }`}
             >
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-medium text-paper-muted">
+                <span className="text-[11px] font-medium text-[#8E8E93]">
                   0{feat.index}
                 </span>
                 <Icon
                   className={`w-3.5 h-3.5 ${
-                    isSelected ? 'text-teal' : 'text-paper-muted'
+                    isSelected ? 'text-[#2D5A6B]' : 'text-[#8E8E93]'
                   }`}
+                  strokeWidth={1.8}
                 />
               </div>
-              <div className="text-xs font-medium truncate">
+              <div className="text-[13px] font-medium truncate">
                 {feat.title}
               </div>
             </button>
@@ -124,35 +125,35 @@ export const FeatureShowcase: React.FC = () => {
       </div>
 
       {/* Dynamic Visual Stage */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center p-6 rounded-xl bg-surface-subtle border border-surface-border">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center p-6 rounded-[10px] bg-[#FAFAF8] border border-[#E5E4E0]">
         {/* Left Side: Explanations & Actions */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="text-xs text-paper-muted">
+          <div className="text-[13px] text-[#8E8E93]">
             <span>Part {current.index}: </span>
-            <span className="text-teal font-medium">{current.tagline}</span>
+            <span className="text-[#1C1C1E] font-medium">{current.tagline}</span>
           </div>
 
-          <h4 className="font-serif text-xl text-paper-primary font-normal leading-snug">
+          <h4 className="text-[17px] font-semibold text-[#1C1C1E] leading-snug">
             {current.title}
           </h4>
 
-          <p className="text-xs sm:text-sm text-paper-secondary leading-relaxed font-sans">
+          <p className="text-[13px] text-[#6E6E73] leading-relaxed">
             {current.description}
           </p>
 
           <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-4">
             <div>
-              <span className="text-[11px] text-paper-muted block">
+              <span className="text-[11px] text-[#8E8E93] block">
                 {current.metricLabel}
               </span>
-              <span className="text-xs font-medium text-paper-primary">
+              <span className="text-[13px] font-medium text-[#1C1C1E]">
                 {current.metricValue}
               </span>
             </div>
 
             <button
               onClick={current.action}
-              className="btn-secondary text-xs self-start"
+              className="btn-secondary text-[13px] self-start font-medium"
             >
               <span>{current.actionLabel}</span>
             </button>
@@ -164,37 +165,36 @@ export const FeatureShowcase: React.FC = () => {
           <AnimatePresence mode="wait">
             <motion.div
               key={current.id}
-              initial={{ opacity: 0, scale: 0.98 }}
+              initial={{ opacity: 0, scale: 0.99 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
+              exit={{ opacity: 0, scale: 0.99 }}
               transition={{ duration: 0.15 }}
-              className="w-full bg-surface rounded-xl p-5 border border-surface-border shadow-xs"
+              className="w-full bg-[#FFFFFF] rounded-[10px] p-5 border border-[#E5E4E0] shadow-card"
             >
               {activeTab === 0 && (
-                /* Feature 01 Graphic: URL Detection */
-                <div className="space-y-3 text-xs">
-                  <div className="flex items-center justify-between text-paper-secondary text-[11px] pb-2 border-b border-surface-border">
+                <div className="space-y-3 text-[13px]">
+                  <div className="flex items-center justify-between text-[#6E6E73] text-[12px] pb-2 border-b border-[#E5E4E0]">
                     <span>Input problem URL</span>
-                    <span className="text-teal font-medium flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3" /> Canonical match
+                    <span className="text-[#5A9367] font-medium flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" strokeWidth={1.8} /> Canonical match
                     </span>
                   </div>
-                  <div className="p-2.5 rounded-lg bg-surface-subtle border border-surface-border text-paper-primary truncate font-mono text-xs">
+                  <div className="p-2.5 rounded-[8px] bg-[#FAFAF8] border border-[#E5E4E0] text-[#1C1C1E] truncate font-mono text-[12px]">
                     https://leetcode.com/problems/trapping-rain-water/
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-[11px]">
-                    <div className="p-2 rounded bg-surface-subtle border border-surface-border">
-                      <span className="text-paper-muted block text-[10px]">Platform</span>
-                      <span className="font-medium text-paper-primary">LeetCode</span>
+                  <div className="grid grid-cols-2 gap-2 text-[12px]">
+                    <div className="p-2 rounded-[6px] bg-[#FAFAF8] border border-[#E5E4E0]">
+                      <span className="text-[#8E8E93] block text-[11px]">Platform</span>
+                      <span className="font-medium text-[#1C1C1E]">LeetCode</span>
                     </div>
-                    <div className="p-2 rounded bg-surface-subtle border border-surface-border">
-                      <span className="text-paper-muted block text-[10px]">Difficulty</span>
-                      <span className="font-semibold text-ochre">Hard</span>
+                    <div className="p-2 rounded-[6px] bg-[#FAFAF8] border border-[#E5E4E0]">
+                      <span className="text-[#8E8E93] block text-[11px]">Difficulty</span>
+                      <span className="font-medium text-[#C25B5B]">Hard</span>
                     </div>
                   </div>
-                  <div className="p-2 rounded bg-surface-subtle border border-surface-border text-[11px]">
-                    <span className="text-paper-muted block text-[10px]">Detected archetypes</span>
-                    <span className="text-paper-primary font-medium">
+                  <div className="p-2 rounded-[6px] bg-[#FAFAF8] border border-[#E5E4E0] text-[12px]">
+                    <span className="text-[#8E8E93] block text-[11px]">Detected archetypes</span>
+                    <span className="text-[#1C1C1E] font-medium">
                       Two Pointers, Monotonic Stack
                     </span>
                   </div>
@@ -202,79 +202,76 @@ export const FeatureShowcase: React.FC = () => {
               )}
 
               {activeTab === 1 && (
-                /* Feature 02 Graphic: Active Recall */
-                <div className="space-y-3 text-xs">
-                  <div className="flex items-center justify-between pb-2 border-b border-surface-border">
-                    <span className="text-paper-muted text-[11px]">Flashcard active recall</span>
-                    <span className="text-xs text-paper-primary font-medium">
+                <div className="space-y-3 text-[13px]">
+                  <div className="flex items-center justify-between pb-2 border-b border-[#E5E4E0]">
+                    <span className="text-[#8E8E93] text-[12px]">Flashcard active recall</span>
+                    <span className="text-[12px] text-[#C4923A] font-medium">
                       Medium
                     </span>
                   </div>
-                  <div className="font-serif text-base text-paper-primary font-normal">
+                  <div className="text-[15px] font-medium text-[#1C1C1E]">
                     Course Schedule (Topological Sort)
                   </div>
-                  <div className="p-3 rounded-lg bg-surface-subtle border border-dashed border-surface-border text-center text-paper-secondary">
-                    <span className="text-xs block mb-1">Approach notes withheld</span>
-                    <span className="text-[11px] text-teal">
+                  <div className="p-3 rounded-[8px] bg-[#FAFAF8] border border-dashed border-[#E5E4E0] text-center text-[#6E6E73]">
+                    <span className="text-[13px] block mb-1">Approach notes withheld</span>
+                    <span className="text-[12px] text-[#1C1C1E]">
                       Press Space to reveal intuition
                     </span>
                   </div>
                   <div className="grid grid-cols-4 gap-1.5 text-[11px] text-center">
-                    <div className="p-1.5 rounded bg-ochre/15 text-ochre">Needs work (1)</div>
-                    <div className="p-1.5 rounded bg-surface-subtle text-paper-secondary">Struggled (2)</div>
-                    <div className="p-1.5 rounded bg-teal/15 text-teal">Remembered (3)</div>
-                    <div className="p-1.5 rounded bg-teal text-[#0E1614] font-medium">Instinctive (4)</div>
+                    <div className="p-1.5 rounded-[6px] bg-[#C25B5B]/10 text-[#C25B5B]">Needs work (1)</div>
+                    <div className="p-1.5 rounded-[6px] bg-[#FAFAF8] text-[#6E6E73] border border-[#E5E4E0]">Struggled (2)</div>
+                    <div className="p-1.5 rounded-[6px] bg-[#5A9367]/10 text-[#5A9367]">Remembered (3)</div>
+                    <div className="p-1.5 rounded-[6px] bg-[#2D5A6B] text-white font-medium">Instinctive (4)</div>
                   </div>
                 </div>
               )}
 
               {activeTab === 2 && (
-                /* Feature 03 Graphic: SM-2 Engine */
-                <div className="space-y-2.5 text-xs">
-                  <div className="flex items-center justify-between pb-2 border-b border-surface-border text-[11px] text-paper-muted">
+                <div className="space-y-2.5 text-[13px]">
+                  <div className="flex items-center justify-between pb-2 border-b border-[#E5E4E0] text-[12px] text-[#8E8E93]">
                     <span>SM-2 interval sequence</span>
-                    <span className="text-teal font-medium">SuperMemo-2</span>
+                    <span className="text-[#1C1C1E] font-medium">SuperMemo-2</span>
                   </div>
-                  <div className="space-y-1.5 text-xs">
-                    <div className="flex items-center justify-between p-2 rounded bg-surface-subtle border border-surface-border">
-                      <span className="text-paper-secondary">Repetition 1</span>
-                      <span className="font-medium text-paper-primary">Day 1 (+1d)</span>
+                  <div className="space-y-1.5 text-[13px]">
+                    <div className="flex items-center justify-between p-2 rounded-[6px] bg-[#FAFAF8] border border-[#E5E4E0]">
+                      <span className="text-[#6E6E73]">Repetition 1</span>
+                      <span className="font-medium text-[#1C1C1E]">Day 1 (+1d)</span>
                     </div>
-                    <div className="flex items-center justify-between p-2 rounded bg-surface-subtle border border-surface-border">
-                      <span className="text-paper-secondary">Repetition 2</span>
-                      <span className="font-medium text-paper-primary">Day 3 (+2d)</span>
+                    <div className="flex items-center justify-between p-2 rounded-[6px] bg-[#FAFAF8] border border-[#E5E4E0]">
+                      <span className="text-[#6E6E73]">Repetition 2</span>
+                      <span className="font-medium text-[#1C1C1E]">Day 3 (+2d)</span>
                     </div>
-                    <div className="flex items-center justify-between p-2 rounded bg-surface-subtle border border-surface-border">
-                      <span className="text-paper-secondary">Repetition 3</span>
-                      <span className="font-medium text-paper-primary">Day 8 (+5d)</span>
+                    <div className="flex items-center justify-between p-2 rounded-[6px] bg-[#FAFAF8] border border-[#E5E4E0]">
+                      <span className="text-[#6E6E73]">Repetition 3</span>
+                      <span className="font-medium text-[#1C1C1E]">Day 8 (+5d)</span>
                     </div>
-                    <div className="flex items-center justify-between p-2 rounded bg-teal/10 border border-teal/30">
-                      <span className="text-teal font-medium">Repetition 4 (Consolidated)</span>
-                      <span className="font-medium text-teal">Day 22 (+14d)</span>
+                    <div className="flex items-center justify-between p-2 rounded-[6px] bg-[#5A9367]/10 border border-[#5A9367]/20">
+                      <span className="text-[#5A9367] font-medium">Repetition 4 (Consolidated)</span>
+                      <span className="font-medium text-[#5A9367]">Day 22 (+14d)</span>
                     </div>
                   </div>
                 </div>
               )}
 
               {activeTab === 3 && (
-                /* Feature 04 Graphic: Pattern Matrix */
-                <div className="space-y-2.5 text-xs">
-                  <div className="flex items-center justify-between pb-2 border-b border-surface-border text-[11px] text-paper-muted">
+                <div className="space-y-2.5 text-[13px]">
+                  <div className="flex items-center justify-between pb-2 border-b border-[#E5E4E0] text-[12px] text-[#8E8E93]">
                     <span>Archetype status</span>
-                    <span className="text-paper-secondary">Retention confidence</span>
+                    <span className="text-[#6E6E73]">Retention confidence</span>
                   </div>
-                  <div className="space-y-1.5 text-xs">
+                  <div className="space-y-1.5 text-[13px]">
                     {[
-                      { name: 'Dynamic Programming', status: 'Ready (2.85 ease)', color: 'text-teal' },
-                      { name: 'Graphs & BFS/DFS', status: 'Consolidating (2.50 ease)', color: 'text-paper-primary' },
-                      { name: 'Sliding Window', status: 'Due soon (2.20 ease)', color: 'text-ochre' },
-                      { name: 'Trie & Backtracking', status: 'Mastered (2.90 ease)', color: 'text-teal' },
+                      { name: 'Dynamic Programming', status: 'Ready (2.85 ease)', color: 'text-[#5A9367]' },
+                      { name: 'Graphs & BFS/DFS', status: 'Consolidating (2.50 ease)', color: 'text-[#1C1C1E]' },
+                      { name: 'Sliding Window', status: 'Due soon (2.20 ease)', color: 'text-[#C4923A]' },
+                      { name: 'Trie & Backtracking', status: 'Mastered (2.90 ease)', color: 'text-[#5A9367]' },
                     ].map((row) => (
                       <div
                         key={row.name}
-                        className="flex items-center justify-between p-2 rounded bg-surface-subtle border border-surface-border"
+                        className="flex items-center justify-between p-2 rounded-[6px] bg-[#FAFAF8] border border-[#E5E4E0]"
                       >
-                        <span className="text-paper-primary">{row.name}</span>
+                        <span className="text-[#1C1C1E]">{row.name}</span>
                         <span className={`font-medium ${row.color}`}>{row.status}</span>
                       </div>
                     ))}

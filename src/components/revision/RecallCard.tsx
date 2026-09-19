@@ -31,7 +31,6 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger shortcuts if user is typing code or text
       if (
         viewMode === 'compiler' ||
         ['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)
@@ -62,23 +61,15 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
   }, [onRate, viewMode]);
 
   return (
-    <div className={`w-full ${viewMode === 'compiler' ? 'max-w-4xl' : 'max-w-2xl'} mx-auto deck-stack-wrap`}>
-      {/* Visual Stacked Index Cards (peeking behind active card to give physical deck feel) */}
-      {viewMode === 'flashcard' && (
-        <>
-          <div className="deck-card-layer-2" aria-hidden="true" />
-          <div className="deck-card-layer-1" aria-hidden="true" />
-        </>
-      )}
-
-      {/* Main Physical Index Card */}
+    <div className={`w-full ${viewMode === 'compiler' ? 'max-w-4xl' : 'max-w-2xl'} mx-auto`}>
+      {/* Main Flashcard Panel */}
       <motion.div
         key={problem.id}
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
+        exit={{ opacity: 0, y: -8 }}
         transition={{ duration: 0.15 }}
-        className="relative z-10 physical-index-card p-6 sm:p-8 flex flex-col transition-all"
+        className="relative z-10 bg-[#FFFFFF] border border-[#E5E4E0] rounded-[10px] p-6 sm:p-8 flex flex-col shadow-card transition-all"
       >
         {/* Card Header: Platform, Difficulty & Due status */}
         <div className="flex items-center justify-between gap-3 mb-5">
@@ -89,21 +80,21 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
 
           <div>
             {isOverdue ? (
-              <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-ochre/15 text-ochre border border-ochre/30">
+              <span className="text-[11px] font-medium px-2.5 py-1 rounded-[6px] bg-[#C25B5B]/10 text-[#C25B5B] border border-[#C25B5B]/20">
                 Overdue ({Math.abs(daysUntil)}d)
               </span>
             ) : (
-              <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-surface text-paper-secondary border border-surface-border">
+              <span className="text-[11px] font-medium px-2.5 py-1 rounded-[6px] bg-[#C4923A]/10 text-[#C4923A] border border-[#C4923A]/20">
                 Due today
               </span>
             )}
           </div>
         </div>
 
-        {/* Problem Title in Fraunces serif */}
+        {/* Problem Title */}
         <div className="mb-4">
           <div className="flex items-start justify-between gap-4">
-            <h2 className="font-serif text-2xl sm:text-3xl text-paper-primary font-normal leading-tight tracking-tight">
+            <h2 className="text-[22px] sm:text-[24px] font-semibold text-[#1C1C1E] leading-tight tracking-tight">
               {problem.title}
             </h2>
 
@@ -111,10 +102,10 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
               <button
                 type="button"
                 onClick={() => openSolveView(problem)}
-                className="btn-primary px-3 py-1.5 text-xs inline-flex items-center gap-1.5"
+                className="btn-primary px-3 py-1.5 text-[13px] inline-flex items-center gap-1.5 font-medium"
                 title="Open full workspace with compiler and problem link"
               >
-                <Maximize2 className="w-3.5 h-3.5" />
+                <Maximize2 className="w-3.5 h-3.5" strokeWidth={1.8} />
                 <span>Solve workspace</span>
               </button>
 
@@ -123,10 +114,10 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Open original problem in new tab"
-                className="btn-secondary px-3 py-1.5 text-xs inline-flex items-center gap-1.5"
+                className="btn-secondary px-3 py-1.5 text-[13px] inline-flex items-center gap-1.5"
               >
                 <span>Open</span>
-                <ExternalLink className="w-3.5 h-3.5 text-paper-muted" />
+                <ExternalLink className="w-3.5 h-3.5 text-[#8E8E93]" strokeWidth={1.8} />
               </a>
             </div>
           </div>
@@ -138,7 +129,7 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
             {problem.tags.map((tag) => (
               <span
                 key={tag}
-                className="text-xs font-normal px-2.5 py-0.5 rounded bg-surface-subtle text-paper-secondary border border-surface-border"
+                className="text-[11px] px-2.5 py-0.5 rounded-[6px] bg-[#FAFAF8] text-[#6E6E73] border border-[#E5E4E0]"
               >
                 {tag}
               </span>
@@ -147,30 +138,30 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
         )}
 
         {/* Mode Switcher: Flashcard vs Code Compiler */}
-        <div className="flex items-center gap-1 p-1 rounded-lg bg-surface-subtle border border-surface-border w-fit mb-5">
+        <div className="flex items-center gap-1 p-1 rounded-[8px] bg-[#FAFAF8] border border-[#E5E4E0] w-fit mb-5">
           <button
             type="button"
             onClick={() => setViewMode('flashcard')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] text-[13px] font-medium transition-all ${
               viewMode === 'flashcard'
-                ? 'bg-surface text-paper-primary shadow-xs border border-surface-border'
-                : 'text-paper-muted hover:text-paper-primary'
+                ? 'bg-[#FFFFFF] text-[#1C1C1E] shadow-sm border border-[#E5E4E0]'
+                : 'text-[#8E8E93] hover:text-[#1C1C1E]'
             }`}
           >
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>Index card</span>
+            <BookOpen className="w-3.5 h-3.5" strokeWidth={1.8} />
+            <span>Recall card</span>
           </button>
 
           <button
             type="button"
             onClick={() => setViewMode('compiler')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] text-[13px] font-medium transition-all ${
               viewMode === 'compiler'
-                ? 'bg-surface text-paper-primary shadow-xs border border-surface-border'
-                : 'text-paper-muted hover:text-paper-primary'
+                ? 'bg-[#FFFFFF] text-[#1C1C1E] shadow-sm border border-[#E5E4E0]'
+                : 'text-[#8E8E93] hover:text-[#1C1C1E]'
             }`}
           >
-            <Code2 className="w-3.5 h-3.5 text-teal" />
+            <Code2 className="w-3.5 h-3.5" strokeWidth={1.8} />
             <span>Code & test</span>
           </button>
         </div>
@@ -181,32 +172,32 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
             <CodeCompiler problemId={problem.id} problemTitle={problem.title} />
           </div>
         ) : (
-          <div className="w-full mb-6 perspective-1000">
+          <div className="w-full mb-6">
             <AnimatePresence mode="wait">
               {!isNotesRevealed ? (
                 <motion.div
                   key="hidden"
-                  initial={{ opacity: 0, rotateX: -15 }}
-                  animate={{ opacity: 1, rotateX: 0 }}
-                  exit={{ opacity: 0, rotateX: 15 }}
-                  transition={{ duration: 0.18, ease: 'easeOut' }}
-                  className="rounded-xl border border-dashed border-surface-border p-6 text-center bg-surface-subtle/70 flex flex-col items-center justify-center min-h-[160px]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="rounded-[10px] border border-dashed border-[#E5E4E0] p-6 text-center bg-[#FAFAF8] flex flex-col items-center justify-center min-h-[160px]"
                 >
-                  <Eye className="w-5 h-5 text-paper-muted mb-2" />
-                  <p className="font-serif text-base text-paper-primary mb-1 font-normal">
+                  <Eye className="w-5 h-5 text-[#8E8E93] mb-2" strokeWidth={1.8} />
+                  <p className="text-[15px] font-medium text-[#1C1C1E] mb-1">
                     Mental recall required
                   </p>
-                  <p className="text-xs text-paper-secondary max-w-sm mb-4 leading-relaxed font-sans">
-                    Mentally reconstruct the data structures, edge cases, and runtime before inspecting your approach notes.
+                  <p className="text-[13px] text-[#6E6E73] max-w-sm mb-4 leading-relaxed">
+                    Mentally reconstruct data structures, key invariants, and time complexity before revealing your approach notes.
                   </p>
 
                   <button
                     type="button"
                     onClick={() => setIsNotesRevealed(true)}
-                    className="btn-secondary text-xs flex items-center gap-2"
+                    className="btn-secondary text-[13px] flex items-center gap-2 font-medium"
                   >
                     <span>Reveal approach notes</span>
-                    <kbd className="text-[10px] bg-surface px-1.5 py-0.5 rounded border border-surface-border text-paper-muted">
+                    <kbd className="text-[10px] bg-[#FFFFFF] px-1.5 py-0.5 rounded-[4px] border border-[#E5E4E0] text-[#8E8E93]">
                       Space
                     </kbd>
                   </button>
@@ -214,30 +205,30 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
               ) : (
                 <motion.div
                   key="revealed"
-                  initial={{ opacity: 0, rotateX: 15 }}
-                  animate={{ opacity: 1, rotateX: 0 }}
-                  exit={{ opacity: 0, rotateX: -15 }}
-                  transition={{ duration: 0.18, ease: 'easeOut' }}
-                  className="rounded-xl border border-surface-border bg-surface-subtle p-6 min-h-[160px]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="rounded-[10px] border border-[#E5E4E0] bg-[#FAFAF8] p-6 min-h-[160px]"
                 >
-                  <div className="flex items-center justify-between mb-3 border-b border-surface-border pb-2">
-                    <span className="text-xs font-medium text-teal">
+                  <div className="flex items-center justify-between mb-3 border-b border-[#E5E4E0] pb-2">
+                    <span className="text-[13px] font-medium text-[#1C1C1E]">
                       Key intuition & notes
                     </span>
                     <button
                       onClick={() => setIsNotesRevealed(false)}
-                      className="text-xs text-paper-muted hover:text-paper-primary transition-colors"
+                      className="text-[12px] text-[#8E8E93] hover:text-[#1C1C1E] transition-colors"
                     >
                       Hide notes
                     </button>
                   </div>
 
                   {problem.notes ? (
-                    <div className="text-xs text-paper-primary whitespace-pre-wrap leading-relaxed font-sans">
+                    <div className="text-[13px] text-[#1C1C1E] whitespace-pre-wrap leading-relaxed">
                       {problem.notes}
                     </div>
                   ) : (
-                    <p className="text-xs text-paper-muted italic">
+                    <p className="text-[13px] text-[#8E8E93] italic">
                       No notes recorded for this problem yet. Add key insights in the solve workspace.
                     </p>
                   )}
@@ -248,10 +239,10 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
         )}
 
         {/* SM-2 Recall Rating Bar */}
-        <div className="pt-4 border-t border-surface-border">
-          <div className="flex items-center justify-between text-xs text-paper-secondary mb-3">
+        <div className="pt-4 border-t border-[#E5E4E0]">
+          <div className="flex items-center justify-between text-[13px] text-[#6E6E73] mb-3">
             <span>Rate recall to schedule next repetition:</span>
-            <span className="hidden sm:inline text-paper-muted">Keys: 1, 2, 3, 4</span>
+            <span className="hidden sm:inline text-[#8E8E93]">Keys: 1, 2, 3, 4</span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -259,10 +250,10 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
             <button
               type="button"
               onClick={() => onRate('again')}
-              className="flex flex-col items-center justify-center p-2.5 rounded-lg bg-ochre/10 hover:bg-ochre/20 text-ochre border border-ochre/30 transition-colors"
+              className="flex flex-col items-center justify-center p-2.5 rounded-[10px] bg-[#C25B5B]/10 hover:bg-[#C25B5B]/15 text-[#C25B5B] border border-[#C25B5B]/25 transition-colors"
             >
-              <div className="flex items-center gap-1 font-medium text-xs">
-                <RotateCcw className="w-3 h-3" />
+              <div className="flex items-center gap-1 font-medium text-[13px]">
+                <RotateCcw className="w-3 h-3" strokeWidth={1.8} />
                 <span>Needs work (1)</span>
               </div>
               <div className="text-[11px] opacity-80 mt-0.5">
@@ -274,12 +265,12 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
             <button
               type="button"
               onClick={() => onRate('hard')}
-              className="flex flex-col items-center justify-center p-2.5 rounded-lg bg-surface hover:bg-surface-hover text-paper-primary border border-surface-border transition-colors"
+              className="flex flex-col items-center justify-center p-2.5 rounded-[10px] bg-[#FFFFFF] hover:bg-[#F7F7F5] text-[#1C1C1E] border border-[#E5E4E0] transition-colors shadow-xs"
             >
-              <div className="flex items-center gap-1 font-medium text-xs">
+              <div className="flex items-center gap-1 font-medium text-[13px]">
                 <span>Struggled (2)</span>
               </div>
-              <div className="text-[11px] text-paper-secondary mt-0.5">
+              <div className="text-[11px] text-[#6E6E73] mt-0.5">
                 +{sm2Hard.interval_days}d
               </div>
             </button>
@@ -288,10 +279,10 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
             <button
               type="button"
               onClick={() => onRate('good')}
-              className="flex flex-col items-center justify-center p-2.5 rounded-lg bg-teal/10 hover:bg-teal/20 text-teal border border-teal/30 transition-colors"
+              className="flex flex-col items-center justify-center p-2.5 rounded-[10px] bg-[#5A9367]/10 hover:bg-[#5A9367]/15 text-[#5A9367] border border-[#5A9367]/25 transition-colors"
             >
-              <div className="flex items-center gap-1 font-medium text-xs">
-                <Check className="w-3 h-3" />
+              <div className="flex items-center gap-1 font-medium text-[13px]">
+                <Check className="w-3 h-3" strokeWidth={1.8} />
                 <span>Remembered (3)</span>
               </div>
               <div className="text-[11px] opacity-80 mt-0.5">
@@ -303,10 +294,10 @@ export const RecallCard: React.FC<RecallCardProps> = ({ problem, onRate }) => {
             <button
               type="button"
               onClick={() => onRate('easy')}
-              className="flex flex-col items-center justify-center p-2.5 rounded-lg bg-teal text-[#0E1614] hover:bg-teal-hover transition-colors font-medium shadow-xs"
+              className="flex flex-col items-center justify-center p-2.5 rounded-[10px] bg-[#2D5A6B] text-white hover:bg-[#234754] transition-colors font-medium shadow-xs"
             >
-              <div className="flex items-center gap-1 text-xs">
-                <Sparkles className="w-3 h-3" />
+              <div className="flex items-center gap-1 text-[13px]">
+                <Sparkles className="w-3 h-3" strokeWidth={1.8} />
                 <span>Instinctive (4)</span>
               </div>
               <div className="text-[11px] opacity-90 mt-0.5">

@@ -36,7 +36,7 @@ const getInitialTheme = (): 'dark' | 'light' => {
     const saved = localStorage.getItem('revision_dsa_theme');
     if (saved === 'dark' || saved === 'light') return saved;
   }
-  return 'dark'; // Dark mode as default per spec
+  return 'light'; // Light paper tone as default per spec
 };
 
 export const useUIStore = create<UIState>((set) => ({

@@ -1,15 +1,3 @@
-/**
- * WelcomePage — landing & authentication hub.
- *
- * Implements the lab-notebook visual identity:
- * - Warm graphite base (#14171F), surface (#1C202B), border (#2C3140).
- * - Fraunces serif for headings and problem flashcard.
- * - Work Sans humanist body typography.
- * - Looping interactive mini-demo of the physical flashcard flip mechanic ("Trapping Rain Water").
- * - Direct, unpretentious action language ("Start reviewing", "Explore demo", "Continue as guest").
- * - No trailing "→" arrows, no marketing buzzwords, no decorative gradients.
- */
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -51,9 +39,9 @@ const GoogleIcon = () => (
 
 // ── Shared input styling ─────────────────────────────────────────────────────
 const inputClass =
-  'w-full bg-[#14171F] border border-[#2C3140] rounded-lg px-3.5 py-2.5 text-xs text-[#E7E5DF] placeholder:text-[#656B7B] focus:outline-none focus:border-[#4F9C8D] transition-colors';
+  'w-full bg-[#FFFFFF] border border-[#E5E4E0] rounded-[10px] px-3.5 py-2.5 text-[14px] text-[#1C1C1E] placeholder:text-[#8E8E93] focus:outline-none focus:border-[#2D5A6B] focus:ring-1 focus:ring-[#2D5A6B] transition-colors';
 
-const errorClass = 'text-[11px] text-ochre mt-1 flex items-center gap-1';
+const errorClass = 'text-[12px] text-[#C25B5B] mt-1 flex items-center gap-1';
 
 // ── Field wrapper ────────────────────────────────────────────────────────────
 const Field: React.FC<{ label: string; error?: string; children: React.ReactNode }> = ({
@@ -62,11 +50,11 @@ const Field: React.FC<{ label: string; error?: string; children: React.ReactNode
   children,
 }) => (
   <div className="space-y-1">
-    <label className="text-xs font-medium text-paper-secondary">{label}</label>
+    <label className="text-[13px] font-medium text-[#6E6E73]">{label}</label>
     {children}
     {error && (
       <p className={errorClass}>
-        <AlertCircle className="w-3 h-3 shrink-0" />
+        <AlertCircle className="w-3 h-3 shrink-0" strokeWidth={1.8} />
         {error}
       </p>
     )}
@@ -79,11 +67,6 @@ const LoopingFlashcardDemo: React.FC = () => {
   const [ratingState, setRatingState] = useState<'idle' | 'remembered' | 'again'>('idle');
 
   useEffect(() => {
-    // Loop cycle: 
-    // 0s: show prompt
-    // 2.5s: reveal approach notes
-    // 5.0s: simulate rating (remembered)
-    // 7.0s: reset to prompt
     const t1 = setTimeout(() => setIsRevealed(true), 2400);
     const t2 = setTimeout(() => setRatingState('remembered'), 4800);
     const t3 = setTimeout(() => {
@@ -107,14 +90,8 @@ const LoopingFlashcardDemo: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full max-w-md mx-auto deck-stack-wrap select-none">
-      {/* Peeking deck layer 2 */}
-      <div className="deck-card-layer-2" aria-hidden="true" />
-      {/* Peeking deck layer 1 */}
-      <div className="deck-card-layer-1" aria-hidden="true" />
-
-      {/* Front physical index card */}
-      <div className="relative z-10 physical-index-card p-6 sm:p-7 flex flex-col justify-between min-h-[340px]">
+    <div className="w-full max-w-md mx-auto select-none">
+      <div className="relative z-10 bg-[#FFFFFF] border border-[#E5E4E0] rounded-[10px] p-6 sm:p-7 flex flex-col justify-between min-h-[340px] shadow-card">
         <div>
           {/* Card Topline */}
           <div className="flex items-center justify-between gap-2 mb-4">
@@ -122,62 +99,62 @@ const LoopingFlashcardDemo: React.FC = () => {
               <PlatformBadge platform="leetcode" size="sm" />
               <DifficultyBadge difficulty="hard" size="sm" />
             </div>
-            <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-surface-subtle text-paper-secondary border border-surface-border">
+            <span className="text-[11px] font-medium px-2 py-0.5 rounded-[6px] bg-[#C4923A]/10 text-[#C4923A] border border-[#C4923A]/20">
               Due today
             </span>
           </div>
 
-          {/* Problem Title in Fraunces serif */}
-          <h3 className="font-serif text-xl sm:text-2xl text-paper-primary font-normal leading-snug mb-3">
+          {/* Problem Title */}
+          <h3 className="text-[18px] sm:text-[20px] font-semibold text-[#1C1C1E] leading-snug mb-3">
             Trapping Rain Water
           </h3>
 
           {/* Topic Tags */}
           <div className="flex items-center gap-1.5 mb-5">
-            <span className="text-xs px-2 py-0.5 rounded bg-surface-subtle text-paper-secondary border border-surface-border">
+            <span className="text-[11px] px-2 py-0.5 rounded-[6px] bg-[#FAFAF8] text-[#6E6E73] border border-[#E5E4E0]">
               Two Pointers
             </span>
-            <span className="text-xs px-2 py-0.5 rounded bg-surface-subtle text-paper-secondary border border-surface-border">
+            <span className="text-[11px] px-2 py-0.5 rounded-[6px] bg-[#FAFAF8] text-[#6E6E73] border border-[#E5E4E0]">
               Monotonic Stack
             </span>
           </div>
 
           {/* Card Interior / Approach Reveal */}
-          <div className="perspective-1000">
+          <div>
             <AnimatePresence mode="wait">
               {!isRevealed ? (
                 <motion.div
                   key="front"
-                  initial={{ opacity: 0, rotateX: -15 }}
-                  animate={{ opacity: 1, rotateX: 0 }}
-                  exit={{ opacity: 0, rotateX: 15 }}
-                  transition={{ duration: 0.18 }}
-                  className="rounded-lg border border-dashed border-surface-border p-4 bg-surface-subtle/80 text-center flex flex-col items-center justify-center min-h-[110px]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="rounded-[8px] border border-dashed border-[#E5E4E0] p-4 bg-[#FAFAF8] text-center flex flex-col items-center justify-center min-h-[110px]"
                 >
-                  <p className="font-serif text-sm text-paper-primary mb-1">
+                  <p className="text-[14px] font-medium text-[#1C1C1E] mb-1">
                     What is the two-pointer invariant?
                   </p>
-                  <p className="text-[11px] text-paper-secondary mb-2">
+                  <p className="text-[12px] text-[#6E6E73] mb-2">
                     Mentally reconstruct the algorithm before revealing.
                   </p>
-                  <span className="text-[10px] text-teal font-medium border border-teal/30 bg-teal/10 px-2 py-0.5 rounded">
+                  <span className="text-[11px] text-[#2D5A6B] font-medium border border-[#2D5A6B]/20 bg-[#2D5A6B]/5 px-2 py-0.5 rounded-[6px]">
                     Auto-revealing in 2s
                   </span>
                 </motion.div>
               ) : (
                 <motion.div
                   key="back"
-                  initial={{ opacity: 0, rotateX: 15 }}
-                  animate={{ opacity: 1, rotateX: 0 }}
-                  exit={{ opacity: 0, rotateX: -15 }}
-                  transition={{ duration: 0.18 }}
-                  className="rounded-lg border border-surface-border bg-surface-subtle p-4 min-h-[110px]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="rounded-[8px] border border-[#E5E4E0] bg-[#FAFAF8] p-4 min-h-[110px]"
                 >
-                  <span className="text-xs font-medium text-teal block mb-1">
+                  <span className="text-[13px] font-medium text-[#1C1C1E] block mb-1">
                     Algorithm invariant
                   </span>
-                  <p className="text-xs text-paper-primary leading-relaxed">
-                    Maintain <span className="font-mono text-[11px] bg-graphite-950 px-1 py-0.5 rounded">left_max</span> and <span className="font-mono text-[11px] bg-graphite-950 px-1 py-0.5 rounded">right_max</span>. Water trapped is <span className="font-mono text-[11px] bg-graphite-950 px-1 py-0.5 rounded">min(L, R) - height[i]</span>. Advance the smaller wall inward.
+                  <p className="text-[13px] text-[#1C1C1E] leading-relaxed">
+                    Maintain <span className="font-mono text-[11px] bg-[#FFFFFF] border border-[#E5E4E0] px-1 py-0.5 rounded">left_max</span> and <span className="font-mono text-[11px] bg-[#FFFFFF] border border-[#E5E4E0] px-1 py-0.5 rounded">right_max</span>. Water trapped is <span className="font-mono text-[11px] bg-[#FFFFFF] border border-[#E5E4E0] px-1 py-0.5 rounded">min(L, R) - height[i]</span>. Advance the smaller wall inward.
                   </p>
                 </motion.div>
               )}
@@ -186,31 +163,31 @@ const LoopingFlashcardDemo: React.FC = () => {
         </div>
 
         {/* Rating Buttons in Footer */}
-        <div className="pt-4 border-t border-surface-border flex items-center justify-between gap-2 mt-4">
-          <div className="text-[11px] text-paper-secondary">
+        <div className="pt-4 border-t border-[#E5E4E0] flex items-center justify-between gap-2 mt-4">
+          <div className="text-[12px] text-[#6E6E73]">
             Recall quality:
           </div>
 
           <div className="flex items-center gap-1.5">
             <span
-              className={`px-2.5 py-1 text-xs rounded-md border transition-all flex items-center gap-1 ${
+              className={`px-2.5 py-1 text-[12px] rounded-[6px] border transition-all flex items-center gap-1 ${
                 ratingState === 'again'
-                  ? 'bg-ochre/25 text-ochre border-ochre font-semibold'
-                  : 'bg-surface text-paper-secondary border-surface-border'
+                  ? 'bg-[#C25B5B]/15 text-[#C25B5B] border-[#C25B5B]/30 font-medium'
+                  : 'bg-[#FFFFFF] text-[#6E6E73] border-[#E5E4E0]'
               }`}
             >
-              <RotateCcw className="w-3 h-3 text-ochre" />
+              <RotateCcw className="w-3 h-3 text-[#C25B5B]" strokeWidth={1.8} />
               <span>Needs work</span>
             </span>
 
             <span
-              className={`px-2.5 py-1 text-xs rounded-md border transition-all flex items-center gap-1 ${
+              className={`px-2.5 py-1 text-[12px] rounded-[6px] border transition-all flex items-center gap-1 ${
                 ratingState === 'remembered'
-                  ? 'bg-teal text-[#0E1614] border-teal font-medium'
-                  : 'bg-teal/10 text-teal border-teal/30'
+                  ? 'bg-[#5A9367] text-white border-[#5A9367] font-medium'
+                  : 'bg-[#5A9367]/10 text-[#5A9367] border-[#5A9367]/20'
               }`}
             >
-              <Check className="w-3 h-3" />
+              <Check className="w-3 h-3" strokeWidth={1.8} />
               <span>Remembered (+3d)</span>
             </span>
           </div>
@@ -228,37 +205,37 @@ export const WelcomePage: React.FC<{ onClose?: () => void; onExploreDemo?: () =>
   const [screen, setScreen] = useState<Screen>('home');
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-graphite bg-grid-pattern p-4 sm:p-6 relative text-paper-primary">
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#FAFAF8] p-4 sm:p-6 relative text-[#1C1C1E]">
       {onClose && (
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-lg bg-surface hover:bg-surface-hover text-paper-secondary hover:text-paper-primary border border-surface-border transition-colors z-30"
+          className="absolute top-6 right-6 p-2 rounded-[10px] bg-[#FFFFFF] hover:bg-[#F7F7F5] text-[#6E6E73] hover:text-[#1C1C1E] border border-[#E5E4E0] transition-colors z-30 shadow-sm"
           title="Close and return to demo"
         >
-          <X className="w-4 h-4" />
+          <X className="w-4 h-4" strokeWidth={1.8} />
         </button>
       )}
 
-      <div className="w-full max-w-5xl flex flex-col lg:flex-row rounded-2xl overflow-hidden border border-surface-border bg-surface shadow-elevated">
+      <div className="w-full max-w-5xl flex flex-col lg:flex-row rounded-[12px] overflow-hidden border border-[#E5E4E0] bg-[#FFFFFF] shadow-soft">
         {/* ── Left Side: Problem Lab & Flashcard Demo ──────────────────────── */}
-        <div className="lg:w-7/12 p-6 sm:p-10 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-surface-border bg-graphite-950/50">
+        <div className="lg:w-7/12 p-6 sm:p-10 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#E5E4E0] bg-[#FAFAF8]">
           <div>
             {/* Minimalist Logo */}
-            <div className="flex items-center gap-2 mb-8">
-              <div className="w-7 h-7 rounded-lg bg-teal text-[#0E1614] flex items-center justify-center font-bold text-xs">
-                <BookOpen className="w-4 h-4" />
+            <div className="flex items-center gap-2.5 mb-8">
+              <div className="w-7 h-7 rounded-[8px] bg-[#2D5A6B] text-white flex items-center justify-center font-medium text-xs shadow-sm">
+                <BookOpen className="w-4 h-4" strokeWidth={1.8} />
               </div>
-              <span className="font-serif text-lg font-bold text-paper-primary tracking-tight">
+              <span className="text-[17px] font-semibold text-[#1C1C1E] tracking-tight">
                 RevisionDSA
               </span>
             </div>
 
             {/* Headline & Value Proposition */}
             <div className="space-y-3 mb-8">
-              <h1 className="font-serif text-3xl sm:text-4xl text-paper-primary font-normal leading-tight">
+              <h1 className="text-[28px] sm:text-[34px] font-semibold text-[#1C1C1E] leading-tight tracking-tight">
                 Deliberate practice for algorithmic problem solving.
               </h1>
-              <p className="text-xs sm:text-sm text-paper-secondary leading-relaxed max-w-lg">
+              <p className="text-[14px] text-[#6E6E73] leading-relaxed max-w-lg">
                 RevisionDSA schedules LeetCode, Codeforces, and GeeksforGeeks problems using adaptive SM-2 spaced repetition, turning ephemeral solves into permanent intuition.
               </p>
             </div>
@@ -269,8 +246,8 @@ export const WelcomePage: React.FC<{ onClose?: () => void; onExploreDemo?: () =>
             </div>
           </div>
 
-          {/* Quiet feature indicators without marketing fluff */}
-          <div className="pt-6 border-t border-surface-border flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-paper-secondary">
+          {/* Quiet feature indicators */}
+          <div className="pt-6 border-t border-[#E5E4E0] flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-[#6E6E73]">
             <span>Adaptive SM-2 spacing</span>
             <span>15,000+ indexed catalog</span>
             <span>Integrated code compiler</span>
@@ -278,7 +255,7 @@ export const WelcomePage: React.FC<{ onClose?: () => void; onExploreDemo?: () =>
         </div>
 
         {/* ── Right Side: Direct Action & Authentication ───────────────────── */}
-        <div className="lg:w-5/12 p-6 sm:p-10 flex flex-col justify-center bg-surface">
+        <div className="lg:w-5/12 p-6 sm:p-10 flex flex-col justify-center bg-[#FFFFFF]">
           <AnimatePresence mode="wait">
             {screen === 'home' && (
               <HomeScreen
@@ -361,10 +338,10 @@ const HomeScreen: React.FC<{
       className="space-y-5"
     >
       <div>
-        <h2 className="font-serif text-2xl text-paper-primary font-normal">
+        <h2 className="text-[22px] font-semibold text-[#1C1C1E]">
           Start practicing
         </h2>
-        <p className="text-xs text-paper-secondary mt-1">
+        <p className="text-[13px] text-[#6E6E73] mt-1">
           Select an option to access your revision queue.
         </p>
       </div>
@@ -374,17 +351,17 @@ const HomeScreen: React.FC<{
         {onExploreDemo && (
           <button
             onClick={onExploreDemo}
-            className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-teal text-[#0E1614] hover:bg-teal-hover font-medium text-xs transition-colors shadow-xs"
+            className="w-full flex items-center justify-between px-4 py-3 rounded-[10px] bg-[#2D5A6B] text-white hover:bg-[#234754] font-medium text-[13px] transition-colors shadow-sm"
           >
             <div className="text-left">
-              <span className="font-semibold block text-xs">
+              <span className="font-semibold block text-[13px]">
                 Explore interactive demo
               </span>
               <span className="text-[11px] opacity-90 block">
                 Test the spaced repetition queue and problem bank immediately
               </span>
             </div>
-            <Sparkles className="w-4 h-4 shrink-0" />
+            <Sparkles className="w-4 h-4 shrink-0" strokeWidth={1.8} />
           </button>
         )}
 
@@ -392,30 +369,30 @@ const HomeScreen: React.FC<{
         <button
           onClick={handleGuest}
           disabled={guestLoading}
-          className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg border border-surface-border bg-surface-subtle hover:bg-surface-hover text-paper-primary transition-colors text-xs disabled:opacity-50"
+          className="w-full flex items-center justify-between px-4 py-2.5 rounded-[10px] border border-[#E5E4E0] bg-[#FFFFFF] hover:bg-[#F7F7F5] text-[#1C1C1E] transition-colors text-[13px] disabled:opacity-50 shadow-xs"
         >
           <div className="text-left">
-            <span className="font-medium block text-xs">
+            <span className="font-medium block text-[13px]">
               Continue as guest
             </span>
-            <span className="text-[11px] text-paper-muted block">
+            <span className="text-[11px] text-[#6E6E73] block">
               No registration required · Progress saved on this device
             </span>
           </div>
-          {guestLoading && <Loader2 className="w-3.5 h-3.5 animate-spin text-teal" />}
+          {guestLoading && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#2D5A6B]" />}
         </button>
 
         {/* Divider */}
         <div className="relative flex items-center gap-3 py-1">
-          <div className="flex-1 h-px bg-surface-border" />
-          <span className="text-[11px] text-paper-muted">or sync across devices</span>
-          <div className="flex-1 h-px bg-surface-border" />
+          <div className="flex-1 h-px bg-[#E5E4E0]" />
+          <span className="text-[11px] text-[#8E8E93]">or sync across devices</span>
+          <div className="flex-1 h-px bg-[#E5E4E0]" />
         </div>
 
         {/* 3. Log In */}
         <button
           onClick={onLogin}
-          className="w-full btn-secondary flex items-center justify-center py-2.5 text-xs font-medium"
+          className="w-full btn-secondary flex items-center justify-center py-2.5 text-[13px] font-medium"
         >
           <span>Log in to existing account</span>
         </button>
@@ -423,7 +400,7 @@ const HomeScreen: React.FC<{
         {/* 4. Sign Up */}
         <button
           onClick={onSignUp}
-          className="w-full flex items-center justify-center py-2 text-xs text-paper-secondary hover:text-paper-primary transition-colors"
+          className="w-full flex items-center justify-center py-2 text-[13px] text-[#6E6E73] hover:text-[#1C1C1E] transition-colors"
         >
           <span>Create an account</span>
         </button>
@@ -431,7 +408,7 @@ const HomeScreen: React.FC<{
 
       {error && (
         <p className={errorClass}>
-          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+          <AlertCircle className="w-3.5 h-3.5 shrink-0" strokeWidth={1.8} />
           {error}
         </p>
       )}
@@ -489,29 +466,29 @@ const LoginForm: React.FC<{ onBack: () => void; onForgot: () => void }> = ({
       <div className="flex items-center gap-2">
         <button
           onClick={onBack}
-          className="p-1 rounded text-paper-muted hover:text-paper-primary transition-colors"
+          className="p-1 rounded-[6px] text-[#8E8E93] hover:text-[#1C1C1E] transition-colors"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-4 h-4" strokeWidth={1.8} />
         </button>
         <div>
-          <h2 className="font-serif text-xl text-paper-primary font-normal">Log in</h2>
-          <p className="text-xs text-paper-secondary">Access your revision schedule.</p>
+          <h2 className="text-[20px] font-semibold text-[#1C1C1E]">Log in</h2>
+          <p className="text-[13px] text-[#6E6E73]">Access your revision schedule.</p>
         </div>
       </div>
 
       <button
         onClick={handleGoogle}
         disabled={googleLoading}
-        className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-surface-border text-xs font-medium text-paper-primary hover:bg-surface-hover transition-colors disabled:opacity-50"
+        className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-[10px] border border-[#E5E4E0] text-[13px] font-medium text-[#1C1C1E] hover:bg-[#F7F7F5] transition-colors disabled:opacity-50 shadow-xs"
       >
-        {googleLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <GoogleIcon />}
+        {googleLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" strokeWidth={1.8} /> : <GoogleIcon />}
         <span>Continue with Google</span>
       </button>
 
       <div className="relative flex items-center gap-3">
-        <div className="flex-1 h-px bg-surface-border" />
-        <span className="text-[11px] text-paper-muted">or with email</span>
-        <div className="flex-1 h-px bg-surface-border" />
+        <div className="flex-1 h-px bg-[#E5E4E0]" />
+        <span className="text-[11px] text-[#8E8E93]">or with email</span>
+        <div className="flex-1 h-px bg-[#E5E4E0]" />
       </div>
 
       <form onSubmit={handleLogin} className="space-y-3">
@@ -541,9 +518,9 @@ const LoginForm: React.FC<{ onBack: () => void; onForgot: () => void }> = ({
             <button
               type="button"
               onClick={() => setShowPw((v) => !v)}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-paper-muted hover:text-paper-primary"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8E8E93] hover:text-[#1C1C1E]"
             >
-              {showPw ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              {showPw ? <EyeOff className="w-3.5 h-3.5" strokeWidth={1.8} /> : <Eye className="w-3.5 h-3.5" strokeWidth={1.8} />}
             </button>
           </div>
         </Field>
@@ -552,7 +529,7 @@ const LoginForm: React.FC<{ onBack: () => void; onForgot: () => void }> = ({
           <button
             type="button"
             onClick={onForgot}
-            className="text-xs text-paper-secondary hover:text-paper-primary hover:underline"
+            className="text-[12px] text-[#6E6E73] hover:text-[#1C1C1E] hover:underline"
           >
             Forgot password?
           </button>
@@ -560,7 +537,7 @@ const LoginForm: React.FC<{ onBack: () => void; onForgot: () => void }> = ({
 
         {error && (
           <p className={errorClass}>
-            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+            <AlertCircle className="w-3.5 h-3.5 shrink-0" strokeWidth={1.8} />
             {error}
           </p>
         )}
@@ -568,9 +545,9 @@ const LoginForm: React.FC<{ onBack: () => void; onForgot: () => void }> = ({
         <button
           type="submit"
           disabled={loading || !email || !password}
-          className="w-full btn-primary py-2 text-xs font-medium disabled:opacity-50 flex items-center justify-center gap-1.5"
+          className="w-full btn-primary py-2 text-[13px] font-medium disabled:opacity-50 flex items-center justify-center gap-1.5"
         >
-          {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+          {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" strokeWidth={1.8} />}
           <span>{loading ? 'Authenticating…' : 'Log in'}</span>
         </button>
       </form>
@@ -644,29 +621,29 @@ const SignUpForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({
       <div className="flex items-center gap-2">
         <button
           onClick={onBack}
-          className="p-1 rounded text-paper-muted hover:text-paper-primary transition-colors"
+          className="p-1 rounded-[6px] text-[#8E8E93] hover:text-[#1C1C1E] transition-colors"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-4 h-4" strokeWidth={1.8} />
         </button>
         <div>
-          <h2 className="font-serif text-xl text-paper-primary font-normal">Create account</h2>
-          <p className="text-xs text-paper-secondary">Sync your problem bank across devices.</p>
+          <h2 className="text-[20px] font-semibold text-[#1C1C1E]">Create account</h2>
+          <p className="text-[13px] text-[#6E6E73]">Sync your problem bank across devices.</p>
         </div>
       </div>
 
       <button
         onClick={handleGoogle}
         disabled={googleLoading}
-        className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-surface-border text-xs font-medium text-paper-primary hover:bg-surface-hover transition-colors disabled:opacity-50"
+        className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-[10px] border border-[#E5E4E0] text-[13px] font-medium text-[#1C1C1E] hover:bg-[#F7F7F5] transition-colors disabled:opacity-50 shadow-xs"
       >
-        {googleLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <GoogleIcon />}
+        {googleLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" strokeWidth={1.8} /> : <GoogleIcon />}
         <span>Sign up with Google</span>
       </button>
 
       <div className="relative flex items-center gap-3">
-        <div className="flex-1 h-px bg-surface-border" />
-        <span className="text-[11px] text-paper-muted">or with email</span>
-        <div className="flex-1 h-px bg-surface-border" />
+        <div className="flex-1 h-px bg-[#E5E4E0]" />
+        <span className="text-[11px] text-[#8E8E93]">or with email</span>
+        <div className="flex-1 h-px bg-[#E5E4E0]" />
       </div>
 
       <form onSubmit={handleSignUp} className="space-y-3">
@@ -710,9 +687,9 @@ const SignUpForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({
             <button
               type="button"
               onClick={() => setShowPw((v) => !v)}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-paper-muted hover:text-paper-primary"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8E8E93] hover:text-[#1C1C1E]"
             >
-              {showPw ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              {showPw ? <EyeOff className="w-3.5 h-3.5" strokeWidth={1.8} /> : <Eye className="w-3.5 h-3.5" strokeWidth={1.8} />}
             </button>
           </div>
           <PasswordStrengthMeter password={password} />
@@ -735,7 +712,7 @@ const SignUpForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({
 
         {error && (
           <p className={errorClass}>
-            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+            <AlertCircle className="w-3.5 h-3.5 shrink-0" strokeWidth={1.8} />
             {error}
           </p>
         )}
@@ -743,9 +720,9 @@ const SignUpForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({
         <button
           type="submit"
           disabled={loading || !email || !password || !!emailError || !!confirmError}
-          className="w-full btn-primary py-2 text-xs font-medium disabled:opacity-50 flex items-center justify-center gap-1.5"
+          className="w-full btn-primary py-2 text-[13px] font-medium disabled:opacity-50 flex items-center justify-center gap-1.5"
         >
-          {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+          {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" strokeWidth={1.8} />}
           <span>{loading ? 'Creating account…' : 'Create account'}</span>
         </button>
       </form>
@@ -789,13 +766,13 @@ const ForgotForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({
       <div className="flex items-center gap-2">
         <button
           onClick={onBack}
-          className="p-1 rounded text-paper-muted hover:text-paper-primary transition-colors"
+          className="p-1 rounded-[6px] text-[#8E8E93] hover:text-[#1C1C1E] transition-colors"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-4 h-4" strokeWidth={1.8} />
         </button>
         <div>
-          <h2 className="font-serif text-xl text-paper-primary font-normal">Reset password</h2>
-          <p className="text-xs text-paper-secondary">We'll send you a password reset link.</p>
+          <h2 className="text-[20px] font-semibold text-[#1C1C1E]">Reset password</h2>
+          <p className="text-[13px] text-[#6E6E73]">We'll send you a password reset link.</p>
         </div>
       </div>
 
@@ -814,7 +791,7 @@ const ForgotForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({
 
         {error && (
           <p className={errorClass}>
-            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+            <AlertCircle className="w-3.5 h-3.5 shrink-0" strokeWidth={1.8} />
             {error}
           </p>
         )}
@@ -822,9 +799,9 @@ const ForgotForm: React.FC<{ onBack: () => void; onSuccess: () => void }> = ({
         <button
           type="submit"
           disabled={loading || !email}
-          className="w-full btn-primary py-2 text-xs font-medium disabled:opacity-50 flex items-center justify-center gap-1.5"
+          className="w-full btn-primary py-2 text-[13px] font-medium disabled:opacity-50 flex items-center justify-center gap-1.5"
         >
-          {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+          {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" strokeWidth={1.8} />}
           <span>{loading ? 'Sending link…' : 'Send reset link'}</span>
         </button>
       </form>
@@ -839,18 +816,18 @@ const CheckInbox: React.FC<{ onBack: () => void }> = ({ onBack }) => (
     animate={{ opacity: 1 }}
     className="text-center space-y-4 py-4"
   >
-    <div className="w-12 h-12 mx-auto rounded-xl bg-teal/15 text-teal flex items-center justify-center border border-teal/30">
-      <Mail className="w-6 h-6" />
+    <div className="w-12 h-12 mx-auto rounded-[10px] bg-[#5A9367]/15 text-[#5A9367] flex items-center justify-center border border-[#5A9367]/25">
+      <Mail className="w-6 h-6" strokeWidth={1.8} />
     </div>
     <div>
-      <h2 className="font-serif text-xl text-paper-primary font-normal">Check your inbox</h2>
-      <p className="text-xs text-paper-secondary mt-1 max-w-xs mx-auto leading-relaxed">
+      <h2 className="text-[20px] font-semibold text-[#1C1C1E]">Check your inbox</h2>
+      <p className="text-[13px] text-[#6E6E73] mt-1 max-w-xs mx-auto leading-relaxed">
         Confirmation link sent. Click the link in the email to activate your account.
       </p>
     </div>
     <button
       onClick={onBack}
-      className="text-xs font-medium text-teal hover:underline"
+      className="text-[13px] font-medium text-[#2D5A6B] hover:underline"
     >
       Return to start
     </button>
@@ -864,18 +841,18 @@ const ForgotSent: React.FC<{ onBack: () => void }> = ({ onBack }) => (
     animate={{ opacity: 1 }}
     className="text-center space-y-4 py-4"
   >
-    <div className="w-12 h-12 mx-auto rounded-xl bg-teal/15 text-teal flex items-center justify-center border border-teal/30">
-      <Check className="w-6 h-6" />
+    <div className="w-12 h-12 mx-auto rounded-[10px] bg-[#5A9367]/15 text-[#5A9367] flex items-center justify-center border border-[#5A9367]/25">
+      <Check className="w-6 h-6" strokeWidth={1.8} />
     </div>
     <div>
-      <h2 className="font-serif text-xl text-paper-primary font-normal">Reset link dispatched</h2>
-      <p className="text-xs text-paper-secondary mt-1 max-w-xs mx-auto leading-relaxed">
+      <h2 className="text-[20px] font-semibold text-[#1C1C1E]">Reset link dispatched</h2>
+      <p className="text-[13px] text-[#6E6E73] mt-1 max-w-xs mx-auto leading-relaxed">
         Check your email for the password reset link. It expires in 1 hour.
       </p>
     </div>
     <button
       onClick={onBack}
-      className="text-xs font-medium text-teal hover:underline"
+      className="text-[13px] font-medium text-[#2D5A6B] hover:underline"
     >
       Return to login
     </button>

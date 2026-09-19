@@ -49,7 +49,7 @@ export const AllProblemsPage: React.FC = () => {
     setToast(null);
   };
 
-  const [viewMode, setViewMode] = useState<'grid' | 'table'>('table'); // Default to dense ledger table view
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>('table');
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | 'all'>('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | 'all'>('all');
   const [selectedTag, setSelectedTag] = useState<string>('all');
@@ -114,66 +114,66 @@ export const AllProblemsPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto space-y-5">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="font-serif text-2xl text-paper-primary font-normal">
-              Problem bank
+            <h1 className="text-[22px] sm:text-[24px] font-semibold text-[#1C1C1E]">
+              Problem Bank
             </h1>
-            <span className="text-xs px-2 py-0.5 rounded-md bg-surface-subtle border border-surface-border text-paper-secondary tabular-nums">
+            <span className="text-[12px] font-medium px-2 py-0.5 rounded-[6px] bg-[#FFFFFF] border border-[#E5E4E0] text-[#6E6E73] tabular-nums shadow-xs">
               {filteredProblems.length} of {problems.length}
             </span>
           </div>
-          <p className="text-xs text-paper-secondary mt-0.5">
+          <p className="text-[13px] text-[#6E6E73] mt-0.5">
             Filter, search, and inspect revision schedules across your algorithmic question library.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           {/* View toggle (Table / Grid) */}
-          <div className="flex items-center p-0.5 rounded-lg bg-surface border border-surface-border">
+          <div className="flex items-center p-0.5 rounded-[8px] bg-[#FFFFFF] border border-[#E5E4E0] shadow-xs">
             <button
               onClick={() => setViewMode('table')}
-              className={`p-1.5 rounded-md transition-colors ${
+              className={`p-1.5 rounded-[6px] transition-colors ${
                 viewMode === 'table'
-                  ? 'bg-surface-hover text-paper-primary shadow-xs'
-                  : 'text-paper-muted hover:text-paper-primary'
+                  ? 'bg-[#F7F7F5] text-[#1C1C1E]'
+                  : 'text-[#8E8E93] hover:text-[#1C1C1E]'
               }`}
-              title="Ledger Table View"
+              title="Table View"
             >
-              <List className="w-4 h-4" />
+              <List className="w-4 h-4" strokeWidth={1.8} />
             </button>
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-md transition-colors ${
+              className={`p-1.5 rounded-[6px] transition-colors ${
                 viewMode === 'grid'
-                  ? 'bg-surface-hover text-paper-primary shadow-xs'
-                  : 'text-paper-muted hover:text-paper-primary'
+                  ? 'bg-[#F7F7F5] text-[#1C1C1E]'
+                  : 'text-[#8E8E93] hover:text-[#1C1C1E]'
               }`}
-              title="Card Grid View"
+              title="Grid View"
             >
-              <LayoutGrid className="w-4 h-4" />
+              <LayoutGrid className="w-4 h-4" strokeWidth={1.8} />
             </button>
           </div>
 
           <button
             onClick={openAddPanel}
-            className="btn-primary text-xs flex items-center gap-1.5 py-1.5 px-3"
+            className="btn-primary text-[13px] flex items-center gap-1.5 py-1.5 px-3"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4" strokeWidth={2} />
             <span>Add problem</span>
           </button>
         </div>
       </div>
 
       {/* Toolbar / Filters */}
-      <div className="p-3 rounded-xl border border-surface-border bg-surface shadow-xs space-y-2.5">
-        <div className="flex flex-wrap items-center gap-2 text-xs">
+      <div className="p-3 rounded-[10px] border border-[#E5E4E0] bg-[#FFFFFF] shadow-card space-y-2.5">
+        <div className="flex flex-wrap items-center gap-2 text-[13px]">
           {/* Platform */}
           <select
             value={selectedPlatform}
             onChange={(e) => setSelectedPlatform(e.target.value as any)}
-            className="bg-surface-subtle border border-surface-border rounded-lg px-2.5 py-1.5 text-paper-primary focus:outline-none focus:border-teal"
+            className="bg-[#FAFAF8] border border-[#E5E4E0] rounded-[8px] px-2.5 py-1.5 text-[#1C1C1E] focus:outline-none focus:border-[#2D5A6B]"
           >
             <option value="all">All platforms</option>
             <option value="leetcode">LeetCode</option>
@@ -185,7 +185,7 @@ export const AllProblemsPage: React.FC = () => {
           <select
             value={selectedDifficulty}
             onChange={(e) => setSelectedDifficulty(e.target.value as any)}
-            className="bg-surface-subtle border border-surface-border rounded-lg px-2.5 py-1.5 text-paper-primary focus:outline-none focus:border-teal"
+            className="bg-[#FAFAF8] border border-[#E5E4E0] rounded-[8px] px-2.5 py-1.5 text-[#1C1C1E] focus:outline-none focus:border-[#2D5A6B]"
           >
             <option value="all">All difficulties</option>
             <option value="easy">Easy</option>
@@ -197,7 +197,7 @@ export const AllProblemsPage: React.FC = () => {
           <select
             value={selectedTag}
             onChange={(e) => setSelectedTag(e.target.value)}
-            className="bg-surface-subtle border border-surface-border rounded-lg px-2.5 py-1.5 text-paper-primary focus:outline-none focus:border-teal max-w-[150px]"
+            className="bg-[#FAFAF8] border border-[#E5E4E0] rounded-[8px] px-2.5 py-1.5 text-[#1C1C1E] focus:outline-none focus:border-[#2D5A6B] max-w-[150px]"
           >
             <option value="all">All patterns</option>
             {PRESET_TAGS.map((tag) => (
@@ -211,7 +211,7 @@ export const AllProblemsPage: React.FC = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as any)}
-            className="bg-surface-subtle border border-surface-border rounded-lg px-2.5 py-1.5 text-paper-primary focus:outline-none focus:border-teal"
+            className="bg-[#FAFAF8] border border-[#E5E4E0] rounded-[8px] px-2.5 py-1.5 text-[#1C1C1E] focus:outline-none focus:border-[#2D5A6B]"
           >
             <option value="all">All statuses</option>
             <option value="learning">Learning (&lt;5 reps)</option>
@@ -220,11 +220,11 @@ export const AllProblemsPage: React.FC = () => {
 
           {/* Sort By */}
           <div className="ml-auto flex items-center gap-1.5">
-            <ArrowUpDown className="w-3.5 h-3.5 text-paper-muted" />
+            <ArrowUpDown className="w-3.5 h-3.5 text-[#8E8E93]" strokeWidth={1.8} />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-surface-subtle border border-surface-border rounded-lg px-2.5 py-1.5 text-paper-primary focus:outline-none focus:border-teal"
+              className="bg-[#FAFAF8] border border-[#E5E4E0] rounded-[8px] px-2.5 py-1.5 text-[#1C1C1E] focus:outline-none focus:border-[#2D5A6B]"
             >
               <option value="review_asc">Next review (urgent first)</option>
               <option value="created_desc">Recently added</option>
@@ -237,10 +237,10 @@ export const AllProblemsPage: React.FC = () => {
           {hasActiveFilters && (
             <button
               onClick={clearAllFilters}
-              className="px-2.5 py-1.5 rounded-lg border border-surface-border bg-surface-subtle text-paper-secondary hover:text-paper-primary flex items-center gap-1 transition-colors"
+              className="px-2.5 py-1.5 rounded-[8px] border border-[#E5E4E0] bg-[#FAFAF8] text-[#6E6E73] hover:text-[#1C1C1E] flex items-center gap-1 transition-colors"
               title="Reset filters"
             >
-              <X className="w-3 h-3" />
+              <X className="w-3 h-3" strokeWidth={1.8} />
               <span>Clear</span>
             </button>
           )}
@@ -249,12 +249,12 @@ export const AllProblemsPage: React.FC = () => {
 
       {/* Problem Content */}
       {filteredProblems.length === 0 ? (
-        <div className="py-16 text-center saas-card p-8 flex flex-col items-center justify-center">
-          <BookOpen className="w-8 h-8 text-paper-muted mb-3" />
-          <h3 className="font-serif text-lg text-paper-primary font-normal mb-1">
+        <div className="py-16 text-center bg-[#FFFFFF] border border-[#E5E4E0] rounded-[10px] p-8 flex flex-col items-center justify-center shadow-card">
+          <BookOpen className="w-8 h-8 text-[#8E8E93] mb-3" strokeWidth={1.8} />
+          <h3 className="text-[17px] font-semibold text-[#1C1C1E] mb-1">
             No matching problems
           </h3>
-          <p className="text-xs text-paper-secondary mb-5 max-w-sm">
+          <p className="text-[13px] text-[#6E6E73] mb-5 max-w-sm">
             {hasActiveFilters
               ? 'Try adjusting your search query or clearing active filters.'
               : 'Your problem bank is empty. Log problems you solve on LeetCode, GFG, or Codeforces to start tracking them.'}
@@ -263,16 +263,16 @@ export const AllProblemsPage: React.FC = () => {
             {hasActiveFilters && (
               <button
                 onClick={clearAllFilters}
-                className="btn-secondary text-xs"
+                className="btn-secondary text-[13px]"
               >
                 Clear filters
               </button>
             )}
             <button
               onClick={openAddPanel}
-              className="btn-primary text-xs flex items-center gap-1.5"
+              className="btn-primary text-[13px] flex items-center gap-1.5"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4" strokeWidth={2} />
               <span>Log problem</span>
             </button>
           </div>
@@ -305,19 +305,19 @@ export const AllProblemsPage: React.FC = () => {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 12 }}
-            className="fixed bottom-20 md:bottom-8 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-[#14171F] text-paper-primary rounded-xl shadow-elevated border border-surface-border max-w-md text-xs"
+            className="fixed bottom-20 md:bottom-8 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-[#FFFFFF] text-[#1C1C1E] rounded-[10px] shadow-modal border border-[#E5E4E0] max-w-md text-[13px]"
           >
-            <div className="w-5 h-5 rounded-full bg-ochre/20 text-ochre flex items-center justify-center shrink-0">
-              <Trash2 className="w-3.5 h-3.5" />
+            <div className="w-5 h-5 rounded-full bg-[#C25B5B]/10 text-[#C25B5B] flex items-center justify-center shrink-0">
+              <Trash2 className="w-3.5 h-3.5" strokeWidth={1.8} />
             </div>
             <div className="flex-1 truncate">
-              <span>Removed <strong className="font-semibold">{toast.title}</strong> from problem bank</span>
+              <span>Removed <strong className="font-medium">{toast.title}</strong> from problem bank</span>
             </div>
             <button
               onClick={handleUndo}
-              className="flex items-center gap-1 font-medium text-teal hover:underline px-2 py-1 rounded hover:bg-surface transition-colors ml-1 shrink-0"
+              className="flex items-center gap-1 font-medium text-[#2D5A6B] hover:underline px-2 py-1 rounded-[6px] hover:bg-[#F7F7F5] transition-colors ml-1 shrink-0"
             >
-              <Undo2 className="w-3.5 h-3.5" />
+              <Undo2 className="w-3.5 h-3.5" strokeWidth={1.8} />
               <span>Undo</span>
             </button>
           </motion.div>

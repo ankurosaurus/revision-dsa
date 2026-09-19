@@ -18,22 +18,22 @@ export const KeyboardShortcutsModal: React.FC<Props> = ({ isOpen, onClose }) => 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-graphite-base/80 backdrop-blur-xs p-4">
-      <div className="w-full max-w-md bg-surface rounded-xl border border-graphite-hairline p-6 shadow-deck space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-graphite-hairline">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-surface-subtle/80 backdrop-blur-xs p-4">
+      <div className="w-full max-w-md bg-surface rounded-[10px] border border-line p-6 shadow-lg space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-line">
           <div className="flex items-center gap-2">
-            <Command className="w-4 h-4 text-teal" />
-            <h3 className="text-sm font-serif font-bold text-paper-primary">Keyboard Shortcuts</h3>
+            <Command className="w-4 h-4 text-[#2D5A6B]" />
+            <h3 className="text-sm font-semibold text-ink">Keyboard Shortcuts</h3>
           </div>
-          <button onClick={onClose} className="p-1 rounded text-paper-muted hover:text-paper-primary hover:bg-graphite-hover transition-colors">
+          <button onClick={onClose} className="p-1 rounded-[10px] text-ink-muted hover:text-ink hover:bg-surface-hover transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
         <div className="space-y-2">
           {SHORTCUTS.map((s) => (
             <div key={s.key} className="flex items-center justify-between py-1.5 text-xs">
-              <span className="text-paper-muted">{s.description}</span>
-              <kbd className="px-2 py-1 rounded bg-graphite-base border border-graphite-hairline font-mono font-medium text-xs text-paper-primary">
+              <span className="text-ink-muted">{s.description}</span>
+              <kbd className="px-2 py-1 rounded-[10px] bg-surface-subtle border border-line font-mono font-medium text-xs text-ink">
                 {s.key}
               </kbd>
             </div>
