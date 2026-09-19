@@ -894,7 +894,7 @@ export const AddProblemPanel: React.FC = () => {
                 <div className="flex items-center gap-1.5 text-xs text-ink-muted">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#2D5A6B]" />
                   <span>
-                    Catalog: {catalogStats.leetcode.toLocaleString()} LeetCode · {catalogStats.codeforces.toLocaleString()} Codeforces
+                    Catalog: {catalogStats.leetcode.toLocaleString()} LeetCode, {catalogStats.codeforces.toLocaleString()} Codeforces
                   </span>
                 </div>
 

@@ -49,13 +49,13 @@
   }
 
   .dark {
-    --bg-app: #121214;
-    --surface-card: #1A1A1E;
-    --surface-hover: #222226;
-    --border-color: #2A2A2E;
-    --text-primary: #EDEDEF;
-    --text-secondary: #A0A0A5;
-    --text-muted: #707075;
+    --bg-app: #17181C;
+    --surface-card: #1F2024;
+    --surface-hover: #26282E;
+    --border-color: #2E3036;
+    --text-primary: #EDEDED;
+    --text-secondary: #9E9EA3;
+    --text-muted: #727278;
     --accent: #4A8196;
     --accent-hover: #5B95AC;
   }

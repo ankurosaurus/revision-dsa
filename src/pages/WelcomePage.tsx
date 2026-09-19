@@ -376,7 +376,7 @@ const HomeScreen: React.FC<{
               Continue as guest
             </span>
             <span className="text-[11px] text-[#6E6E73] block">
-              No registration required · Progress saved on this device
+              No registration required — Progress saved on this device
             </span>
           </div>
           {guestLoading && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#2D5A6B]" />}

@@ -192,7 +192,7 @@ export const CatalogPage: React.FC = () => {
 
   useEffect(() => {
     getCatalogStats().then((s) => {
-      setStatsText(`${s.leetcode.toLocaleString()} LeetCode · ${s.codeforces.toLocaleString()} Codeforces · ${s.gfg} GeeksforGeeks`);
+      setStatsText(`${s.leetcode.toLocaleString()} LeetCode, ${s.codeforces.toLocaleString()} Codeforces, ${s.gfg} GeeksforGeeks`);
     });
   }, []);
 
@@ -382,7 +382,7 @@ export const CatalogPage: React.FC = () => {
             {totalPages > 1 && (
               <div className="flex items-center justify-between px-6 py-4 border-t border-[#E5E4E0] bg-[#FFFFFF]">
                 <span className="text-[13px] text-[#6E6E73] tabular-nums">
-                  Page {page} of {totalPages} · {result.totalMatches.toLocaleString()} total
+                  Page {page} of {totalPages} ({result.totalMatches.toLocaleString()} total)
                 </span>
                 <div className="flex items-center gap-1.5">
                   <button
