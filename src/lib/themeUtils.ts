@@ -4,7 +4,9 @@
 
 export function getSystemTheme(): 'dark' | 'light' {
   if (typeof window === 'undefined') return 'dark';
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  const saved = localStorage.getItem('revision_dsa_theme');
+  if (saved === 'light') return 'light';
+  return 'dark';
 }
 
 export function applyTheme(theme: 'dark' | 'light') {

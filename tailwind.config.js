@@ -5,36 +5,41 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Clean Minimalist Restrained System
+        // Clean Minimalist Restrained System (Responsive CSS Variables)
         bg: {
-          DEFAULT: '#FAFAF8',
-          soft: '#F4F4F0',
+          DEFAULT: 'var(--bg-app)',
+          soft: 'var(--surface-hover)',
         },
         surface: {
-          DEFAULT: '#FFFFFF',
-          hover: '#F7F7F5',
-          subtle: '#FAFAF8',
-          border: '#E5E4E0',
+          DEFAULT: 'var(--surface-card)',
+          hover: 'var(--surface-hover)',
+          subtle: 'var(--bg-app)',
+          border: 'var(--border-color)',
         },
         ink: {
-          DEFAULT: '#1C1C1E',
-          primary: '#1C1C1E',
-          secondary: '#6E6E73',
-          muted: '#8E8E93',
-          faint: '#C7C7CC',
+          DEFAULT: 'var(--text-primary)',
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          muted: 'var(--text-muted)',
+          faint: 'var(--text-muted)',
         },
         line: {
-          DEFAULT: '#E5E4E0',
-          subtle: '#EFEFEA',
-          strong: '#D1D0CB',
+          DEFAULT: 'var(--border-color)',
+          subtle: 'var(--border-color)',
+          strong: 'var(--border-color)',
         },
-        // Single Accent: Quiet, desaturated deep teal-blue (#2D5A6B)
+        // Single Accent: Quiet, desaturated deep teal-blue
         accent: {
-          DEFAULT: '#2D5A6B',
-          hover: '#234754',
-          subtle: 'rgba(45, 90, 107, 0.08)',
-          border: 'rgba(45, 90, 107, 0.25)',
+          DEFAULT: 'var(--accent)',
+          hover: 'var(--accent-hover)',
+          subtle: 'rgba(45, 90, 107, 0.12)',
+          border: 'rgba(45, 90, 107, 0.3)',
         },
+        'dark-bg': '#17181C',
+        'dark-surface': '#1F2024',
+        'dark-surfaceHover': '#26282E',
+        'dark-border': '#2E3036',
+        'dark-textMuted': '#727278',
         // Functional quiet/desaturated indicators
         status: {
           easy: '#5A9367',

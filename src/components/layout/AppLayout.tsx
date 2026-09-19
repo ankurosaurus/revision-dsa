@@ -18,7 +18,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, isDemo, onOpenAu
   const { isGuest } = useAuth();
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-neutral-50 dark:bg-dark-bg bg-grid-pattern text-neutral-900 dark:text-neutral-100 font-sans">
+    <div className="flex h-screen w-screen overflow-hidden bg-[var(--bg-app)] text-[var(--text-primary)] font-sans">
       {/* Sidebar (desktop/tablet) */}
       <Sidebar />
 

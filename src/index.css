@@ -263,5 +263,92 @@
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #2A2A2E;
+  background: #2E3036;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #3E4048;
+}
+
+/* ── Dark Mode Utility Overrides for Seamless Inversion ─────────────────── */
+.dark .bg-\[\#FFFFFF\] {
+  background-color: var(--surface-card) !important;
+}
+
+.dark .bg-\[\#FAFAF8\] {
+  background-color: var(--bg-app) !important;
+}
+
+.dark .bg-\[\#FAFAF8\]\/95 {
+  background-color: rgba(23, 24, 28, 0.95) !important;
+}
+
+.dark .bg-\[\#F7F7F5\] {
+  background-color: var(--surface-hover) !important;
+}
+
+.dark .bg-\[\#F4F4F0\] {
+  background-color: var(--surface-hover) !important;
+}
+
+.dark .border-\[\#E5E4E0\] {
+  border-color: var(--border-color) !important;
+}
+
+.dark .border-\[\#D1D0CB\] {
+  border-color: #383A40 !important;
+}
+
+.dark .text-\[\#1C1C1E\] {
+  color: var(--text-primary) !important;
+}
+
+.dark .text-\[\#6E6E73\] {
+  color: var(--text-secondary) !important;
+}
+
+.dark .text-\[\#8E8E93\] {
+  color: var(--text-muted) !important;
+}
+
+.dark .text-\[\#2D5A6B\] {
+  color: #58A6BA !important;
+}
+
+.dark .bg-\[\#2D5A6B\]\/10 {
+  background-color: rgba(88, 166, 186, 0.12) !important;
+}
+
+.dark .border-\[\#2D5A6B\]\/20,
+.dark .border-\[\#2D5A6B\]\/25,
+.dark .border-\[\#2D5A6B\]\/30 {
+  border-color: rgba(88, 166, 186, 0.28) !important;
+}
+
+.dark .hover\:bg-\[\#F7F7F5\]:hover {
+  background-color: var(--surface-hover) !important;
+}
+
+.dark .hover\:bg-\[\#FAFAF8\]:hover {
+  background-color: var(--surface-card) !important;
+}
+
+.dark .hover\:text-\[\#1C1C1E\]:hover {
+  color: var(--text-primary) !important;
+}
+
+.dark .hover\:border-\[\#D1D0CB\]:hover {
+  border-color: #383A40 !important;
+}
+
+.dark .placeholder\:text-\[\#8E8E93\]::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.dark .shadow-card,
+.dark .shadow-soft,
+.dark .shadow-modal,
+.dark .shadow-xs,
+.dark .shadow-sm {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
 }

@@ -34,9 +34,9 @@ interface UIState {
 const getInitialTheme = (): 'dark' | 'light' => {
   if (typeof window !== 'undefined') {
     const saved = localStorage.getItem('revision_dsa_theme');
-    if (saved === 'dark' || saved === 'light') return saved;
+    if (saved === 'light') return 'light';
   }
-  return 'light'; // Light paper tone as default per spec
+  return 'dark'; // Dark mode is default, only light if explicitly opted into
 };
 
 export const useUIStore = create<UIState>((set) => ({

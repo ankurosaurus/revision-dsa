@@ -24,6 +24,7 @@ import {
 } from '../../lib/pistonService';
 import { supabase, isSupabaseConfigured } from '../../lib/supabaseClient';
 import { useAuth } from '../../contexts/AuthContext';
+import { useUIStore } from '../../store/useUIStore';
 import { track } from '../../lib/analytics';
 
 interface CodeCompilerProps {
@@ -41,6 +42,7 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
   initialLanguage = 'python',
 }) => {
   const { user } = useAuth();
+  const theme = useUIStore((s) => s.theme);
   const [language, setLanguage] = useState<SupportedLanguage>(initialLanguage);
   const [code, setCode] = useState<string>('');
   const [stdin, setStdin] = useState<string>('');
@@ -140,37 +142,66 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
     triggerAutosave(val, language);
   };
 
+  const monacoRef = useRef<any>(null);
+
   const handleEditorMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
+    monacoRef.current = monaco;
 
     // Define custom dark theme to blend with RevisionDSA dark mode
     monaco.editor.defineTheme('revisionDark', {
       base: 'vs-dark',
       inherit: true,
       rules: [
-        { token: 'comment', foreground: '6b7280', fontStyle: 'italic' },
-        { token: 'keyword', foreground: '818cf8', fontStyle: 'bold' },
-        { token: 'string', foreground: '34d399' },
-        { token: 'number', foreground: 'fbbf24' },
+        { token: 'comment', foreground: '727278', fontStyle: 'italic' },
+        { token: 'keyword', foreground: '58A6BA', fontStyle: 'bold' },
+        { token: 'string', foreground: '5A9367' },
+        { token: 'number', foreground: 'C4923A' },
       ],
       colors: {
-        'editor.background': '#0e0e11',
-        'editor.foreground': '#f3f4f6',
-        'editorLineNumber.foreground': '#4b5563',
-        'editorLineNumber.activeForeground': '#9ca3af',
-        'editor.selectionBackground': '#374151',
-        'editor.lineHighlightBackground': '#18181b',
-        'editorCursor.foreground': '#6366f1',
+        'editor.background': '#1F2024',
+        'editor.foreground': '#EDEDED',
+        'editorLineNumber.foreground': '#727278',
+        'editorLineNumber.activeForeground': '#EDEDED',
+        'editor.selectionBackground': '#2E3036',
+        'editor.lineHighlightBackground': '#26282E',
+        'editorCursor.foreground': '#58A6BA',
       },
     });
 
-    monaco.editor.setTheme('revisionDark');
+    monaco.editor.defineTheme('revisionLight', {
+      base: 'vs',
+      inherit: true,
+      rules: [
+        { token: 'comment', foreground: '8E8E93', fontStyle: 'italic' },
+        { token: 'keyword', foreground: '2D5A6B', fontStyle: 'bold' },
+        { token: 'string', foreground: '5A9367' },
+        { token: 'number', foreground: 'C4923A' },
+      ],
+      colors: {
+        'editor.background': '#FFFFFF',
+        'editor.foreground': '#1C1C1E',
+        'editorLineNumber.foreground': '#8E8E93',
+        'editorLineNumber.activeForeground': '#1C1C1E',
+        'editor.selectionBackground': '#E5E4E0',
+        'editor.lineHighlightBackground': '#F7F7F5',
+        'editorCursor.foreground': '#2D5A6B',
+      },
+    });
+
+    monaco.editor.setTheme(theme === 'dark' ? 'revisionDark' : 'revisionLight');
 
     // Add keyboard shortcut for Run Code: Ctrl+Enter or Cmd+Enter
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
       handleRunCode();
     });
   };
+
+  useEffect(() => {
+    if (monacoRef.current) {
+      monacoRef.current.editor.setTheme(theme === 'dark' ? 'revisionDark' : 'revisionLight');
+    }
+  }, [theme]);
 
   // ── Run Code via Piston API ────────────────────────────────────────────────
   const handleRunCode = async () => {
@@ -362,7 +393,7 @@ export const CodeCompiler: React.FC<CodeCompilerProps> = ({
           value={code}
           onChange={handleEditorChange}
           onMount={handleEditorMount}
-          theme="vs-dark"
+          theme={theme === 'dark' ? 'revisionDark' : 'revisionLight'}
           options={{
             fontSize: 13,
             fontFamily: 'Geist Mono, JetBrains Mono, Menlo, Monaco, monospace',
